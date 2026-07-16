@@ -2,85 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cup of IQ — Coming soon</title>
-  <meta name="description" content="Cup of IQ — daily brain puzzles. Coming soon.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Cup of IQ</title>
+  <meta name="description" content="Cup of IQ — one little puzzle, every morning.">
 
-  <!-- Link preview tags (SHR-6 will replace the image with og-image.png later) -->
+  <!-- SHR-6: static link-preview tags. og:image becomes a hand-drawn 1200×630
+       og-image.png in Phase 2 (sign-off #4: no per-day OG image). -->
   <meta property="og:title" content="Cup of IQ">
-  <meta property="og:description" content="Daily brain puzzles. Coming soon.">
+  <meta property="og:description" content="One little puzzle, every morning. Follow the tracks, find the egg.">
   <meta property="og:image" content="https://cupofiq.com/logo.webp">
   <meta property="og:url" content="https://cupofiq.com">
   <meta name="twitter:card" content="summary">
 
-  <link rel="icon" href="logo.webp" type="image/webp">
-
-  <style>
-    /* Palette sampled from the logo itself */
-    :root {
-      --cream: #FEFBF8;   /* exact logo background — image blends seamlessly */
-      --brown: #6E5340;   /* wordmark brown */
-      --brown-soft: #9B8672;
-      --green: #9CBF7B;   /* puzzle-piece green */
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    html, body { height: 100%; }
-
-    body {
-      background: var(--cream);
-      color: var(--brown);
-      font-family: ui-rounded, "SF Pro Rounded", "Hiragino Maru Gothic ProN",
-                   Quicksand, Comfortaa, "Segoe UI", system-ui, sans-serif;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      padding: 2rem 1.5rem;
-    }
-
-    main { max-width: 26rem; }
-
-    .logo {
-      width: min(320px, 78vw);
-      height: auto;
-      display: block;
-      margin: 0 auto;
-      animation: steam-bob 5s ease-in-out infinite;
-    }
-
-    /* The one flourish: the cup drifts like its own steam */
-    @keyframes steam-bob {
-      0%, 100% { transform: translateY(0); }
-      50%      { transform: translateY(-8px); }
-    }
-
-    h1 {
-      font-size: clamp(1.6rem, 6vw, 2.1rem);
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      margin-top: 0.5rem;
-    }
-
-    h1 .dot { color: var(--green); }
-
-    p {
-      margin-top: 0.75rem;
-      font-size: 1.05rem;
-      color: var(--brown-soft);
-      line-height: 1.5;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .logo { animation: none; }
-    }
-  </style>
+  <!-- logo.webp must live in public/ so the built site serves it (binary: upload via web UI) -->
+  <link rel="icon" href="/logo.webp" type="image/webp">
 </head>
 <body>
-  <main>
-    <img class="logo" src="logo.webp" alt="Cup of IQ — a steaming coffee cup with a green puzzle piece rising in the steam. Daily brain puzzles." width="640" height="640">
-    <h1>Coming soon<span class="dot">.</span></h1>
-    <p>A little puzzle is brewing.<br>Check back for opening day. ☕</p>
+  <main id="app-root">
+    <div class="hdr" id="hdr">Cup of IQ 🥚</div>
+    <div class="story" id="story"></div>
+    <div id="app"></div>
   </main>
+  <script type="module" src="/src/main.ts"></script>
 </body>
 </html>

@@ -1,0 +1,118 @@
+/* Cup of IQ — one plain CSS file (design.md §1). Palette and keyframes are the
+   prototype's (prototype/prototype-l1.html), which is the feel source of truth. */
+:root {
+  --cream: #FEFBF8;
+  --brown: #6E5340;
+  --brown-soft: #9B8672;
+  --tan: #B7A182;
+  --print: #9DB289;
+  --print-done: #5F7F49;
+  --green: #7BA35C;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--brown);
+  font-family: ui-rounded, 'SF Pro Rounded', Quicksand, 'Segoe UI', system-ui, sans-serif;
+  text-align: center;
+}
+
+#app-root { max-width: 420px; margin: 0 auto; padding: 14px 8px 24px; min-height: 100vh; }
+.hdr { font-size: 14px; font-weight: 700; color: var(--brown-soft); }
+.story { font-size: 14px; color: var(--tan); margin-top: 2px; min-height: 18px; }
+
+/* --- keyframes (names and timings per design.md §7b) --- */
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes wobble { 0%, 100% { transform: rotate(0); } 20% { transform: rotate(-8deg); } 45% { transform: rotate(7deg); } 70% { transform: rotate(-4deg); } }
+@keyframes hintb { 0%, 10%, 100% { transform: translateY(0); } 4% { transform: translateY(-14px); } 7% { transform: translateY(-2px); } }
+@keyframes popin { 0% { transform: scale(.2); opacity: 0; } 70% { transform: scale(1.15); } 100% { transform: scale(1); opacity: 1; } }
+@keyframes stamp { 0% { transform: scale(1); } 40% { transform: scale(1.18); } 100% { transform: scale(1); } }
+@keyframes jiggle { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-3deg); } 75% { transform: rotate(3deg); } }
+@keyframes dance { 0%, 100% { transform: rotate(-6deg) translateY(0); } 50% { transform: rotate(6deg) translateY(-8px); } }
+@keyframes wordpop { 0% { transform: scale(.3) translateY(6px); opacity: 0; } 25% { transform: scale(1.15); opacity: 1; } 70% { transform: scale(1); opacity: 1; } 100% { transform: scale(1) translateY(-8px); opacity: 0; } }
+@keyframes fall { 0% { transform: translateY(-20px) rotate(0); opacity: 1; } 100% { transform: translateY(360px) rotate(340deg); opacity: 0; } }
+
+/* --- game scenes --- */
+.scene { position: relative; width: 336px; height: 452px; margin: 4px auto 0; }
+.scene-eggs { position: relative; width: 336px; margin: 4px auto 0; }
+.trail { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.nest { position: absolute; left: 50%; top: 2px; transform: translateX(-50%); }
+.nest.jiggle, .day-egg.jiggle { animation: jiggle .4s ease-in-out; }
+.day-egg { margin: 0 auto; width: 72px; }
+
+.patch {
+  position: absolute;
+  width: 104px;
+  height: 96px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  animation: bob 3.2s ease-in-out infinite;
+}
+.egg-target {
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  animation: bob 3.2s ease-in-out infinite;
+}
+.board5 { position: relative; width: 336px; height: 392px; margin: 6px auto 0; }
+.board5 .egg-target { position: absolute; width: 92px; height: 104px; }
+.board10 { display: grid; grid-template-columns: repeat(4, minmax(64px, 1fr)); gap: 12px; width: 336px; margin: 6px auto 0; justify-items: center; }
+.board10 .egg-target { width: 72px; height: 84px; }
+
+.patch.wob, .egg-target.wob { animation: wobble .5s ease-in-out; } /* FBK-1 */
+.patch.hint, .egg-target.hint { animation: hintb 4s ease-in-out infinite; } /* FBK-3 */
+.patch.done, .egg-target.done { cursor: default; animation: stamp .45s ease-out; } /* TRL-3 / TAP-4 */
+
+.word-bub { position: absolute; top: 34px; left: 50%; transform: translateX(-50%); font-size: 30px; font-weight: 700; color: var(--green); opacity: 0; pointer-events: none; z-index: 5; }
+.scene-eggs .word-bub { top: 96px; }
+.word-bub.pop { animation: wordpop 1.4s ease-out forwards; } /* AUD-2 */
+.hmm { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); font-size: 15px; color: var(--tan); opacity: 0; transition: opacity .3s; }
+.scene-eggs .hmm { position: static; transform: none; margin-top: 6px; }
+
+/* --- celebration --- */
+.party { position: relative; padding-top: 16px; min-height: 420px; overflow: hidden; }
+.party-pop { animation: popin .6s ease-out; }
+.party-dino { display: inline-block; }
+.party-dino.dance { animation: dance .6s ease-in-out infinite; } /* CEL-1 */
+.party-dino img { width: 190px; height: auto; }
+.dino-emoji { font-size: 110px; line-height: 1.25; } /* placeholder until real art lands */
+.party-line { font-size: 24px; font-weight: 700; margin-top: 4px; }
+.party-sub { font-size: 18px; color: var(--brown-soft); margin-top: 4px; }
+.confetti { position: absolute; inset: 0; pointer-events: none; }
+.confetti div { position: absolute; width: 8px; height: 12px; border-radius: 2px; top: -16px; }
+
+/* --- results / comeback --- */
+.results, .comeback { padding-top: 8px; }
+.comeback { padding-top: 26px; }
+.comeback-dino img { width: 160px; height: auto; }
+.res-title { font-size: 20px; font-weight: 700; margin-top: 2px; }
+.res-sub { font-size: 15px; color: var(--brown-soft); margin-top: 4px; }
+.res-up { color: var(--green); font-weight: 700; }
+.card { margin: 14px auto 0; max-width: 260px; background: #F7F0E4; border-radius: 14px; padding: 10px 14px; font-size: 14px; }
+.btn-row { display: flex; gap: 10px; justify-content: center; margin-top: 14px; }
+.pbtn { font-family: inherit; font-size: 15px; font-weight: 700; color: var(--brown); background: #FFFDF7; border: 2px solid #D9C9AF; border-radius: 14px; padding: 10px 22px; cursor: pointer; }
+.pbtn.danger { border-color: #D9A9A0; }
+.grown-link { display: block; margin: 22px auto 0; font-size: 13px; color: var(--brown-soft); background: none; border: none; cursor: pointer; text-decoration: underline dotted; font-family: inherit; }
+
+/* --- shared chrome --- */
+.toast { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); background: var(--brown); color: var(--cream); font-size: 13px; padding: 6px 14px; border-radius: 12px; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 30; }
+.overlay { position: fixed; inset: 0; background: rgba(60, 48, 38, .45); display: grid; place-items: center; z-index: 20; }
+.panel { background: var(--cream); border-radius: 18px; padding: 18px; width: min(320px, 90vw); text-align: left; }
+.panel h2 { margin: 0 0 6px; font-size: 17px; }
+.panel-note { margin: 0 0 10px; font-size: 12px; color: var(--brown-soft); }
+.panel .lvl { display: block; width: 100%; text-align: left; margin: 4px 0; padding: 8px 10px; border-radius: 10px; border: 2px solid #D9C9AF; background: #FFFDF7; font: inherit; cursor: pointer; }
+.panel .lvl.current { border-color: var(--green); background: #F0F6E8; }
+.panel .row { display: flex; justify-content: space-between; align-items: center; margin: 12px 0; }
+.privacy { font-size: 12px; color: var(--brown-soft); margin-top: 10px; }
+
+/* Idle bob off under reduced motion; feedback animations (wobble/stamp/hint)
+   stay — they carry meaning (FBK-5). */
+@media (prefers-reduced-motion: reduce) {
+  .patch, .egg-target { animation: none; }
+}
