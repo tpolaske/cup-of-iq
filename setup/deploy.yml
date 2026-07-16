@@ -6,10 +6,10 @@
 #   1. Open this file on GitHub (branch feat/mvp-phase-0-1) and click the pencil (Edit)
 #   2. In the filename box, change the path to:  .github/workflows/deploy.yml
 #      (type ../.github/workflows/deploy.yml to walk out of setup/)
-#   3. Delete this comment block (lines starting with "# ⚠️" through this one)
+#   3. Delete this comment block (everything above the "name:" line)
 #   4. Commit directly to the branch
 #
-ame: CI & Deploy
+name: CI & Deploy
 
 on:
   push:
