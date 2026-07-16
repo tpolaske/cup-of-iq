@@ -1,0 +1,59 @@
+# ⚠️ Move me: .github/workflows/deploy.yml
+#
+# The GitHub MCP connector app lacks the "Workflows" permission, so it cannot
+# commit files under .github/workflows/. To activate CI + Pages deploys:
+#
+#   1. Open this file on GitHub (branch feat/mvp-phase-0-1) and click the pencil (Edit)
+#   2. In the filename box, change the path to:  .github/workflows/deploy.yml
+#      (type ../.github/workflows/deploy.yml to walk out of setup/)
+#   3. Delete this comment block (lines starting with "# ⚠️" through this one)
+#   4. Commit directly to the branch
+#
+ame: CI & Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  # Pinned so DST-boundary dayNumber tests are deterministic (design.md §1)
+  TZ: America/New_York
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      # npm install (not ci): a package-lock.json can't be generated through the
+      # text-only MCP connector. TODO: commit a lockfile, then switch to `npm ci`.
+      - run: npm install --no-audit --no-fund
+      - run: npm test
+      - run: npm run build
+      - uses: actions/upload-pages-artifact@v3
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        with:
+          path: dist
+
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: test-and-build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
