@@ -1,0 +1,6 @@
+[
+  { "id": "t-rex", "label": "T-Rex round", "emoji": "🦖", "maxWrong": 0 },
+  { "id": "triceratops", "label": "Triceratops round", "emoji": "🦕", "maxWrong": 1 },
+  { "id": "stegosaurus", "label": "Stegosaurus round", "emoji": "🦕", "maxWrong": 3 },
+  { "id": "brontosaurus", "label": "Brontosaurus round", "emoji": "🦕", "maxWrong": null }
+]
