@@ -9,7 +9,9 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "types": ["vite/client"],
+    // "node" is needed by src/content.test.ts, which reads content/ and public/
+    // off disk to validate the daily files (design.md §4).
+    "types": ["vite/client", "node"],
     "noEmit": true
   },
   "include": ["src", "vite.config.ts"]
