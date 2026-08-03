@@ -1,4 +1,4 @@
-// ui.ts — tiny shared DOM helpers: toast, long-press gate (GRN-1), share/copy (SHR-3/4).
+// ui.ts — tiny shared DOM helpers: toast, share/copy (SHR-3/4).
 
 let toastEl: HTMLElement | null = null;
 
@@ -13,29 +13,6 @@ export function showToast(message: string): void {
   window.setTimeout(() => {
     if (toastEl) toastEl.style.opacity = '0';
   }, 1400);
-}
-
-// GRN-1 — 2 s continuous press opens; a plain tap does nothing.
-export function attachLongPress(el: HTMLElement, ms: number, onLongPress: () => void): void {
-  let timer: number | undefined;
-  const cancel = () => {
-    if (timer !== undefined) {
-      window.clearTimeout(timer);
-      timer = undefined;
-    }
-  };
-  el.addEventListener('pointerdown', (e) => {
-    e.preventDefault();
-    cancel();
-    timer = window.setTimeout(() => {
-      timer = undefined;
-      onLongPress();
-    }, ms);
-  });
-  for (const ev of ['pointerup', 'pointerleave', 'pointercancel']) {
-    el.addEventListener(ev, cancel);
-  }
-  el.addEventListener('contextmenu', (e) => e.preventDefault());
 }
 
 export async function copyText(text: string): Promise<void> {
@@ -59,4 +36,16 @@ export async function shareResult(text: string): Promise<void> {
     }
   }
   await copyText(text);
+}
+
+// GRN-1 — the grown-ups entry control. A plain tap: the gate was a 2 s
+// long-press until sign-off #17 found it unusable one-handed on a phone. The
+// panel is grown-up-facing text, not a secret; the only destructive action in
+// it (reset) keeps its own confirm.
+export function grownupsLink(onOpen: () => void): HTMLButtonElement {
+  const b = document.createElement('button');
+  b.className = 'grown-link';
+  b.textContent = 'For grown-ups';
+  b.addEventListener('click', onOpen);
+  return b;
 }

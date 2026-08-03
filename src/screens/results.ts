@@ -2,7 +2,7 @@
 // here only; the child-facing celebration is identical at every accuracy (CEL-2).
 import type { Dino } from '../daily';
 import type { TitleDef } from '../share';
-import { attachLongPress, copyText, shareResult } from '../ui';
+import { copyText, grownupsLink, shareResult } from '../ui';
 
 export interface ResultsOpts {
   dino: Dino;
@@ -65,11 +65,7 @@ export function showResults(root: HTMLElement, o: ResultsOpts): void {
   );
   el.appendChild(btns);
 
-  const grown = document.createElement('button');
-  grown.className = 'grown-link';
-  grown.textContent = 'For grown-ups (press and hold)';
-  attachLongPress(grown, 2000, o.onGrownups); // GRN-1
-  el.appendChild(grown);
+  el.appendChild(grownupsLink(o.onGrownups)); // GRN-1
 
   root.appendChild(el);
 }
