@@ -1,6 +1,6 @@
-# Cup of IQ — Design (v2, 2026-07-08)
+# Cup of IQ — Design (v2, 2026-07-08 · amended 2026-08-03)
 
-*v2 incorporates `learning-review.md` R1–R8 and the prototyping session of 2026-07-08 (sign-offs #12–16). New/changed: §3 board specs, §4 content, §7b L1 implementation, §9 audio, §11 reference implementation. The stack (§1) and architecture shape (§2) are unchanged.*
+*v2 incorporates `learning-review.md` R1–R8 and the prototyping session of 2026-07-08 (sign-offs #12–16). New/changed: §3 board specs, §4 content, §7b L1 implementation, §9 audio, §11 reference implementation. The stack (§1) and architecture shape (§2) are unchanged. 2026-08-03: §3 `LAUNCH_DATE` is now real; §6 grown-ups entry is a plain tap (sign-off #17).*
 
 ## 1. Tech stack decision ⚠️ (parent sign-off #1)
 
@@ -31,11 +31,11 @@ The product is one interactive screen plus two static-ish screens, maintained pa
 ## 2. Architecture overview
 
 ```
-                    ┌────────────────────────────────────┐
+                    ┌──────────────────────────────────┐
                     │  index.html (static, OG tags)      │
-                    └──────────────┬─────────────────────┘
+                    └──────────────┬───────────────────┘
                                    │ boots
-                    ┌──────────────▼─────────────────────┐
+                    ┌──────────────▼───────────────────┐
                     │ main.ts — decide today's screen    │
                     │  played today? ──yes──► comeback   │
                     │       │ no                         │
@@ -61,9 +61,9 @@ Everything below `main.ts` is pure functions plus a thin DOM layer; the state ma
 
 ```ts
 // daily.ts
-const LAUNCH_DATE = new Date(2026, 8, 1); // ⚠️ placeholder (sign-off #7) — set on go-live day.
-// IMMUTABLE once the first real result is shared: changing it renumbers every
-// day and reshuffles every board.
+const LAUNCH_DATE = new Date(2026, 7, 3); // 2026-08-03 — go-live day, Day 1.
+// IMMUTABLE now that the first real result has been shared: changing it
+// renumbers every day and reshuffles every board. Month is 0-indexed: 7 = Aug.
 
 export function dayNumber(now = new Date()): number {
   const localMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -74,7 +74,11 @@ export function dayNumber(now = new Date()): number {
   return Math.max(1, day); // pre-launch visits clamp to Day 1 — JS % preserves
                            // sign, so day ≤ 0 would index dinos[-1] = undefined
 }
+```
 
+⚠️ **The clamp has a second-order effect worth remembering.** While `LAUNCH_DATE` sits in the future, *every* visit returns Day 1 — so the LCK-1 lock check (`lastPlayed.dayNumber === dayNumber(now)`) stays true forever and the come-back card shows every morning instead of a new round. This shipped as a bug on 2026-08-03 (the placeholder date was still 2026-09-01). The clamp is correct; a future launch date is not a state the product should ever be deployed in.
+
+```ts
 function posMod(n: number, m: number): number { return ((n % m) + m) % m; }
 
 export function todaysDino(day: number, dinos: Dino[]): Dino {
@@ -119,7 +123,7 @@ export function seededShuffle<T>(items: T[], seed: number): T[] { /* Fisher–Ya
 export function boardSeed(day: number, level: number): number { return day * 100 + level; }
 ```
 
-**Worked example (Level 1).** Launch = 2026-09-01; on 2026-09-14 `dayNumber` = **14**; `todaysDino` with 30 dinos = `dinos[13]` → Baby Stegosaurus. `boardSeed(14, 1)` = **1401**; `seededShuffle([1,2,3], 1401)` yields e.g. `[3,2,1]`, assigned in order to scatter slots **A, B, C** (§7b geometry): slot A shows 3 footprints, slot B shows 2, slot C shows 1. Every L1 device on Day 14 sees exactly that scatter and hatches exactly that Stegosaurus. `todaysPrompt(14, prompts)` picks the same parent prompt everywhere.
+**Worked example (Level 1).** Launch = 2026-08-03; fourteen days later `dayNumber` = **14**; `todaysDino` with 30 dinos = `dinos[13]` → Baby Stegosaurus. `boardSeed(14, 1)` = **1401**; `seededShuffle([1,2,3], 1401)` yields e.g. `[3,2,1]`, assigned in order to scatter slots **A, B, C** (§7b geometry): slot A shows 3 footprints, slot B shows 2, slot C shows 1. Every L1 device on Day 14 sees exactly that scatter and hatches exactly that Stegosaurus. `todaysPrompt(14, prompts)` picks the same parent prompt everywhere.
 
 ⚠️ Sign-off #3: "today" is the device-local calendar date (the Wordle choice). ⚠️ Sign-off #13/BRD-3: the shuffle assigns *values to slots*; slot positions themselves are fixed per layout and chosen so no assignment yields a spatially ordered path.
 
@@ -185,7 +189,7 @@ Single key `cupofiq.v1` (version bump = migration function in `progress.ts`). Un
 }
 ```
 
-- Lock check (LCK-1): `lastPlayed.dayNumber === dayNumber(now)`.
+- Lock check (LCK-1): `lastPlayed.dayNumber === dayNumber(now)`. See the §3 warning: this is only as trustworthy as `LAUNCH_DATE`.
 - Level-up (PRG-2): on a perfect round, `perfectsAtLevel++`; at 3 → `level++` (cap 5), reset counter, `leveledUp: true`.
 - In-progress rounds are never persisted (LCK-4); a reload resets `wrongTaps` and `revealStage` — accepted loophole, sign-off #9.
 - No history array, no PII. If localStorage throws (private mode), the game runs stateless (NFR-7): no lock, so the comeback card never shows in private mode and sharing is only available from the results screen within the same session. This is correct behavior — do not "fix" it.
@@ -202,13 +206,16 @@ Vanilla-TS "components" are modules exporting `mount(el, props)`-style functions
 | `src/daily.ts` | `dayNumber`, `boardSeed`, `seededShuffle`, `todaysDino`, **`boardSpecForLevel`, `todaysPrompt`, `todaysMission`** — pure, fully unit-tested |
 | `src/progress.ts` | localStorage read/write, schema migration, level-up rules (cap **5**) — pure core, tested |
 | `src/feedback.ts` | Plays stamp/crack/wobble/hint/hatch animations + sfx; **`sayNumber(v)` and `rawr()` via the voice manifest; lazy-loads audio after first paint; unlocks audio context on first tap (AUD-4)**; respects sound-off |
+| `src/ui.ts` | Shared DOM helpers: toast, share/copy, `grownupsLink()` — the plain-tap panel entry (GRN-1, sign-off #17) |
 | `src/share.ts` | `buildShareText(result)` (**L1 adds the "We followed the tracks" line**), `share()` with Web Share → clipboard fallback |
 | `src/screens/results.ts` | Results: dino, title, wrong taps, perfect treatment, **parent prompt (PRM-1)**, share/copy, grown-ups control |
 | `src/screens/comeback.ts` | Come-back card (LCK-1): static dino, share controls, **counting mission (MSN-1, Phase 2)** |
-| `src/screens/grownups.ts` | Long-press-gated panel: **level picker with 5 named levels**, sound toggle, reset, privacy note |
+| `src/screens/grownups.ts` | Panel opened by a plain tap on the grown-ups control (GRN-1): **level picker with 5 named levels**, sound toggle, reset-with-confirm, privacy note |
 | `content/` | `dinos.json`, `titles.json`, **`prompts.json`**, **`missions.json`** |
 | `public/img`, `public/sfx`, **`public/voice`** | Static assets |
 | **`prototype/prototype-l1.html`**, **`mockups/*.svg`** | **Reference implementation + spec screenshots (§11). Not shipped; excluded from the build.** |
+
+**On the grown-ups gate (sign-off #17).** The entry was a 2 s long-press until first-week use on the real device showed it was unusable one-handed: four times the platform norm, no progress feedback, a 13 px target, and cancelled by any drift or by the scroller claiming the gesture. It is now a plain tap on a ≥ 44 px control with its own `touch-action`. The gate exists to survive an idle toddler tap, not to hide anything — the panel is grown-up-facing text, and reset keeps its confirm. `attachLongPress` was deleted rather than kept as a seam (§10).
 
 ## 7. Incorrect-tap feedback design ⚠️ (sign-off #2)
 
@@ -294,7 +301,7 @@ L2 reuses the `quincunx5` egg layout from the original design with the `prints+n
 
 ## 10. Seams for future modes (design for, don't build)
 
-Unchanged from v1: routing seam (one route per mode), shared-for-real modules extracted only when Mode 2 lands (`daily`, `progress`, `share`, `feedback`), board rendering never shared, no generic engine. Level names in the grown-ups panel come from BRD-1. Parking lot (SAT/adult modes) unchanged.
+Unchanged from v1: routing seam (one route per mode), shared-for-real modules extracted only when Mode 2 lands (`daily`, `progress`, `share`, `feedback`), board rendering never shared, no generic engine. Level names in the grown-ups panel come from BRD-1. Parking lot (SAT/adult modes) unchanged. Corollary, applied for the first time on 2026-08-03: when a mechanism is replaced, its helper is **deleted**, not parked — `attachLongPress` went out with the long-press gate.
 
 ## 11. Reference implementation & mockups (new in v2)
 
