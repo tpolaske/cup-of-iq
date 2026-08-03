@@ -98,7 +98,27 @@ body {
 .btn-row { display: flex; gap: 10px; justify-content: center; margin-top: 14px; }
 .pbtn { font-family: inherit; font-size: 15px; font-weight: 700; color: var(--brown); background: #FFFDF7; border: 2px solid #D9C9AF; border-radius: 14px; padding: 10px 22px; cursor: pointer; }
 .pbtn.danger { border-color: #D9A9A0; }
-.grown-link { display: block; margin: 22px auto 0; font-size: 13px; color: var(--brown-soft); background: none; border: none; cursor: pointer; text-decoration: underline dotted; font-family: inherit; }
+
+/* GRN-1 — plain-tap entry (sign-off #17). Deliberately a comfortable target:
+   ≥ 44 px tall, its own touch-action so the scroller can't claim the gesture,
+   and no text selection on a long finger rest. */
+.grown-link {
+  display: block;
+  margin: 18px auto 0;
+  min-height: 44px;
+  padding: 12px 18px;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--brown-soft);
+  background: none;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  text-decoration: underline dotted;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
 
 /* --- shared chrome --- */
 .toast { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); background: var(--brown); color: var(--cream); font-size: 13px; padding: 6px 14px; border-radius: 12px; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 30; }
