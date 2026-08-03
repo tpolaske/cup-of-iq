@@ -14,10 +14,9 @@ export interface Mission {
   count: number;
 }
 
-export const LAUNCH_DATE = new Date(2026, 8, 1);
-// ⚠️ Placeholder (sign-off #7) — set to the real date on go-live morning.
-// IMMUTABLE once the first real result is shared: changing it renumbers every
-// day and reshuffles every board.
+export const LAUNCH_DATE = new Date(2026, 7, 3); // 2026-08-03 — go-live day, Day 1.
+// ⚠️ IMMUTABLE (sign-off #7). Changing this renumbers every day and reshuffles
+// every board. Note the month is 0-indexed: 7 = August.
 
 const MS_PER_DAY = 86_400_000;
 
@@ -25,7 +24,8 @@ const MS_PER_DAY = 86_400_000;
 // floor) is deliberate: it absorbs DST's 23/25-hour days, since local-midnight
 // diffs are then ±1 h off an exact multiple of 24 h. Pre-launch visits clamp
 // to Day 1: JS % preserves sign, so day ≤ 0 would index dinos[-1] = undefined
-// (swarm.md ARCH-1).
+// (swarm.md ARCH-1). Beware: while LAUNCH_DATE is in the future the clamp
+// pins every visit to Day 1, which also pins the LCK-1 lock closed.
 export function dayNumber(now: Date = new Date(), launch: Date = LAUNCH_DATE): number {
   const nowMid = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const launchMid = new Date(launch.getFullYear(), launch.getMonth(), launch.getDate());
