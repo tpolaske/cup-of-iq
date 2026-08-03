@@ -1,4 +1,4 @@
-# Cup of IQ — Requirements (v2, 2026-07-08)
+# Cup of IQ — Requirements (v2, 2026-07-08 · GRN-1 amended 2026-08-03)
 
 ## Product Vision
 
@@ -10,9 +10,9 @@ Wrong taps get a warm, wordless wobble and a soft "hmm?" — no penalty feeling,
 
 It is strictly once a day. After the celebration, the results screen shows a grown-up-facing dino title based on accuracy (0 wrong = T-Rex round, 1 = Triceratops, 2–3 = Stegosaurus, 4+ = Brontosaurus — every tier positive), one small rotating **parent prompt** ("Try together: count his fingers to 3 today"), and a one-tap share/copy of a plain-text result. Reopening the page later that day shows only a gentle card with today's hatched dino, "new egg tomorrow," and (Phase 2) a real-world **counting mission** ("find 3 spoons at breakfast") that gives the "AGAIN!" energy somewhere to go — off-screen, with real objects. There is no replay, no collection shelf, no leaderboard, no accounts, no chat, no timers.
 
-Progression is the parent's own design: three perfect rounds (zero wrong taps) at a level advance the child to the next level, always effective tomorrow, never mid-ritual. A hidden grown-ups panel can override the level at any time. Letters, shapes, and an eventual real word game are future modes. The whole thing is static files and localStorage: no backend, no cost, no maintenance burden, built by one parent for one kid first.
+Progression is the parent's own design: three perfect rounds (zero wrong taps) at a level advance the child to the next level, always effective tomorrow, never mid-ritual. A quiet grown-ups panel, tucked at the bottom of the grown-up-facing screens, can override the level at any time. Letters, shapes, and an eventual real word game are future modes. The whole thing is static files and localStorage: no backend, no cost, no maintenance burden, built by one parent for one kid first.
 
-**Disagreements log:** Claude proposed replayable-with-first-attempt-counting; parent chose strict once-a-day — resolved with the static-dino "come back tomorrow" card. Claude proposed a dino collection shelf; parent chose leaner — dropped. Parent proposed SAT/adult modes; Claude pushed back — parked. Parent proposed ABCs as Level 3; moved to Mode 2 (Letters). Parent proposed dino titles per accuracy; adopted, grown-up-facing only. **v2 additions:** parent proposed per-tap hatches with a 5-dino dance party; revised to a progressive reveal of one dino after the learning review flagged content cost and reward-overload (per-tap *progress*, not per-tap *jackpots*). Claude proposed footprints printed on eggs; parent flagged the broken metaphor ("footprints opening an egg doesn't make sense"); resolved as tracks-on-the-ground drawn into a trail — the fiction now matches the mechanic. Original numerals-first L1 replaced by the quantity-first developmental ladder per `learning-review.md`.
+**Disagreements log:** Claude proposed replayable-with-first-attempt-counting; parent chose strict once-a-day — resolved with the static-dino "come back tomorrow" card. Claude proposed a dino collection shelf; parent chose leaner — dropped. Parent proposed SAT/adult modes; Claude pushed back — parked. Parent proposed ABCs as Level 3; moved to Mode 2 (Letters). Parent proposed dino titles per accuracy; adopted, grown-up-facing only. **v2 additions:** parent proposed per-tap hatches with a 5-dino dance party; revised to a progressive reveal of one dino after the learning review flagged content cost and reward-overload (per-tap *progress*, not per-tap *jackpots*). Claude proposed footprints printed on eggs; parent flagged the broken metaphor ("footprints opening an egg doesn't make sense"); resolved as tracks-on-the-ground drawn into a trail — the fiction now matches the mechanic. Original numerals-first L1 replaced by the quantity-first developmental ladder per `learning-review.md`. **Post-launch:** Claude spec'd a 2 s long-press to gate the grown-ups panel; parent found it unusable on the phone the game actually runs on and questioned whether the panel needed hiding at all — resolved as a plain tap (#17).
 
 ---
 
@@ -28,13 +28,17 @@ Progression is the parent's own design: three perfect rounds (zero wrong taps) a
 15. **Progressive reveal (supersedes single final reveal).** The day's one egg advances a crack stage with each correct tap (final stage = hatch). One species per day, identical for every player, is preserved; the 5-species-per-day variant is rejected.
 16. **Discovery framing + parent prompt (MVP) + counting mission (Phase 2).** Celebration copy is revelation ("You found her!"), never prize language; no stars/trophies on child-facing surfaces. Results screen shows one rotating parent prompt. The comeback card gains a daily real-world counting mission in Phase 2. Success metric (advisory): the ritual sticks 30 consecutive mornings; he counts real things unprompted within 3 months; maintenance stays under ~1 hour/month.
 
-Remaining pre-build blocker: **purchase cupofiq.com** (tasks.md Phase −1). `LAUNCH_DATE` is set on go-live day.
+**#17 signed off 2026-08-03** (from first-week use on the real device):
+
+17. **Grown-ups entry is a plain tap (supersedes the long-press in #GRN-1).** The 2 s continuous press proved unusable one-handed on a phone: roughly four times the platform norm, with no progress feedback, on a small target, cancelled by any finger drift or by the scroller claiming the gesture. The panel was never a secret — it is grown-up-facing text, and its one destructive action keeps its own confirm (GRN-3). The gate's real job is only to survive an idle toddler tap during the ritual, which a small, quiet, bottom-of-screen control does. **Accepted risk:** a child can tap in and change the level; the change applies from the next round and is reversible in seconds.
+
+Launch: cupofiq.com purchased and live; `LAUNCH_DATE` set to 2026-08-03 and now immutable (sign-off #7).
 
 ---
 
 ## 1. Daily Puzzle Selection (DPS)
 
-- **DPS-1** WHEN the page loads, THE SYSTEM SHALL compute `dayNumber` as the number of device-local calendar days since the launch date, plus one, using no network call. WHEN the current date precedes the launch date, THE SYSTEM SHALL clamp `dayNumber` to 1 (a negative or zero value would otherwise produce a negative array index in DPS-2 and break the board).
+- **DPS-1** WHEN the page loads, THE SYSTEM SHALL compute `dayNumber` as the number of device-local calendar days since the launch date, plus one, using no network call. WHEN the current date precedes the launch date, THE SYSTEM SHALL clamp `dayNumber` to 1 (a negative or zero value would otherwise produce a negative array index in DPS-2 and break the board). *Note: while the launch date sits in the future the clamp pins every visit to Day 1, which also pins the LCK-1 lock closed — correct behaviour, but it means `LAUNCH_DATE` must be real before anyone plays twice.*
 - **DPS-2** WHEN `dayNumber` is computed, THE SYSTEM SHALL select the day's dinosaur as `dinos[(dayNumber - 1) % dinos.length]` from `content/dinos.json` checked into the repo, using a positive-modulo helper. The list MAY be shorter than 365 entries; species repeating on a cycle is accepted per sign-off #11.
 - **DPS-3** WHEN the board is built for level *L* on day *N*, THE SYSTEM SHALL derive the assignment of values to layout slots from a seeded PRNG with seed `N * 100 + L`, so every device at the same level sees the identical arrangement that day.
 - **DPS-4** WHEN the same day and level are loaded twice (including after refresh), THE SYSTEM SHALL produce an identical board, dinosaur, title thresholds, parent prompt, and (Phase 2) counting mission.
@@ -133,13 +137,13 @@ Remaining pre-build blocker: **purchase cupofiq.com** (tasks.md Phase −1). `LA
 
 ## 11. Grown-Ups Panel (GRN)
 
-- **GRN-1** WHEN the "For grown-ups" control on the results screen or come-back card is pressed and held for 2 continuous seconds, THE SYSTEM SHALL open the grown-ups panel; a plain tap SHALL do nothing. There is deliberately no panel entry point on the game screen; the first-ever round runs on defaults (Level 1, sound on) per sign-off #10.
+- **GRN-1** WHEN the "For grown-ups" control on the results screen or come-back card is tapped, THE SYSTEM SHALL open the grown-ups panel (plain tap per sign-off #17, superseding the 2 s long-press). THE control SHALL be a comfortable tap target (≥ 44 px tall) styled quietly at the foot of the screen, and SHALL set its own `touch-action` so the page scroller cannot claim the gesture. There is deliberately no panel entry point on the game screen; the first-ever round runs on defaults (Level 1, sound on) per sign-off #10.
 - **GRN-2** THE panel SHALL offer exactly: level picker showing the five levels by their plain-language names from BRD-1, sound on/off, reset-all-progress (with confirm), and a privacy note stating that all data lives on this device.
-- **GRN-3** WHEN reset is confirmed, THE SYSTEM SHALL clear the app's localStorage namespace and reload to a fresh state.
+- **GRN-3** WHEN reset is confirmed, THE SYSTEM SHALL clear the app's localStorage namespace and reload to a fresh state. This confirm is the only protection any panel action needs; nothing else in the panel is irreversible (sign-off #17).
 
 ## 12. Non-Functional (NFR)
 
-- **NFR-1 (toddler usability)** All child-facing interactions SHALL work with imprecise single taps; no hover, double-tap, drag, or text comprehension required; target sizes and gaps per BRD-1/TAP-2.
+- **NFR-1 (toddler usability)** All child-facing interactions SHALL work with imprecise single taps; no hover, double-tap, drag, or text comprehension required; target sizes and gaps per BRD-1/TAP-2. Grown-up-facing controls SHALL likewise require no sustained or precise gesture (sign-off #17).
 - **NFR-2 (performance)** First playable render SHALL occur within 2 s on a mid-range phone over fast 3G; total initial transfer including today's dino image SHALL be ≤ 300 KB gzipped. Each dino image SHALL be WebP and ≤ 60 KB. Audio files SHALL be lazy-loaded after first paint; each ≤ 25 KB (see design.md §9), so the number-word set does not count against the first-render budget.
 - **NFR-3 (privacy / no PII)** THE SYSTEM SHALL set no cookies, load no analytics, fonts, or third-party scripts, and make no network requests other than fetching its own static assets. Voice audio is static files in the repo — never a speech API.
 - **NFR-4 (cost / hosting)** THE SYSTEM SHALL deploy as static files to free hosting; recurring cost SHALL be the domain name only; deploying SHALL require nothing beyond `git push`.
