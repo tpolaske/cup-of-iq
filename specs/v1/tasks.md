@@ -45,7 +45,7 @@ Each task = one focused coding session, one PR. Requirement IDs refer to `requir
 - [x] Correct-tap stamp: prints darken + 450 ms pop; word bubble 1.4 s (TRL-3, AUD-2)
 - [x] Incorrect-tap wobble + soft chime, no child-visible penalty; hint bounce after 3 consecutive misses (FBK-1..3, FBK-5)
 - [x] Hatch on final tap ≤ 1 s → celebration, **discovery copy ("You found her!")**, auto-transition to results (REV-1..3, CEL-1..3)
-- [ ] **Open design question:** trail segments currently point toward the next patch, which hints the answer and may conflict with BRD-3. Decide which behaviour to keep
+- [ ] **Parked (2026-08-03):** trail segments currently point *toward* the next patch, hinting the answer, which conflicts with TRL-1's wording and BRD-3. Fix is a retrospective trail + a visible start marker. Deliberately deferred — he isn't attached to the trail and it isn't hurting him
 
 **Grown-up surfaces:**
 - [x] `screens/results.ts`: dino, title, wrong taps, perfect treatment + level-up progress + **parent prompt** (SHR-1, SHR-2, PRG-3, PRM-1)
@@ -57,14 +57,21 @@ Each task = one focused coding session, one PR. Requirement IDs refer to `requir
 **Ship gate:**
 - [ ] Perf pass: ≤ 300 KB gzipped initial incl. today's dino; voice files verified lazy-loaded post-first-paint; playable < 2 s on throttled fast-3G (NFR-2)
 - [ ] Privacy pass: DevTools network tab shows own-origin static requests only; no cookies; no speech APIs (NFR-3, SHR-5, AUD-3)
-- [ ] Manual on-device checklist (real phone + real toddler): footprints countable by a small finger; trail reads as "path to the egg"; number word lands with the tap; wobble reads friendly; peek-eyes moment lands; celebration length right; share sheet opens; comeback card ends the "AGAIN!" negotiation; **grown-ups control opens first try, one-handed**; compare feel against `prototype/prototype-l1.html`
+- [ ] Manual on-device checklist (real phone + real toddler): footprints countable by a small finger; trail reads as "path to the egg"; number word lands with the tap; wobble reads friendly; peek-eyes moment lands; celebration length right; share sheet opens; **grown-ups control opens first try, one-handed**; compare feel against `prototype/prototype-l1.html`
 - [ ] Placeholder art OK to ship; real art tracked in Phase 2
+
+## Phase 1b — "AGAIN!" (from the 2026-08-03 feedback session)
+
+Observed: he asks to see the dino and play again; he lights up for tapping the patches, the egg cracking, and the dance/rawr; he gets 1→2→3 with a moment's thought — the difficulty is right, the *dose* is short. Design response is more payoff, not harder counting.
+
+- [ ] **Replay button** — shape TBD, pending parent decision. Needs a sign-off either way: it reverses the original once-a-day resolution (requirements.md disagreements log) and/or carves an exception into LCK-2's "no interactive toy elements"
 
 ## Phase 2 — Polish
 
 - [ ] Final hand-drawn art per `assets/STYLE.md`: L1 scene (nest, egg reveal layers, patches, trail), egg SVGs for L2+, first 30 dino illustrations
 - [ ] Final CC0/home-recorded sfx set, quiet defaults (design.md §9)
 - [ ] **`content/missions.json` (≥ 14 entries) + counting-mission chip on the comeback card** (MSN-1)
+- [ ] **Two-scatter round (idea, needs sign-off).** One egg, one dinosaur, six taps: two back-to-back 1–3 scatters at identical difficulty, reveal stages spread across both legs (crack A after leg 1; eyes peek mid-leg 2; hatch on the final tap). The egg's crack state must NOT reset between legs — the carried-over damage is what pulls him into leg two. Open questions: the title ladder is tuned for three taps and gets harsher at six, so perfect rounds and level-ups both slow; leg two needs its own deterministic seed, which turns `boardSpecForLevel` into more of a *round* spec than a board spec; and whether the first hatch-less scatter reads as anticipation or as a letdown
 - [ ] Animation quality pass: crack layers, dance loop, perfect-round confetti
 - [ ] Add-to-homescreen: manifest + icons; optional minimal service worker (keep tiny; skip if it adds churn)
 - [ ] Optional off-by-default voice line "Not that one yet!" (deferred Option B) — parent decision
