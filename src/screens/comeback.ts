@@ -1,5 +1,6 @@
-// comeback.ts — the once-a-day card (LCK-1/2): static dino, no replay
-// affordance, no interactive toy elements. Counting mission arrives in Phase 2.
+// comeback.ts — the once-a-day card (LCK-1): today's dino, statically, and
+// "new egg tomorrow". The day still OPENS here rather than on the board — the
+// ritual is unchanged; replaying is a deliberate extra tap (LCK-5).
 import type { Dino } from '../daily';
 import { copyText, grownupsLink, shareResult } from '../ui';
 
@@ -7,6 +8,7 @@ export interface ComebackOpts {
   dino: Dino;
   shareText: string | null; // null in private mode — no stored result to share (NFR-7)
   onGrownups: () => void;
+  onReplay: () => void;
 }
 
 export function showComeback(root: HTMLElement, o: ComebackOpts): void {
@@ -37,6 +39,12 @@ export function showComeback(root: HTMLElement, o: ComebackOpts): void {
 
   el.append(pic, title, sub);
 
+  // LCK-5 — same dino, fresh tracks. Nothing is recorded or shared.
+  const again = document.createElement('div');
+  again.className = 'btn-row';
+  again.appendChild(pbtn('🥚 Play again', o.onReplay));
+  el.appendChild(again);
+
   if (o.shareText) {
     const text = o.shareText;
     const btns = document.createElement('div');
@@ -48,7 +56,7 @@ export function showComeback(root: HTMLElement, o: ComebackOpts): void {
     el.appendChild(btns);
   }
 
-  el.appendChild(grownupsLink(o.onGrownups)); // GRN-1: panel entry lives here too
+  el.appendChild(grownupsLink(o.onGrownups));
 
   root.appendChild(el);
 }
