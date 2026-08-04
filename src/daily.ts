@@ -112,6 +112,11 @@ export function seededShuffle<T>(items: readonly T[], seed: number): T[] {
   return a;
 }
 
-export function boardSeed(day: number, level: number): number {
-  return day * 100 + level;
+// `attempt` is 0 for the day's real round, so DPS-3 is untouched: every device
+// still sees the identical morning board. Replays (LCK-5, sign-off #18) pass
+// 1, 2, … and get a fresh arrangement, so he practises counting rather than
+// memorising positions. Replays are never recorded or shared, so they need no
+// cross-device agreement.
+export function boardSeed(day: number, level: number, attempt = 0): number {
+  return day * 100 + level + attempt * 1_000_003;
 }

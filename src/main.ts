@@ -28,6 +28,11 @@ const day = dayNumber(); // DPS-1
 const dino = pickDaily(day, dinos); // DPS-2 / REV-2: same species everywhere today
 const prompt = pickDaily(day, prompts); // PRM-1
 
+// Replay counter (LCK-5, sign-off #18). 0 = the day's real round — the only one
+// recorded, scored, or shared. Resets on reload, so the first replay after a
+// refresh repeats the morning's arrangement. Harmless.
+let attempt = 0;
+
 const hdr = document.getElementById('hdr')!;
 const story = document.getElementById('story')!;
 const app = document.getElementById('app')!;
@@ -76,6 +81,7 @@ function renderComeback(): void {
     dino,
     shareText: shareTextFromLast(),
     onGrownups: () => openGrownups(grownupsOpts()),
+    onReplay: () => runRound(false), // LCK-5
   });
 }
 
@@ -85,6 +91,8 @@ function renderResults(): void {
     renderComeback();
     return;
   }
+  // Always the recorded first attempt: replays never overwrite lastPlayed, so
+  // the title, the wrong-tap count, and the share text stay the morning's.
   const t = titles.find((x) => x.id === lp.titleId) ?? titleFor(lp.wrongTaps, titles);
   showResults(app, {
     dino,
@@ -98,33 +106,40 @@ function renderResults(): void {
     prompt,
     shareText: shareTextFromLast() ?? '',
     onGrownups: () => openGrownups(grownupsOpts()),
+    onReplay: () => runRound(false), // LCK-5
   });
 }
 
-function startGame(): void {
+// `record` is true only for the day's first round. A replay runs the identical
+// play loop and celebration — the child sees no difference (CEL-2) — but writes
+// nothing: no wrongTaps, no perfectsAtLevel, no level-up, no lock change.
+function runRound(record: boolean): void {
   const level = state.level;
   const spec = boardSpecForLevel(level); // BRD-1
-  const assignment = seededShuffle(spec.values, boardSeed(day, level)); // DPS-3
+  const assignment = seededShuffle(spec.values, boardSeed(day, level, attempt)); // DPS-3
   story.textContent = level === 1 ? 'Follow the footprints to the egg!' : 'Tap the eggs in counting order!';
   playRound(app, spec, assignment, (outcome) => {
-    const t = titleFor(outcome.wrongTaps, titles);
-    state = progress.recordRound(state, {
-      dayNumber: day,
-      levelPlayed: level,
-      wrongTaps: outcome.wrongTaps,
-      dinoId: dino.id,
-      titleId: t.id,
-    }); // PRG-1/2 + sets the LCK-1 lock
-    progress.save(storage, state);
+    if (record) {
+      const t = titleFor(outcome.wrongTaps, titles);
+      state = progress.recordRound(state, {
+        dayNumber: day,
+        levelPlayed: level,
+        wrongTaps: outcome.wrongTaps,
+        dinoId: dino.id,
+        titleId: t.id,
+      }); // PRG-1/2 + sets the LCK-1 lock
+      progress.save(storage, state);
+    }
+    attempt++;
     story.textContent = '';
     showCelebration(app, dino, outcome.wrongTaps === 0, renderResults); // REV / CEL
   });
 }
 
 if (progress.playedToday(state, day)) {
-  renderComeback(); // LCK-1
+  renderComeback(); // LCK-1 — the day still opens on the card, not the board
 } else {
-  startGame();
+  runRound(true);
 }
 
 // AUD-4 — lazy-load voice after first paint so the first-render budget is untouched.
