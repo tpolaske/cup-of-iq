@@ -28,5 +28,9 @@
   { "id": "mosasaurus", "displayName": "Baby Mosasaurus", "emoji": "🦖", "image": "img/dinos/mosasaurus.webp", "funFact": "Giant swimming sea monsters like Mosasaurus and Plesiosaurus are also not classified as dinosaurs." },
   { "id": "quetzalcoatlus", "displayName": "Baby Quetzalcoatlus", "emoji": "🦖", "image": "img/dinos/quetzalcoatlus.webp", "funFact": "Scientists who dig up and study dinosaur fossils are called paleontologists." },
   { "id": "troodon", "displayName": "Baby Troodon", "emoji": "🦖", "image": "img/dinos/troodon.webp", "funFact": "The smartest dinosaurs were likely small meat-eaters like Troodon, which had big brains relative to their body size." },
-  { "id": "edmontosaurus", "displayName": "Baby Edmontosaurus", "emoji": "🦕", "image": "img/dinos/edmontosaurus.webp", "funFact": "Dinosaur poop that has turned into stone over millions of years is called a coprolite." }
+  { "id": "edmontosaurus", "displayName": "Baby Edmontosaurus", "emoji": "🦕", "image": "img/dinos/edmontosaurus.webp", "funFact": "Dinosaur poop that has turned into stone over millions of years is called a coprolite." },
+  { "id": "plesiosaurus", "displayName": "Baby Plesiosaurus", "emoji": "🦕", "image": "img/dinos/plesiosaurus.webp", "funFact": "Plesiosaurus swam using four flipper-like limbs instead of a tail, more like a sea turtle than a fish." },
+  { "id": "liopleurodon", "displayName": "Baby Liopleurodon", "emoji": "🦖", "image": "img/dinos/liopleurodon.webp", "funFact": "Liopleurodon had a short neck and a huge head, and it hunted other sea creatures in the deep ocean." },
+  { "id": "ichthyosaurus", "displayName": "Baby Ichthyosaurus", "emoji": "🦕", "image": "img/dinos/ichthyosaurus.webp", "funFact": "Ichthyosaurus looked a lot like a modern dolphin, even though the two are not related at all." },
+  { "id": "pterodactylus", "displayName": "Baby Pterodactylus", "emoji": "🦖", "image": "img/dinos/pterodactylus.webp", "funFact": "Pterodactylus was one of the very first flying reptiles ever found, with wings made of skin stretched to its long fourth finger." }
 ]

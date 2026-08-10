@@ -1,6 +1,6 @@
 [
-  { "id": "t-rex", "label": "T-Rex round", "emoji": "🦖", "maxWrong": 0 },
-  { "id": "triceratops", "label": "Triceratops round", "emoji": "🦕", "maxWrong": 1 },
-  { "id": "stegosaurus", "label": "Stegosaurus round", "emoji": "🦕", "maxWrong": 3 },
-  { "id": "brontosaurus", "label": "Brontosaurus round", "emoji": "🦕", "maxWrong": null }
+  { "id": "roar", "label": "Roar-some round", "emoji": "🦖", "maxWrong": 0 },
+  { "id": "trailblazer", "label": "Trailblazer round", "emoji": "🐾", "maxWrong": 1 },
+  { "id": "egg-hunter", "label": "Egg hunter round", "emoji": "🥚", "maxWrong": 3 },
+  { "id": "hatch-day", "label": "Hatch day round", "emoji": "🎉", "maxWrong": null }
 ]
