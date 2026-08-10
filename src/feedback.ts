@@ -1,4 +1,4 @@
-// feedback.ts — recorded-voice playback (AUD-1..5). The sfx set (crack-pop,
+// feedback.ts — recorded-voice playback (AUD-1..6). The sfx set (crack-pop,
 // "hmm?" marimba, fanfare) is Phase 2; animations fully carry muted play per
 // FBK-5, so every call here is safe to no-op.
 
@@ -29,9 +29,12 @@ export function unlockAudio(): void {
   unlocked = true;
 }
 
-function play(key: string): void {
+// key/fallbackKey — AUD-6: the perfect-round bonus rawr looks for a dedicated
+// clip first and falls back to the standard one if it hasn't been recorded
+// yet, so the feature ships before the extra recording session happens.
+function play(key: string, fallbackKey?: string): void {
   if (!soundOn || !unlocked || !manifest) return;
-  const src = manifest[key];
+  const src = manifest[key] ?? (fallbackKey ? manifest[fallbackKey] : undefined);
   if (!src) return;
   try {
     if (current) {
@@ -57,8 +60,10 @@ export function sayNumber(value: number): void {
   play(String(value)); // AUD-1
 }
 
-export function rawr(): void {
-  play('rawr'); // AUD-5
+// AUD-5/AUD-6 — rawr(true) is the perfect-round bonus (sign-off #19): tries
+// the dedicated "rawr-big" clip, falls back to the standard "rawr" clip.
+export function rawr(big = false): void {
+  play(big ? 'rawr-big' : 'rawr', 'rawr');
 }
 
 export function playHmm(): void {
