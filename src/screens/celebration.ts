@@ -1,6 +1,7 @@
 // celebration.ts — hatch reveal + dance (REV-1..3, CEL-1..3, AUD-5).
 // Discovery framing, never prize language; identical regardless of accuracy
-// except confetti, which is the signed-off perfect-round treatment.
+// except confetti and the roar beat below — both are signed-off perfect-round
+// treatment (SHR-2, CEL-2 sign-off #19).
 import type { Dino } from '../daily';
 import * as feedback from '../feedback';
 
@@ -50,7 +51,26 @@ export function showCelebration(root: HTMLElement, dino: Dino, perfect: boolean,
   }
 
   root.appendChild(party);
-  feedback.rawr(); // AUD-5
-  window.setTimeout(() => dinoEl.classList.add('dance'), 700); // popin, then dance
+  feedback.rawr(perfect); // AUD-5/6 — perfect rounds get the bonus "rawr-big" clip
+
+  window.setTimeout(() => {
+    if (perfect) {
+      // Sign-off #19 — the one accuracy-driven beat on the child-facing screen:
+      // a big scale/shake "roar" pulse + burst text, then settle into the normal
+      // dance. Carries fully muted (FBK-5) since the text + motion read on their own.
+      dinoEl.classList.add('roar');
+      const burst = document.createElement('div');
+      burst.className = 'roar-burst';
+      burst.textContent = 'RAWRRR!';
+      party.appendChild(burst);
+      window.setTimeout(() => {
+        dinoEl.classList.remove('roar');
+        dinoEl.classList.add('dance');
+      }, 750);
+    } else {
+      dinoEl.classList.add('dance'); // popin, then dance
+    }
+  }, 700);
+
   window.setTimeout(onDone, 4500); // CEL-1 (4–8 s) → CEL-3 auto-transition
 }
