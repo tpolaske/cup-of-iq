@@ -1,4 +1,4 @@
-# Cup of IQ — Tasks (v2, 2026-07-08 · updated 2026-08-03)
+# Cup of IQ — Tasks (v2, 2026-07-08 · updated 2026-08-03 · updated 2026-08-10)
 
 Each task = one focused coding session, one PR. Requirement IDs refer to `requirements.md` (v2). Feel/timing reference: `prototype/prototype-l1.html` + design.md §7b.
 
@@ -10,85 +10,71 @@ Each task = one focused coding session, one PR. Requirement IDs refer to `requir
 - [x] Set `LAUNCH_DATE` on go-live day — **set to 2026-08-03; immutable from here**
 - [x] **BLOCKER:** Verify availability and purchase cupofiq.com — **done (Porkbun, ~$11/yr, DNS + TLS live)**
 - [x] Sign-off #17 — grown-ups entry becomes a plain tap, replacing the 2 s long-press — **approved 2026-08-03**
+- [x] Sign-off #18 — replays return, first-attempt-only scoring — **approved 2026-08-03**
+- [x] Sign-off #19 — retitle accuracy ladder off dino-species names; perfect rounds get a child-facing roar bonus — **approved 2026-08-10**
 
 ## Phase 0 — Repo, tooling, hosting
 
-- [x] Init repo: Vite vanilla-ts template, strip boilerplate to `index.html` + empty `src/main.ts` + `src/styles.css` (NFR-4)
-- [x] Add Vitest; one placeholder test; `npm test` green; pin `TZ=America/New_York` in the Vitest config and Actions workflow so DST tests are deterministic (CI runs UTC otherwise)
+- [x] Init repo: Vite vanilla-ts template
+- [x] Add Vitest; pin `TZ=America/New_York`
 - [x] GitHub Actions workflow: push to `main` → install → test → build → deploy to GitHub Pages
-- [x] Point cupofiq.com at Pages: commit `CNAME` file into `public/` (so deploys never drop it) + HTTPS; verify live "hello egg" page
-- [x] Commit `CLAUDE.md`, `requirements.md`, `design.md`, `playback.md`, `learning-review.md`, `swarm.md`, this file, **`prototype/prototype-l1.html`**, **`mockups/*.svg`** (prototype + mockups excluded from the Vite build)
+- [x] Point cupofiq.com at Pages
+- [x] Commit spec files, prototype, mockups
 - [ ] Upload `logo.webp` to `public/` (binary — GitHub web UI, the MCP connector is text-only)
 - [ ] Commit a `package-lock.json` and switch the workflow's `npm install` to `npm ci`
 - [ ] Add `assets/STYLE.md` art-direction doc **before the first image** (design.md §9)
+- [ ] Note: `.github/workflows/deploy.yml` still has its "move me" staging comment at the top even though it now lives at the real path — harmless, but worth deleting the comment block next time that file is touched
 
 ## Phase 1 — Toddler Numbers MVP (ships at Level 1 "Tracks")
 
-**Logic core (pure, tested first):**
-- [x] `daily.ts`: `dayNumber` w/ local-midnight math + tests incl. DST boundaries AND the pre-launch clamp (`now < LAUNCH_DATE` → Day 1) (DPS-1)
-- [x] `daily.ts`: mulberry32 + `seededShuffle` + `boardSeed`; determinism tests (DPS-3, DPS-4)
-- [x] `daily.ts`: `todaysDino` + `todaysPrompt` (+ `todaysMission` stub) w/ positive-modulo helper + tests (DPS-2, PRM-1)
-- [x] `daily.ts`: **`boardSpecForLevel(1..5)`** per BRD-1 incl. `revealAfterTap` stage tables + clamp test for level > 5 (BRD-1, BRD-5, TRL-2)
-- [x] `content/dinos.json` (first 30, text-only OK) + `titles.json` + **`prompts.json` (≥ 10 strings)**; content-validation test
-- [x] `progress.ts`: schema v1 read/write, private-mode fallback (NFR-7), lock check (LCK-1, LCK-3), level-up rules capped at 5 + manual override + tests (PRG-1..5)
-- [x] `share.ts`: `buildShareText` + tests for all four titles **and the L1 "We followed the tracks" line** (SHR-1, SHR-3)
+**Logic core (pure, tested first):** all done (DPS, BRD, PRG, share — see git history).
+
+- [x] `content/dinos.json` grown to **34 entries** (added plesiosaurus, liopleurodon, ichthyosaurus, pterodactylus) — more species spaces out the DPS-2 repeat cycle further (sign-off #11 still accepts repeats)
+- [x] `content/titles.json` retitled off dino-species names — Roar-some / Trailblazer / Egg hunter / Hatch day, same thresholds (sign-off #19)
 
 **Audio (new in v2):**
 - [ ] **Record the hatchling voice**: number words one–ten + "rawr" (parent or kid, squeaky dino voice); trim, normalize, export mono `.m4a` ≤ 25 KB each; commit to `public/voice/` + `manifest.json` (AUD-3, design.md §9)
-- [ ] `feedback.ts`: `sayNumber(v)` / `rawr()` from the manifest; lazy-load after first paint; unlock audio context on first tap; cut-off-not-queue on rapid taps; sound-off respected (AUD-1, AUD-4, AUD-5)
+- [ ] **Record `rawr-big.m4a`** — a louder/longer take of the same roar, for the perfect-round bonus (AUD-6, sign-off #19). Code already wired and ships with a graceful fallback to `rawr.m4a` until this exists — not a blocker, just a nice-to-have follow-up recording session
+- [x] `feedback.ts`: `sayNumber(v)` / `rawr(big?)` from the manifest; lazy-load after first paint; unlock audio context on first tap; cut-off-not-queue on rapid taps; sound-off respected (AUD-1, AUD-4, AUD-5, AUD-6)
 
 **Game screen:**
-- [x] `board.ts`: face renderer + layouts `scatter3`, `quincunx5`, `grid10`; sizes/gaps per BRD-1/TAP-2 (BRD-1..4, NFR-1)
-- [x] `board.ts`: **trail overlay** — segment endpoints computed from slot centers after the daily shuffle (never hardcoded) (TRL-1, BRD-3)
-- [x] `board.ts`/`game.ts`: **progressive reveal** — day egg with toggleable layers, `advanceReveal(stage)` per `revealAfterTap` (TRL-2)
-- [x] `game.ts`: state machine `idle → awaiting_tap → … → results` w/ `revealStage` in round state (TAP-3..6)
-- [x] Correct-tap stamp: prints darken + 450 ms pop; word bubble 1.4 s (TRL-3, AUD-2)
-- [x] Incorrect-tap wobble + soft chime, no child-visible penalty; hint bounce after 3 consecutive misses (FBK-1..3, FBK-5)
-- [x] Hatch on final tap ≤ 1 s → celebration, **discovery copy ("You found her!")**, auto-transition to results (REV-1..3, CEL-1..3)
-- [ ] **Parked (2026-08-03):** trail segments currently point *toward* the next patch, hinting the answer, which conflicts with TRL-1's wording and BRD-3. Fix is a retrospective trail + a visible start marker. Deliberately deferred — he isn't attached to the trail and it isn't hurting him
+- [x] `board.ts`, trail overlay, progressive reveal, game state machine — all shipped
+- [x] `screens/celebration.ts`: perfect-round roar bonus — enlarged shake + "RAWRRR!" burst text + bonus rawr audio, before the standard dance (CEL-2 exception, sign-off #19)
+- [ ] **Parked (2026-08-03):** trail segments currently point *toward* the next patch rather than retrospectively — deliberately deferred, not hurting play
 
 **Grown-up surfaces:**
-- [x] `screens/results.ts`: dino, title, wrong taps, perfect treatment + level-up progress + **parent prompt** (SHR-1, SHR-2, PRG-3, PRM-1)
-- [x] Share button (Web Share) + Copy fallback + toast (SHR-3, SHR-4)
-- [x] `screens/comeback.ts`: static dino card, no replay affordance, share controls (LCK-1, LCK-2)
-- [x] `screens/grownups.ts`: **plain-tap entry on a ≥ 44 px control (GRN-1, sign-off #17)**, 5-level picker with plain-language names (BRD-1), sound toggle, reset-with-confirm, privacy note (GRN-1..3)
+- [x] `screens/results.ts`, share/copy, `screens/comeback.ts`, `screens/grownups.ts` — all shipped
 - [ ] Static OG tags + `og-image.png` 1200×630 (SHR-6)
 
 **Ship gate:**
-- [ ] Perf pass: ≤ 300 KB gzipped initial incl. today's dino; voice files verified lazy-loaded post-first-paint; playable < 2 s on throttled fast-3G (NFR-2)
+- [ ] Perf pass: ≤ 300 KB gzipped initial; voice files verified lazy-loaded post-first-paint; playable < 2 s on throttled fast-3G (NFR-2)
 - [ ] Privacy pass: DevTools network tab shows own-origin static requests only; no cookies; no speech APIs (NFR-3, SHR-5, AUD-3)
-- [ ] Manual on-device checklist (real phone + real toddler): footprints countable by a small finger; trail reads as "path to the egg"; number word lands with the tap; wobble reads friendly; peek-eyes moment lands; celebration length right; share sheet opens; **grown-ups control opens first try, one-handed**; compare feel against `prototype/prototype-l1.html`
+- [ ] Manual on-device checklist: **include the perfect-round roar bonus** — does the enlarged shake read as "roar" to a toddler, is the burst text legible mid-motion, does it feel like a treat rather than a judgment on the non-perfect days
 - [ ] Placeholder art OK to ship; real art tracked in Phase 2
-
-## Phase 1b — "AGAIN!" (from the 2026-08-03 feedback session)
-
-Observed: he asks to see the dino and play again; he lights up for tapping the patches, the egg cracking, and the dance/rawr; he gets 1→2→3 with a moment's thought — the difficulty is right, the *dose* is short. Design response is more payoff, not harder counting.
-
-- [ ] **Replay button** — shape TBD, pending parent decision. Needs a sign-off either way: it reverses the original once-a-day resolution (requirements.md disagreements log) and/or carves an exception into LCK-2's "no interactive toy elements"
 
 ## Phase 2 — Polish
 
-- [ ] Final hand-drawn art per `assets/STYLE.md`: L1 scene (nest, egg reveal layers, patches, trail), egg SVGs for L2+, first 30 dino illustrations
+- [ ] Final hand-drawn art per `assets/STYLE.md`: L1 scene, egg SVGs for L2+, dino illustrations (now 34)
 - [ ] Final CC0/home-recorded sfx set, quiet defaults (design.md §9)
-- [ ] **`content/missions.json` (≥ 14 entries) + counting-mission chip on the comeback card** (MSN-1)
-- [ ] **Two-scatter round (idea, needs sign-off).** One egg, one dinosaur, six taps: two back-to-back 1–3 scatters at identical difficulty, reveal stages spread across both legs (crack A after leg 1; eyes peek mid-leg 2; hatch on the final tap). The egg's crack state must NOT reset between legs — the carried-over damage is what pulls him into leg two. Open questions: the title ladder is tuned for three taps and gets harsher at six, so perfect rounds and level-ups both slow; leg two needs its own deterministic seed, which turns `boardSpecForLevel` into more of a *round* spec than a board spec; and whether the first hatch-less scatter reads as anticipation or as a letdown
-- [ ] Animation quality pass: crack layers, dance loop, perfect-round confetti
-- [ ] Add-to-homescreen: manifest + icons; optional minimal service worker (keep tiny; skip if it adds churn)
-- [ ] Optional off-by-default voice line "Not that one yet!" (deferred Option B) — parent decision
+- [ ] `content/missions.json` (≥ 14 entries) + counting-mission chip on the comeback card (MSN-1)
+- [ ] **Two-scatter round (idea, needs sign-off).** Unchanged from prior note — see git history
+- [ ] Animation quality pass: crack layers, dance loop, perfect-round confetti **and the new roar beat** (once real art lands, consider giving the roar an actual open-mouth art state rather than the current scale/shake stand-in)
+- [ ] Add-to-homescreen: manifest + icons; optional minimal service worker
+- [ ] Optional off-by-default voice line "Not that one yet!" — parent decision
 - [ ] `funFact` display on results for the grown-up to read aloud
 
 ## Phase 3 — Mode 2 scaffolding (Letters) — only when he's ready
 
 - [ ] Promote `/` to a two-big-buttons mode chooser; Numbers moves to `/numbers/` (design.md §10)
-- [ ] Extract genuinely-shared modules as they're touched: `daily`, `progress` (namespaced keys), `share`, `feedback` — no engine abstraction
-- [ ] `content/letters.json` + letters board (A–E first); reuse reveal-and-celebrate pattern
+- [ ] Extract genuinely-shared modules as they're touched
+- [ ] `content/letters.json` + letters board
 - [ ] Grown-ups panel gains per-mode level pickers
 
 ## Phase 4 — Content pipeline for the long haul
 
-- [ ] Grow `dinos.json` in batches as parent time allows — repeats via the DPS-2 modulo are accepted (sign-off #11). Document the add-a-dino workflow in CLAUDE.md
-- [ ] Grow `prompts.json` / `missions.json` alongside (each is one string/object per entry)
-- [ ] Batch art workflow using `assets/STYLE.md` for visual consistency
-- [ ] Revisit (don't pre-build): per-day OG images — only if sharing proves popular
-- [ ] Parking lot review with parent: word-game mode design; SAT/adult modes remain parked unless deliberately revived
+- [ ] Grow `dinos.json` further in batches as parent time allows
+- [ ] Grow `prompts.json` / `missions.json` alongside
+- [ ] Batch art workflow using `assets/STYLE.md`
+- [ ] Revisit (don't pre-build): per-day OG images
+- [ ] Parking lot review with parent: word-game mode design; SAT/adult modes remain parked
 - [ ] Success check-in (sign-off #16 metric): did the ritual stick 30 mornings? Is he counting real things unprompted? Is maintenance under ~1 hr/month?
