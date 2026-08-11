@@ -82,8 +82,10 @@ body {
 .party-dino { display: inline-block; }
 .party-dino.dance { animation: dance .6s ease-in-out infinite; } /* CEL-1 */
 .party-dino.roar { animation: roar .75s ease-in-out; } /* sign-off #19 — perfect-round bonus beat, plays once before .dance takes over */
-.party-dino img { width: 190px; height: auto; }
-.dino-emoji { font-size: 110px; line-height: 1.25; } /* placeholder until real art lands */
+.party-dino img { width: 190px; height: auto; transition: width .3s ease-out; }
+.dino-emoji { font-size: 110px; line-height: 1.25; transition: font-size .3s ease-out; } /* placeholder until real art lands */
+.party-dino.perfect img { width: 250px; } /* sign-off #20 — perfect rounds render bigger, for the whole celebration */
+.party-dino.perfect .dino-emoji { font-size: 145px; }
 .party-line { font-size: 24px; font-weight: 700; margin-top: 4px; }
 .party-sub { font-size: 18px; color: var(--brown-soft); margin-top: 4px; }
 .roar-burst { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); font-size: 34px; font-weight: 800; color: var(--tan); opacity: 0; pointer-events: none; z-index: 6; animation: wordpop 1s ease-out forwards; } /* sign-off #19 */

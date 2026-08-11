@@ -1,7 +1,7 @@
 // celebration.ts — hatch reveal + dance (REV-1..3, CEL-1..3, AUD-5).
 // Discovery framing, never prize language; identical regardless of accuracy
-// except confetti and the roar beat below — both are signed-off perfect-round
-// treatment (SHR-2, CEL-2 sign-off #19).
+// except confetti, size, and the roar beat below — all signed-off perfect-round
+// treatment (SHR-2, CEL-2 sign-off #19/#20).
 import type { Dino } from '../daily';
 import * as feedback from '../feedback';
 
@@ -15,7 +15,9 @@ export function showCelebration(root: HTMLElement, dino: Dino, perfect: boolean,
   const pop = document.createElement('div');
   pop.className = 'party-pop';
   const dinoEl = document.createElement('div');
-  dinoEl.className = 'party-dino';
+  // sign-off #20 — perfect rounds render the dino larger for the whole
+  // celebration, not just the momentary roar pulse.
+  dinoEl.className = perfect ? 'party-dino perfect' : 'party-dino';
   const img = document.createElement('img');
   img.src = '/' + dino.image;
   img.alt = dino.displayName;
@@ -57,7 +59,7 @@ export function showCelebration(root: HTMLElement, dino: Dino, perfect: boolean,
     if (perfect) {
       // Sign-off #19 — the one accuracy-driven beat on the child-facing screen:
       // a big scale/shake "roar" pulse + burst text, then settle into the normal
-      // dance. Carries fully muted (FBK-5) since the text + motion read on their own.
+      // dance (still at the enlarged #20 size). Carries fully muted (FBK-5).
       dinoEl.classList.add('roar');
       const burst = document.createElement('div');
       burst.className = 'roar-burst';
