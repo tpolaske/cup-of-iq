@@ -3,9 +3,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
-// Content-validation test (design.md \u00a74, NFR-2, NFR-6, AUD-3).
+// Content-validation test (design.md §4, NFR-2, NFR-6, AUD-3).
 // Binary assets can't land through the text-only MCP connector, so *existence*
-// is only enforced when STRICT_ASSETS=1 \u2014 flip that on in CI once the art and
+// is only enforced when STRICT_ASSETS=1 — flip that on in CI once the art and
 // voice recordings are committed. Weight budgets are always enforced for any
 // file that does exist.
 
@@ -45,8 +45,8 @@ describe('content validity', () => {
     }
   });
 
-  it('title ladder is exactly the signed-off ladder, ordered, exhaustive (SHR-1)', () => {
-    expect(titles.map((t) => t.id)).toEqual(['t-rex', 'triceratops', 'stegosaurus', 'brontosaurus']);
+  it('title ladder is exactly the signed-off ladder, ordered, exhaustive (SHR-1, sign-off #19)', () => {
+    expect(titles.map((t) => t.id)).toEqual(['roar', 'trailblazer', 'egg-hunter', 'hatch-day']);
     expect(titles.map((t) => t.maxWrong)).toEqual([0, 1, 3, null]);
     for (const t of titles) {
       expect(t.label.trim().length).toBeGreaterThan(0);
@@ -59,13 +59,13 @@ describe('content validity', () => {
     for (const p of prompts) expect(p.trim().length).toBeGreaterThan(0);
   });
 
-  it('voice manifest covers values 1\u201310 plus rawr (AUD-3)', () => {
+  it('voice manifest covers values 1–10 plus rawr (AUD-3)', () => {
     for (const key of ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'rawr']) {
-      expect(manifest[key], `manifest missing "${key}"`).toMatch(/^voice\/[a-z]+\.m4a$/);
+      expect(manifest[key], `manifest missing "${key}"`).toMatch(/^voice\/[a-z-]+\.m4a$/);
     }
   });
 
-  it('asset weight budgets: images \u2264 60 KB, voice \u2264 25 KB (NFR-2)', () => {
+  it('asset weight budgets: images ≤ 60 KB, voice ≤ 25 KB (NFR-2)', () => {
     const missing: string[] = [];
     const overweight: string[] = [];
     const check = (rel: string, budget: number) => {
@@ -86,7 +86,7 @@ describe('content validity', () => {
       console.warn(
         `[content] ${missing.length} asset(s) not yet committed (expected pre-art):`,
         missing.slice(0, 5).join(', '),
-        missing.length > 5 ? '\u2026' : '',
+        missing.length > 5 ? '…' : '',
       );
     }
   });
