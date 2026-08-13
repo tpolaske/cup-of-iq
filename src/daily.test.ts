@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { boardSeed, boardSpecForLevel, dayNumber, pickDaily, posMod, seededShuffle } from './daily';
+import { boardSeed, boardSpecForLevel, dayNumber, dinoBadgeColor, pickDaily, posMod, seededShuffle } from './daily';
 
 // TZ is pinned to America/New_York in vite.config.ts, so the DST dates below
 // are real 23/25-hour local days.
@@ -52,8 +52,22 @@ describe('daily picks (DPS-2, PRM-1)', () => {
   });
 });
 
+describe('dinoBadgeColor (sign-off #22)', () => {
+  it('is stable for the same id', () => {
+    expect(dinoBadgeColor('brachiosaurus')).toBe(dinoBadgeColor('brachiosaurus'));
+  });
+
+  it('differs across ids (spot check, not guaranteed globally unique)', () => {
+    expect(dinoBadgeColor('brachiosaurus')).not.toBe(dinoBadgeColor('triceratops'));
+  });
+
+  it('always returns a valid hsl() string', () => {
+    expect(dinoBadgeColor('stegosaurus')).toMatch(/^hsl\(\d{1,3}, 58%, 80%\)$/);
+  });
+});
+
 describe('boardSpecForLevel (BRD-1, BRD-5, TRL-2)', () => {
-  it('L1 Tracks: quantities 1\u20133, prints only, scatter, \u2265 100 px', () => {
+  it('L1 Tracks: quantities 1–3, prints only, scatter, ≥ 100 px', () => {
     const s = boardSpecForLevel(1);
     expect(s.values).toEqual([1, 2, 3]);
     expect(s.face).toBe('prints');
@@ -62,14 +76,14 @@ describe('boardSpecForLevel (BRD-1, BRD-5, TRL-2)', () => {
     expect(s.revealAfterTap[2]).toBe('peek'); // eyes at step two
   });
 
-  it('L2 pairs prints with numerals 1\u20135 (BRD-4)', () => {
+  it('L2 pairs prints with numerals 1–5 (BRD-4)', () => {
     const s = boardSpecForLevel(2);
     expect(s.values).toEqual([1, 2, 3, 4, 5]);
     expect(s.face).toBe('prints+numeral');
     expect(s.layout).toBe('quincunx5');
   });
 
-  it('L3 is numerals only 1\u20135; L4 is numerals 6\u201310', () => {
+  it('L3 is numerals only 1–5; L4 is numerals 6–10', () => {
     expect(boardSpecForLevel(3).face).toBe('numeral');
     expect(boardSpecForLevel(3).values).toEqual([1, 2, 3, 4, 5]);
     expect(boardSpecForLevel(4).values).toEqual([6, 7, 8, 9, 10]);
@@ -97,7 +111,7 @@ describe('boardSpecForLevel (BRD-1, BRD-5, TRL-2)', () => {
 });
 
 describe('seeded shuffle (DPS-3/4)', () => {
-  it('same seed \u2192 identical order on every device', () => {
+  it('same seed → identical order on every device', () => {
     expect(seededShuffle([1, 2, 3, 4, 5], 1401)).toEqual(seededShuffle([1, 2, 3, 4, 5], 1401));
   });
 
@@ -114,7 +128,7 @@ describe('seeded shuffle (DPS-3/4)', () => {
     expect(a).not.toEqual(b);
   });
 
-  it('boardSeed: day 14 at level 1 \u2192 1401 (design.md \u00a73 worked example)', () => {
+  it('boardSeed: day 14 at level 1 → 1401 (design.md §3 worked example)', () => {
     expect(boardSeed(14, 1)).toBe(1401);
   });
 });

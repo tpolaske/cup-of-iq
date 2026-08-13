@@ -47,6 +47,21 @@ export const todaysDino = (day: number, dinos: readonly Dino[]): Dino => pickDai
 export const todaysPrompt = (day: number, prompts: readonly string[]): string => pickDaily(day, prompts);
 export const todaysMission = (day: number, missions: readonly Mission[]): Mission => pickDaily(day, missions); // Phase 2
 
+// Sign-off #22 — interim visual distinctiveness. No per-species art is
+// committed yet (Phase 2), so every dino currently falls back to one of only
+// two emoji (🦕/🦖), which made the daily species change invisible even
+// though DPS-2 was picking correctly underneath. This derives a stable pastel
+// hue from the dino's id (same id → same color, always) so each of the 34
+// species reads as visually distinct day to day until real art replaces it.
+export function dinoBadgeColor(id: string): string {
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) {
+    hash = (hash * 31 + id.charCodeAt(i)) | 0;
+  }
+  const hue = Math.abs(hash) % 360;
+  return `hsl(${hue}, 58%, 80%)`;
+}
+
 export type TargetFace = 'prints' | 'prints+numeral' | 'numeral';
 export type LayoutId = 'scatter3' | 'quincunx5' | 'grid10';
 export type RevealStage = 'crackA' | 'crackA2' | 'crackB' | 'peek' | 'hatch';
