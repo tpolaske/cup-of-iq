@@ -40,7 +40,10 @@ describe('content validity', () => {
       expect(d.id).toMatch(/^[a-z0-9-]+$/);
       expect(d.displayName.trim().length).toBeGreaterThan(0);
       expect(d.emoji.trim().length).toBeGreaterThan(0);
-      expect(d.image).toMatch(/^img\/dinos\/[a-z0-9-]+\.webp$/);
+      // .webp is preferred (smaller at the same quality) but .png is accepted
+      // too — the real budget enforcement is the weight-check test below, not
+      // the file extension (parent decision, 2026-08-12).
+      expect(d.image).toMatch(/^img\/dinos\/[a-z0-9-]+\.(webp|png)$/);
       expect(d.funFact.trim().length).toBeGreaterThan(0);
     }
   });
