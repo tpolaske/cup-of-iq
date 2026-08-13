@@ -34,6 +34,17 @@ const QUINCUNX = [
 ];
 const EGG_W = 92;
 const EGG_H = 104;
+// L5 grid: 4 cols × 3 rows (4+4+2, last row centered), 72×84 eggs (≥ 64 px, BRD-1).
+// Fixed absolute slots (sign-off #21) rather than live CSS Grid, so completing
+// one egg never reflows the others — that reflow was the exact confusion we're
+// removing by adding the tray in the first place.
+const GRID10 = [
+  { x: 39, y: 46 }, { x: 125, y: 46 }, { x: 211, y: 46 }, { x: 297, y: 46 },
+  { x: 39, y: 144 }, { x: 125, y: 144 }, { x: 211, y: 144 }, { x: 297, y: 144 },
+  { x: 125, y: 242 }, { x: 211, y: 242 },
+];
+const EGG10_W = 72;
+const EGG10_H = 84;
 
 function printGlyph(cx: number, cy: number, s = 1): string {
   const e = (dx: number, dy: number, rx: number, ry: number) =>
@@ -134,6 +145,11 @@ export function mountBoard(
   const valueEl = new Map<number, HTMLElement>();
   const trail: SVGLineElement[] = [];
   let revealHost: HTMLElement | null = null;
+  // Sign-off #21 (L2–L5 only): a completed egg slides out of the board and
+  // into this ordered tray so what's left on the board is what's left to do.
+  // L1 has its own "what's done" signal already — the growing trail — so it's
+  // exempt (BRD-2/TRL-1).
+  let tray: HTMLElement | null = null;
 
   const word = document.createElement('div');
   word.className = 'word-bub';
@@ -204,14 +220,30 @@ export function mountBoard(
     board.className = spec.layout === 'quincunx5' ? 'board5' : 'board10';
     scene.appendChild(board);
 
+    // Sign-off #21: the tray sits below the board, in normal document flow, so
+    // it just pushes the page height slightly rather than needing absolute math.
+    tray = document.createElement('div');
+    tray.className = `tray tray-${spec.layout}`;
+    scene.appendChild(tray);
+
     assignment.forEach((v, i) => {
       const target = document.createElement('div');
       target.className = 'egg-target';
-      target.innerHTML = eggSVG(v, spec.face === 'prints+numeral');
+      // Split into outer (position/FLIP-transform) + inner (stamp-bounce anim)
+      // so the tray slide and the correct-tap stamp never fight over `transform`
+      // on the same element (sign-off #21).
+      const inner = document.createElement('div');
+      inner.className = 'egg-inner';
+      inner.innerHTML = eggSVG(v, spec.face === 'prints+numeral');
+      target.appendChild(inner);
       if (spec.layout === 'quincunx5') {
         const c = QUINCUNX[i];
         target.style.left = `${c.x - EGG_W / 2}px`;
         target.style.top = `${c.y - EGG_H / 2}px`;
+      } else {
+        const c = GRID10[i];
+        target.style.left = `${c.x - EGG10_W / 2}px`;
+        target.style.top = `${c.y - EGG10_H / 2}px`;
       }
       target.style.animationDelay = `${(i % 3) * 0.35}s`;
       attachTap(target, v);
@@ -227,16 +259,44 @@ export function mountBoard(
 
   const el = (v: number) => valueEl.get(v);
 
+  // FLIP animation: measure the egg's current on-screen spot, reparent it into
+  // the tray (which repositions it via flex layout), then animate from the old
+  // spot to the new one. Robust to exact geometry — works the same regardless
+  // of layout math above (sign-off #21).
+  function moveToTray(e: HTMLElement): void {
+    if (!tray) return;
+    const before = e.getBoundingClientRect();
+    e.style.animation = 'none'; // stop the infinite idle "bob" so it can't fight the slide
+    e.style.left = '';
+    e.style.top = '';
+    e.style.transition = 'none';
+    tray.appendChild(e);
+    const after = e.getBoundingClientRect();
+    const dx = before.left - after.left;
+    const dy = before.top - after.top;
+    e.style.transform = `translate(${dx}px, ${dy}px)`;
+    void e.offsetWidth; // force reflow before enabling the transition
+    e.style.transition = 'transform .5s cubic-bezier(.3,.6,.3,1)';
+    e.style.transform = 'translate(0, 0)';
+  }
+
   return {
     complete(v) {
       const e = el(v);
       if (!e) return;
       e.dataset.done = '1';
       e.classList.remove('hint', 'wob');
-      e.classList.add('done'); // stamp pop (TRL-3)
+      e.classList.add('done');
+      const inner = e.querySelector<HTMLElement>('.egg-inner');
+      if (inner) {
+        inner.classList.add('done'); // stamp pop plays here, not on the outer FLIP element (TRL-3)
+      } else {
+        // scatter3 patches have no inner wrapper; stamp lives on the element itself.
+      }
       e.querySelectorAll<SVGGElement>('.prints').forEach((g) => {
         g.style.fill = '#5F7F49';
       });
+      if (tray) moveToTray(e); // sign-off #21 — L2–L5 only
     },
     wobble(v) {
       const e = el(v);
