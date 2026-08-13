@@ -2,7 +2,7 @@
 // Discovery framing, never prize language; identical regardless of accuracy
 // except confetti, size, and the roar beat below — all signed-off perfect-round
 // treatment (SHR-2, CEL-2 sign-off #19/#20).
-import type { Dino } from '../daily';
+import { dinoBadgeColor, type Dino } from '../daily';
 import * as feedback from '../feedback';
 
 const CONFETTI_COLORS = ['#9CBF7B', '#E8B84B', '#D98E73', '#8FB8D9', '#C9A0C6'];
@@ -22,9 +22,12 @@ export function showCelebration(root: HTMLElement, dino: Dino, perfect: boolean,
   img.src = '/' + dino.image;
   img.alt = dino.displayName;
   img.addEventListener('error', () => {
-    // Real art lands in Phase 2; the emoji is the placeholder (tasks.md ship gate).
+    // Real art lands in Phase 2; until then, sign-off #22 gives each species a
+    // stable badge color so the daily change is actually visible — otherwise
+    // every dino falls back to one of only two emoji (🦕/🦖).
     const d = document.createElement('div');
     d.className = 'dino-emoji';
+    d.style.background = dinoBadgeColor(dino.id);
     d.textContent = dino.emoji;
     img.replaceWith(d);
   });

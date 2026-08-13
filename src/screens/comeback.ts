@@ -1,7 +1,7 @@
 // comeback.ts — the once-a-day card (LCK-1): today's dino, statically, and
 // "new egg tomorrow". The day still OPENS here rather than on the board — the
 // ritual is unchanged; replaying is a deliberate extra tap (LCK-5).
-import type { Dino } from '../daily';
+import { dinoBadgeColor, type Dino } from '../daily';
 import { copyText, grownupsLink, shareResult } from '../ui';
 
 export interface ComebackOpts {
@@ -22,8 +22,11 @@ export function showComeback(root: HTMLElement, o: ComebackOpts): void {
   img.src = '/' + o.dino.image;
   img.alt = o.dino.displayName;
   img.addEventListener('error', () => {
+    // Sign-off #22 — same interim badge-color treatment as celebration.ts,
+    // until real per-species art lands (Phase 2).
     const d = document.createElement('div');
     d.className = 'dino-emoji';
+    d.style.background = dinoBadgeColor(o.dino.id);
     d.textContent = o.dino.emoji;
     img.replaceWith(d);
   });
