@@ -61,14 +61,34 @@ body {
   touch-action: manipulation;
   animation: bob 3.2s ease-in-out infinite;
 }
+.egg-inner { width: 100%; height: 100%; }
+
+/* L2–L4: absolute-positioned eggs (fixed slots, sign-off #21 keeps this style
+   for L5 too — see .board10 below — so completing one never reflows others). */
 .board5 { position: relative; width: 336px; height: 392px; margin: 6px auto 0; }
 .board5 .egg-target { position: absolute; width: 92px; height: 104px; }
-.board10 { display: grid; grid-template-columns: repeat(4, minmax(64px, 1fr)); gap: 12px; width: 336px; margin: 6px auto 0; justify-items: center; }
-.board10 .egg-target { width: 72px; height: 84px; }
+
+/* L5: was live CSS Grid; now fixed absolute slots (board.ts GRID10) so that
+   pulling a completed egg into the tray can't shift the remaining eggs
+   (sign-off #21 — that reflow was exactly the confusion being removed). */
+.board10 { position: relative; width: 336px; height: 300px; margin: 6px auto 0; }
+.board10 .egg-target { position: absolute; width: 72px; height: 84px; }
 
 .patch.wob, .egg-target.wob { animation: wobble .5s ease-in-out; } /* FBK-1 */
 .patch.hint, .egg-target.hint { animation: hintb 4s ease-in-out infinite; } /* FBK-3 */
-.patch.done, .egg-target.done { cursor: default; animation: stamp .45s ease-out; } /* TRL-3 / TAP-4 */
+.patch.done { cursor: default; animation: stamp .45s ease-out; } /* TRL-3 / TAP-4 */
+.egg-target.done { cursor: default; } /* stamp now plays on .egg-inner (below) so it doesn't fight the tray-slide transform on this element */
+.egg-inner.done { animation: stamp .45s ease-out; } /* TRL-3, sign-off #21 */
+
+/* Sign-off #21 — collected-numbers tray (L2–L5). A completed egg is reparented
+   here and FLIP-animated into place (board.ts moveToTray); the flex row keeps
+   them in the order they were tapped, which is always ascending (TAP-1), so it
+   reads left-to-right as a growing number line. L1 doesn't get a tray — the
+   trail is its own "what's done" signal (TRL-1). */
+.tray { position: relative; display: flex; justify-content: center; align-items: flex-end; flex-wrap: wrap; gap: 8px; margin: 8px auto 0; min-height: 40px; }
+.tray .egg-target { animation: none; cursor: default; }
+.tray-quincunx5 .egg-target { width: 46px; height: 52px; }
+.tray-grid10 .egg-target { width: 30px; height: 34px; }
 
 .word-bub { position: absolute; top: 34px; left: 50%; transform: translateX(-50%); font-size: 30px; font-weight: 700; color: var(--green); opacity: 0; pointer-events: none; z-index: 5; }
 .scene-eggs .word-bub { top: 96px; }
@@ -138,7 +158,9 @@ body {
 
 /* Idle bob off under reduced motion; feedback animations (wobble/stamp/hint)
    stay — they carry meaning (FBK-5). Roar/dance keep some motion (the burst
-   text still carries the moment on its own). */
+   text still carries the moment on its own). Tray FLIP transitions are a plain
+   CSS transition, not an @keyframes animation, so they're unaffected here —
+   the tray-slide itself is a legibility aid, not decorative motion. */
 @media (prefers-reduced-motion: reduce) {
   .patch, .egg-target { animation: none; }
 }
