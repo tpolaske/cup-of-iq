@@ -33,7 +33,11 @@ const manifest = readJson('public/voice/manifest.json') as Record<string, string
 
 describe('content validity', () => {
   it('dino ids are unique and every entry is complete (NFR-6)', () => {
-    expect(dinos.length).toBeGreaterThanOrEqual(30);
+    // Roster is intentionally trimmed to the 13 species with real art
+    // (parent decision, 2026-08-13) — the daily rotation cycles only these
+    // until Phase 4 batches more illustrations into content/dinos.json.
+    // The original ~30-launch-dino target lives on in content/dinos-upcoming.json.
+    expect(dinos.length).toBeGreaterThanOrEqual(10);
     const ids = dinos.map((d) => d.id);
     expect(new Set(ids).size).toBe(ids.length);
     for (const d of dinos) {
