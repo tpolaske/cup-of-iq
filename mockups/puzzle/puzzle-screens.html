@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cup of IQ — Puzzle mode screens v3 (reference mockup)</title>
+<style>
+  :root{
+    --cream:#FEFBF8; --brown:#6E5340; --brown-soft:#9B8672; --tan:#B7A182;
+    --card:#FFFDF7; --card-line:#E8DCC8;
+    --dino-a:#9CBF7B; --good:#5F7F49; --bad:#B4694A;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    background:#F3EDE4; padding:30px;
+    font-family:ui-rounded,"SF Pro Rounded","Hiragino Maru Gothic ProN",Quicksand,Comfortaa,"Segoe UI",system-ui,sans-serif;
+    color:var(--brown);
+    display:flex; gap:24px; align-items:flex-start; flex-wrap:wrap;
+  }
+  .phone{
+    width:320px; background:var(--cream); border:1px solid #E8DCC8; border-radius:26px;
+    padding:18px 16px 22px; position:relative; overflow:hidden; min-height:540px;
+  }
+  .phone h2{ position:absolute; top:-26px; left:2px; font-size:13px; color:#8a877e; font-weight:600; }
+
+  .top-row{ display:flex; justify-content:flex-end; margin-bottom:16px; }
+  .pill{ font-size:11px; font-weight:700; color:var(--brown-soft); background:#F1E9D8; border-radius:20px; padding:4px 10px; }
+
+  .prompt-card{ background:var(--card); border:2px solid var(--card-line); border-radius:18px; padding:18px; font-size:16px; line-height:1.48; margin-bottom:18px; margin-top:6px; }
+
+  .choice{ display:flex; align-items:center; gap:10px; border:2px solid var(--card-line); background:var(--card); border-radius:14px; padding:11px 13px; margin-bottom:9px; font-size:14.5px; cursor:pointer; }
+  .choice .letter{ width:24px; height:24px; border-radius:50%; background:#F1E9D8; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; color:var(--brown-soft); flex-shrink:0; }
+  .choice.selected{ border-color:var(--dino-a); background:#F5F9F1; }
+  .choice.selected .letter{ background:var(--dino-a); color:#fff; }
+
+  .lockbtn{ width:100%; margin-top:8px; padding:13px; border:none; border-radius:16px; background:var(--brown); color:var(--cream); font-weight:700; font-size:15px; font-family:inherit; cursor:pointer; }
+
+  .reveal-phone{ display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+  .reveal-word{ font-size:23px; font-weight:800; margin-bottom:20px; }
+  .reveal-word.good{ color:var(--good); }
+  .auto-note{ position:absolute; bottom:16px; left:0; right:0; text-align:center; font-size:11px; color:#B3AA9B; }
+
+  .recap{ font-size:13px; color:var(--brown-soft); line-height:1.5; margin-bottom:14px; }
+  .recap .q{ color:var(--brown); font-weight:600; margin-bottom:6px; }
+  .recap .yours{ display:flex; gap:6px; align-items:center; margin-top:3px; }
+  .recap .yours.right{ color:var(--good); font-weight:700; }
+  .recap .yours.wrong{ color:var(--bad); font-weight:700; }
+  .recap .correct{ display:flex; gap:6px; align-items:center; margin-top:3px; color:var(--good); font-weight:700; }
+
+  .badge-row{ display:flex; align-items:center; gap:12px; background:var(--card); border:2px solid var(--card-line); border-radius:16px; padding:10px 14px; margin-bottom:6px; }
+  .badge-row .school-name{ font-family:"Liberation Serif","Times New Roman",Georgia,serif; font-weight:700; font-size:16px; color:var(--brown); }
+  .badge-row .school-sub{ font-size:11px; color:var(--brown-soft); }
+  .tier-aside{ font-size:11.5px; color:#B3AA9B; margin-bottom:16px; }
+
+  .trickbtn{ width:100%; padding:11px; border-radius:14px; font-family:inherit; font-weight:700; font-size:13.5px; cursor:pointer; border:2px dashed var(--card-line); background:transparent; color:var(--brown-soft); margin-bottom:16px; display:flex; align-items:center; justify-content:center; gap:6px; }
+
+  .streak-line{ text-align:center; font-size:13px; color:var(--brown-soft); margin-bottom:16px; }
+  .streak-line b{ color:var(--brown); }
+
+  .actions{ display:flex; gap:10px; }
+  .actions button{ flex:1; padding:11px; border-radius:14px; font-family:inherit; font-weight:700; font-size:14px; cursor:pointer; border:2px solid var(--card-line); background:var(--card); color:var(--brown); }
+  .actions button.primary{ background:var(--brown); color:var(--cream); border-color:var(--brown); }
+
+  .pen-wrap{ filter:drop-shadow(0 8px 14px rgba(0,0,0,0.2)); }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0">
+  <defs>
+    <filter id="feltgrain" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="11" result="noise"/>
+      <feColorMatrix in="noise" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.14 0" result="grain"/>
+      <feComposite in="grain" in2="SourceGraphic" operator="over"/>
+    </filter>
+    <linearGradient id="fabricShade" x1="10%" y1="0%" x2="90%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.16"/>
+      <stop offset="45%" stop-color="#FFFFFF" stop-opacity="0.02"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.14"/>
+    </linearGradient>
+    <linearGradient id="foldSheen" x1="0%" y1="100%" x2="55%" y2="0%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0"/>
+      <stop offset="38%" stop-color="#FFFFFF" stop-opacity="0.1"/>
+      <stop offset="46%" stop-color="#FFFFFF" stop-opacity="0"/>
+      <stop offset="70%" stop-color="#FFFFFF" stop-opacity="0.05"/>
+      <stop offset="78%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="grommetMetal" cx="35%" cy="32%" r="70%">
+      <stop offset="0%" stop-color="#EDEDED"/>
+      <stop offset="45%" stop-color="#9A9A9A"/>
+      <stop offset="100%" stop-color="#4A4A4A"/>
+    </radialGradient>
+  </defs>
+</svg>
+
+<!-- reusable pennant, big (reveal moment) -->
+<!-- ============ 1. PLAY — no timer, no tags ============ -->
+<div class="phone">
+  <h2>1. Play</h2>
+  <div class="top-row"><span class="pill">Day 96</span></div>
+
+  <div class="prompt-card">
+    A store raises the price of a $100 jacket by 20%, then puts it on sale
+    for 20% off. What's the final price?
+  </div>
+
+  <div class="choice"><span class="letter">A</span> $96</div>
+  <div class="choice selected"><span class="letter">B</span> $100</div>
+  <div class="choice"><span class="letter">C</span> $104</div>
+  <div class="choice"><span class="letter">D</span> $120</div>
+
+  <button class="lockbtn">Lock it in</button>
+</div>
+
+<!-- ============ 2. REVEAL — pure celebration, nothing else ============ -->
+<div class="phone reveal-phone">
+  <h2>2. Reveal (auto-advances)</h2>
+  <div class="reveal-word good">Correct! 🎉</div>
+
+  <div class="pen-wrap">
+    <svg width="290" height="122" viewBox="0 0 380 160">
+      <polygon points="0,4 0,156 356,80" fill="#4E2A84"/>
+      <polygon points="0,4 0,156 356,80" fill="url(#fabricShade)"/>
+      <polygon points="0,4 0,156 356,80" fill="#4E2A84" filter="url(#feltgrain)" opacity="0.9"/>
+      <polygon points="0,4 0,156 356,80" fill="url(#foldSheen)"/>
+      <polyline points="0,4 356,80 0,156" fill="none" stroke="#2E1A4F" stroke-width="5" stroke-linejoin="round" opacity=".5"/>
+      <polyline points="0,4 356,80 0,156" fill="none" stroke="#F5F0E6" stroke-width="2.5" stroke-linejoin="round"/>
+      <rect x="0" y="4" width="15" height="152" fill="#2E1A4F"/>
+      <rect x="13" y="4" width="2.5" height="152" fill="#F5F0E6" opacity=".85"/>
+      <g>
+        <circle cx="7.5" cy="20" r="4.2" fill="url(#grommetMetal)"/><circle cx="7.5" cy="20" r="4.2" fill="none" stroke="#2B2B2B" stroke-width=".6"/>
+        <circle cx="7.5" cy="50" r="4.2" fill="url(#grommetMetal)"/><circle cx="7.5" cy="50" r="4.2" fill="none" stroke="#2B2B2B" stroke-width=".6"/>
+        <circle cx="7.5" cy="80" r="4.2" fill="url(#grommetMetal)"/><circle cx="7.5" cy="80" r="4.2" fill="none" stroke="#2B2B2B" stroke-width=".6"/>
+        <circle cx="7.5" cy="110" r="4.2" fill="url(#grommetMetal)"/><circle cx="7.5" cy="110" r="4.2" fill="none" stroke="#2B2B2B" stroke-width=".6"/>
+        <circle cx="7.5" cy="140" r="4.2" fill="url(#grommetMetal)"/><circle cx="7.5" cy="140" r="4.2" fill="none" stroke="#2B2B2B" stroke-width=".6"/>
+      </g>
+      <text x="46" y="86" font-size="26" font-family="Liberation Serif, Georgia, serif" font-weight="700" fill="#FFFFFF">NORTHWESTERN</text>
+    </svg>
+  </div>
+
+  <div class="auto-note">continues automatically in a moment…</div>
+</div>
+
+<!-- ============ 3. RESULTS — collapsed, tier context lives here now ============ -->
+<div class="phone">
+  <h2>3. Results — collapsed</h2>
+  <div class="top-row"><span class="pill">Day 96</span></div>
+
+  <div class="recap">
+    <div class="q">A store raises a $100 jacket 20%, then takes 20% off. Final price?</div>
+    <div class="yours right">✅ Your answer: A) $96</div>
+  </div>
+
+  <div class="badge-row">
+    <svg width="46" height="36" viewBox="0 0 46 36">
+      <polygon points="0,1 0,35 43,18" fill="#4E2A84"/>
+      <polygon points="0,1 0,35 43,18" fill="url(#fabricShade)"/>
+      <polyline points="0,1 43,18 0,35" fill="none" stroke="#F5F0E6" stroke-width="1.4" stroke-linejoin="round"/>
+      <rect x="0" y="1" width="4" height="34" fill="#2E1A4F"/>
+      <circle cx="2" cy="8" r="1.3" fill="#D8D8D8"/>
+      <circle cx="2" cy="18" r="1.3" fill="#D8D8D8"/>
+      <circle cx="2" cy="28" r="1.3" fill="#D8D8D8"/>
+    </svg>
+    <div>
+      <div class="school-name">Northwestern</div>
+      <div class="school-sub">Nice work</div>
+    </div>
+  </div>
+  <div class="tier-aside">Medium puzzle</div>
+
+  <button class="trickbtn">💡 Show the trick</button>
+
+  <div class="streak-line">🔥 <b>5-day streak</b> — new puzzle tomorrow</div>
+
+  <div class="actions">
+    <button>Copy</button>
+    <button class="primary">Share</button>
+  </div>
+</div>
+
+<!-- ============ 4. RESULTS — trick expanded ============ -->
+<div class="phone">
+  <h2>4. Results — trick expanded</h2>
+  <div class="top-row"><span class="pill">Day 96</span></div>
+
+  <div class="recap">
+    <div class="q">A store raises a $100 jacket 20%, then takes 20% off. Final price?</div>
+    <div class="yours right">✅ Your answer: A) $96</div>
+  </div>
+
+  <div class="badge-row">
+    <svg width="46" height="36" viewBox="0 0 46 36">
+      <polygon points="0,1 0,35 43,18" fill="#4E2A84"/>
+      <polygon points="0,1 0,35 43,18" fill="url(#fabricShade)"/>
+      <polyline points="0,1 43,18 0,35" fill="none" stroke="#F5F0E6" stroke-width="1.4" stroke-linejoin="round"/>
+      <rect x="0" y="1" width="4" height="34" fill="#2E1A4F"/>
+      <circle cx="2" cy="8" r="1.3" fill="#D8D8D8"/>
+      <circle cx="2" cy="18" r="1.3" fill="#D8D8D8"/>
+      <circle cx="2" cy="28" r="1.3" fill="#D8D8D8"/>
+    </svg>
+    <div>
+      <div class="school-name">Northwestern</div>
+      <div class="school-sub">Nice work</div>
+    </div>
+  </div>
+  <div class="tier-aside">Medium puzzle</div>
+
+  <div style="background:#F7F0E4;border-radius:16px;padding:13px 15px;margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:800;color:var(--brown-soft);letter-spacing:.06em;margin-bottom:5px;">THE TRICK</div>
+    <p style="font-size:13.5px;line-height:1.5;color:var(--brown);">The 20% increase and 20% decrease don't cancel out — the second
+    20% applies to a bigger number. $100 → $120 → $96, not back to $100.</p>
+  </div>
+
+  <div class="streak-line">🔥 <b>5-day streak</b> — new puzzle tomorrow</div>
+
+  <div class="actions">
+    <button>Copy</button>
+    <button class="primary">Share</button>
+  </div>
+</div>
+
+</body>
+</html>
