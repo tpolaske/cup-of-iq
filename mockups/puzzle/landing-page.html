@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cup of IQ — Choose a mode</title>
+<!--
+  REFERENCE PROTOTYPE — landing page / mode chooser (LND-1..3).
+  Single-file, dependency-free, same convention as prototype/prototype-l1.html.
+  Palette and motion language reused from coming-soon-site-index.html and
+  design.md §9 — nothing new invented, just extended to a second screen.
+-->
+<style>
+  :root{
+    --cream:#FEFBF8;
+    --brown:#6E5340;
+    --brown-soft:#9B8672;
+    --tan:#B7A182;
+    --card:#FFFDF7;
+    --card-line:#E8DCC8;
+    --dino-a:#9CBF7B;
+    --dino-b:#7BA35C;
+    --print-done:#5F7F49;
+    --cap-a:#6E5340;
+    --cap-b:#9CBF7B;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    background:var(--cream);
+    color:var(--brown);
+    font-family:ui-rounded,"SF Pro Rounded","Hiragino Maru Gothic ProN",
+                Quicksand,Comfortaa,"Segoe UI",system-ui,sans-serif;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    padding:2rem 1.5rem;
+    position:relative;
+  }
+
+  /* ---- corner mark ---- */
+  .mark{
+    position:fixed;
+    top:18px; left:18px;
+    width:46px; height:46px;
+    border-radius:50%;
+    overflow:hidden;
+    background:var(--cream);
+    box-shadow:0 1px 3px rgba(110,83,64,0.15);
+    animation:steam-bob 5s ease-in-out infinite;
+  }
+  .mark img{
+    position:absolute;
+    width:78px; height:78px;
+    left:50%; top:56%;
+    transform:translate(-50%,-50%);
+  }
+  @keyframes steam-bob{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-3px);}
+  }
+
+  /* ---- chooser ---- */
+  .chooser{
+    display:flex;
+    gap:1.5rem;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .mode-btn{
+    appearance:none; border:none; cursor:pointer;
+    width:210px; height:210px;
+    background:var(--card);
+    border:2px solid var(--card-line);
+    border-radius:28px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:inherit;
+    color:var(--brown);
+    transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .mode-btn:hover, .mode-btn:focus-visible{
+    transform:translateY(-4px);
+    box-shadow:0 14px 26px -14px rgba(110,83,64,0.35);
+    border-color:var(--tan);
+  }
+  .mode-btn:active{ transform:translateY(-1px) scale(.98); }
+  .mode-btn:focus-visible{ outline:3px solid var(--dino-a); outline-offset:3px; }
+
+  .icon-wrap{
+    width:132px; height:132px;
+    display:flex; align-items:center; justify-content:center;
+    animation:bob 3.4s ease-in-out infinite;
+  }
+  .mode-btn:nth-of-type(2) .icon-wrap{ animation-delay:.4s; }
+
+  @keyframes bob{
+    0%,100%{ transform:translateY(0); }
+    50%{ transform:translateY(-5px); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .mark, .icon-wrap{ animation:none; }
+    .mode-btn{ transition:none; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="mark"><img src="icon-badge.webp" alt=""></div>
+
+  <div class="chooser">
+    <button class="mode-btn" type="button" aria-label="Dino counting game, for little ones">
+      <span class="icon-wrap">
+        <svg width="132" height="132" viewBox="0 0 104 104">
+          <rect x="18" y="62" width="30" height="30" rx="6" fill="var(--tan)"/>
+          <text x="33" y="83" font-size="20" font-weight="700" fill="var(--brown)" text-anchor="middle" font-family="ui-rounded,sans-serif">1</text>
+          <rect x="54" y="62" width="30" height="30" rx="6" fill="var(--dino-a)"/>
+          <text x="69" y="83" font-size="20" font-weight="700" fill="var(--brown)" text-anchor="middle" font-family="ui-rounded,sans-serif">2</text>
+          <rect x="36" y="28" width="30" height="30" rx="6" fill="#F0DDB8"/>
+          <text x="51" y="49" font-size="20" font-weight="700" fill="var(--brown)" text-anchor="middle" font-family="ui-rounded,sans-serif">3</text>
+        </svg>
+      </span>
+    </button>
+
+    <button class="mode-btn" type="button" aria-label="Daily brain puzzle, for grown-ups">
+      <span class="icon-wrap">
+        <!-- graduation cap -->
+        <svg width="132" height="132" viewBox="0 0 104 104">
+          <!-- board -->
+          <path d="M52 30 L94 47 L52 64 L10 47 Z" fill="var(--cap-a)"/>
+          <path d="M52 30 L94 47 L52 64 L10 47 Z" fill="none" stroke="#5A4133" stroke-width="1.5" stroke-linejoin="round"/>
+          <!-- head/base -->
+          <path d="M28 54 L28 70 Q52 84 76 70 L76 54 L52 64 Z" fill="#8A6C57"/>
+          <!-- button -->
+          <circle cx="52" cy="47" r="4.5" fill="var(--cap-b)"/>
+          <!-- tassel cord -->
+          <path d="M52 47 Q66 54 66 68" fill="none" stroke="var(--cap-b)" stroke-width="2.2" stroke-linecap="round"/>
+          <!-- tassel bud -->
+          <ellipse cx="66" cy="76" rx="5.5" ry="7.5" fill="var(--cap-b)"/>
+          <g stroke="#5F7F49" stroke-width="1.2" stroke-linecap="round">
+            <line x1="63" y1="82" x2="63" y2="88"/>
+            <line x1="66" y1="83" x2="66" y2="89"/>
+            <line x1="69" y1="82" x2="69" y2="88"/>
+          </g>
+        </svg>
+      </span>
+    </button>
+  </div>
+
+</body>
+</html>
