@@ -1,4 +1,4 @@
-# Cup of IQ — Requirements (v2, 2026-07-08 · GRN-1 and LCK amended 2026-08-03 · titles & celebration amended 2026-08-10)
+# Cup of IQ — Requirements (v2, 2026-07-08 · GRN-1 and LCK amended 2026-08-03 · titles & celebration amended 2026-08-10 · SHR-7 added 2026-08-15)
 
 ## Product Vision
 
@@ -35,7 +35,7 @@ Progression is the parent's own design: three perfect rounds (zero wrong taps) a
 
 **#19 signed off 2026-08-10** (parent request, after more real play):
 
-19. **Retitle the accuracy ladder; add a perfect-round roar bonus.** `content/titles.json` labels no longer borrow dino-species names (was T-Rex/Triceratops/Stegosaurus/Brontosaurus by wrong-tap count) — that read as a second, competing "which dino" idea sitting next to the real daily-hatch species (DPS-2), which already gives a different dinosaur every day regardless of score. New ladder, same thresholds, still every tier positive, grown-up-facing only (unchanged from #8): **Roar-some round** (0 wrong), **Trailblazer round** (1), **Egg hunter round** (2–3), **Hatch day round** (4+). Separately, CEL-2's "identical celebration" rule gains its first carve-out: a perfect round (`wrongTaps === 0`) plays one extra beat — the hatched dino rears back for a big, mouth-open ROAR (enlarged scale/shake animation + a louder recorded "rawr," falling back to the standard rawr clip until the bonus one is recorded) — before settling into the normal dance. Every other child-facing element (species, discovery copy, dance length, timing) stays identical regardless of accuracy.
+19. **Retitle the accuracy ladder; add a perfect-round roar bonus.** `content/titles.json` labels no longer borrow dino-species names (was T-Rex/Triceratops/Stegosaurus/Brontosaurus by wrong-tap count) — that read as a second, competing "which dino" idea sitting next to the real daily-hatch dino. New ladder, same thresholds, still every tier positive, grown-up-facing only (unchanged from #8): **Roar-some round** (0 wrong), **Trailblazer round** (1), **Egg hunter round** (2–3), **Hatch day round** (4+). Separately, CEL-2's "identical celebration" rule gains its first carve-out: a perfect round (`wrongTaps === 0`) plays one extra beat — the hatched dino rears back for a big, mouth-open ROAR (enlarged scale/shake animation + a louder recorded "rawr," falling back to the standard rawr clip until the bonus one is recorded) — before settling into the normal dance. Every other child-facing element (species, discovery copy, dance length, timing) stays identical regardless of accuracy.
 
 Launch: cupofiq.com purchased and live; `LAUNCH_DATE` set to 2026-08-03 and now immutable (sign-off #7).
 
@@ -123,6 +123,7 @@ Launch: cupofiq.com purchased and live; `LAUNCH_DATE` set to 2026-08-03 and now 
 - **SHR-4** WHEN the Web Share API is unavailable, THE SYSTEM SHALL copy the same text to the clipboard and confirm with a brief "Copied!" toast; a separate always-visible Copy button SHALL do the same.
 - **SHR-5** THE SYSTEM SHALL transmit nothing anywhere except via the user-invoked share sheet or clipboard.
 - **SHR-6** WHEN the shared link is unfurled by a messaging app, the page SHALL present static OG title, description, and image tags producing an attractive preview.
+- **SHR-7** *(added 2026-08-15, drafted alongside Puzzle mode's spec)* WHEN the results screen renders after the day's first (recorded) round, THE SYSTEM SHALL show a short, permanent line noting that a new dinosaur species arrives tomorrow — e.g. "🥚 Tomorrow: a new dinosaur to find!" — distinct from same-day replays (LCK-5), which reuse today's already-hatched species rather than a new one. Always shown, no dismiss action, no first-time-only logic, no new localStorage state. (Originally scoped as a fix for "no once-a-day context before the first round"; adapted here since sign-off #18 already made replays — not a hard lock — the actual current behavior.)
 - **PRM-1** WHEN the results screen renders, THE SYSTEM SHALL show one grown-up-facing prompt selected deterministically as `prompts[(dayNumber - 1) % prompts.length]` from `content/prompts.json`.
 
 ## 9. Once-a-Day Lock, Replays, and Missions (LCK / MSN)
