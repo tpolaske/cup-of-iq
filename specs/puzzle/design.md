@@ -367,6 +367,91 @@ Mirrors the toddler project's content test pattern:
   "Movie Theater" question needed hand-correcting, which is exactly the
   class of bug this would catch for free going forward.
 
+## 12. Code-Sharing Boundary & Test Strategy (new, 2026-08-15)
+
+This section exists because "how tightly should the two modes couple?"
+turned out to need a real answer, not just NFR-S5's one-liner. Short
+version: **share a small number of genuinely-identical pure functions;
+share nothing about rendering, state, or content shape.** Longer version
+below, including why this is also the right call for regression safety,
+which was the actual thing motivating the question.
+
+### The shape argument
+
+The two modes aren't just reskins of each other — they have different
+interaction shapes. Toddler mode is a real-time tap loop with animated
+board state, a seeded shuffle, audio, no timer, and replay support. Puzzle
+mode is a single select-then-confirm decision, a silent timer, and a
+reveal→results sequence. Trying to share a state machine or a rendering
+layer between them would mean bending one mode's natural shape to fit the
+other's, or building a generic abstraction neither actually needs — the
+exact "build the engine" trap CLAUDE.md already warns against, just
+arriving from a different direction (mode count instead of feature count).
+
+### What's actually identical (worth sharing)
+
+Three things are the *same algorithm*, not just similar-looking code:
+
+- **Date math** — `dayNumber()`, the positive-modulo helper, and the
+  mulberry32 PRNG. Both modes need "what day is it, deterministically,
+  with a pre-launch clamp" and "a seeded random source." This is pure,
+  well-tested-once logic with zero UI attached.
+- **Share/clipboard mechanics** — `navigator.share()` → clipboard fallback
+  → toast. The *text* each mode builds is entirely different; the
+  plumbing that sends it is identical.
+- **Safe localStorage read/write** — the try/catch pattern that lets both
+  modes degrade gracefully in private browsing (NFR-7/NFR-S4). Not the
+  schema — just the "don't throw if storage is unavailable" wrapper.
+
+These move to `src/shared/daily.ts`, `src/shared/share.ts`,
+`src/shared/storage.ts`. Everything else — board/puzzle rendering, state
+machines, content schemas, progress/streak rules, the banner-tier
+algorithm — stays mode-specific, even where the two modes end up with
+similarly-*shaped* code (e.g. both have a "results screen" module, but
+they don't share one).
+
+### Why less sharing is actually the safer choice for regressions
+
+This is the counter-intuitive part worth stating plainly: **a bigger
+shared surface doesn't reduce regression risk, it relocates and
+concentrates it.** Every function moved into `shared/` becomes a function
+that both modes' test suites must jointly protect forever — a change made
+to fix a Puzzle mode bug can silently break the toddler app, and vice
+versa, with no compiler error to catch it, only a test (or a real user)
+noticing. Keeping the shared surface to exactly three small, pure,
+thoroughly-tested modules means:
+
+- The blast radius of "what could a shared-code change break" stays small
+  and enumerable — you can name the three files.
+- Each mode's own logic (the majority of the code) only needs its own
+  tests to reason about, since it doesn't depend on anything the other
+  mode is simultaneously changing.
+- This is a solo/small-team project — the usual argument *for* heavier
+  sharing (avoiding duplicate maintenance across a large team) doesn't
+  apply here the way it would at a company. A little duplication between
+  two modes maintained by the same person(s) is cheap; a shared abstraction
+  that has to serve two different interaction models is not.
+
+### Test suite structure
+
+One `npm test` run, three test populations, same CI gate:
+
+```
+src/shared/daily.test.ts     — dayNumber, posMod, mulberry32
+src/shared/share.test.ts     — share/clipboard fallback logic
+src/shared/storage.test.ts   — safe read/write, private-mode fallback
+src/dino/**/*.test.ts        — toddler mode, unchanged
+src/puzzle/**/*.test.ts      — puzzle mode, new
+```
+
+The practical rule for `tasks.md`: **any PR touching `src/shared/` runs
+the full suite, not just the tests for whichever mode motivated the
+change**, and gets treated with extra scrutiny regardless of which mode's
+work it was filed under. The Phase 0 task that migrates the toddler app's
+existing date math into `shared/` is explicitly a refactor of working
+code, not new code — it needs the toddler suite green before and after,
+same bar as any other change that touches shipped behavior.
+
 ---
 
 ## Not yet designed (next steps)
@@ -376,8 +461,6 @@ Mirrors the toddler project's content test pattern:
 - Pennant refinements: fringe/tassel detail at the tip, rounded vs. sharp
   corners, size variants for results screen vs. share-image use, and final
   font pick from the Bevan/Alfa Slab One/Playfair Display shortlist (§9)
-- Vitest test list (mirrors tasks.md's Phase 1 structure for the toddler
-  game — daily selection, banner tiers, streak rules, content validation)
 - Exact confetti/celebration treatment for a Tier-1 or Sunday-solved result
 - Full ranked school-name list finalization (tiers 1-4 + both fail pools),
   each paired with its felt/accent color — content-writing task, not a
