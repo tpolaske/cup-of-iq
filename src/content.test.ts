@@ -68,11 +68,15 @@ describe('content validity', () => {
 
   it('voice manifest covers values 1–10 plus rawr (AUD-3)', () => {
     for (const key of ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'rawr']) {
-      expect(manifest[key], `manifest missing "${key}"`).toMatch(/^voice\/[a-z-]+\.m4a$/);
+      expect(manifest[key], `manifest missing "${key}"`).toMatch(/^voice\/[a-zA-Z-]+\.m4a$/);
     }
   });
 
-  it('asset weight budgets: images ≤ 60 KB, voice ≤ 25 KB (NFR-2)', () => {
+  it('voice manifest includes the perfect-round bonus rawr-big (AUD-6, sign-off #19/#23)', () => {
+    expect(manifest['rawr-big'], 'manifest missing "rawr-big"').toMatch(/^voice\/[a-zA-Z-]+\.m4a$/);
+  });
+
+  it('asset weight budgets: images ≤ 60 KB, voice ≤ 25 KB, rawr-big ≤ 70 KB (NFR-2, sign-off #23)', () => {
     const missing: string[] = [];
     const overweight: string[] = [];
     const check = (rel: string, budget: number) => {
@@ -84,7 +88,12 @@ describe('content validity', () => {
       if (statSync(p).size > budget) overweight.push(`${rel} (${statSync(p).size} B > ${budget} B)`);
     };
     for (const d of dinos) check(d.image, 60 * 1024);
-    for (const f of Object.values(manifest)) check(f, 25 * 1024);
+    for (const [key, f] of Object.entries(manifest)) {
+      // sign-off #23: the perfect-round bonus roar (rawr-big) is a longer
+      // celebratory clip, not a one-word tap sound — it gets its own, larger
+      // budget rather than being squeezed under the number-word ceiling.
+      check(f, key === 'rawr-big' ? 70 * 1024 : 25 * 1024);
+    }
 
     expect(overweight).toEqual([]);
     if (process.env.STRICT_ASSETS === '1') {
