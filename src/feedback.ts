@@ -29,9 +29,12 @@ export function unlockAudio(): void {
   unlocked = true;
 }
 
-function play(key: string): void {
+// key/fallbackKey — AUD-6: the perfect-round bonus rawr looks for a dedicated
+// clip first and falls back to the standard one if it hasn't been recorded
+// yet, so the feature ships before the extra recording session happens.
+function play(key: string, fallbackKey?: string): void {
   if (!soundOn || !unlocked || !manifest) return;
-  const src = manifest[key];
+  const src = manifest[key] ?? (fallbackKey ? manifest[fallbackKey] : undefined);
   if (!src) return;
   try {
     if (current) {
@@ -57,14 +60,10 @@ export function sayNumber(value: number): void {
   play(String(value)); // AUD-1
 }
 
-// AUD-5/AUD-6 revised (sign-off #19b, parent final decision): the roar is now
-// perfect-round only. Non-perfect hatches get NO roar audio at all — the dance
-// animation (CEL-1) carries the celebratory beat identically either way
-// (FBK-5-style: fully understandable muted). There is no more "standard"
-// rawr clip; the manifest's old "rawr" key has been retired.
-export function rawr(perfect: boolean): void {
-  if (!perfect) return;
-  play('rawr-big');
+// AUD-5/AUD-6 — rawr(true) is the perfect-round bonus (sign-off #19): tries
+// the dedicated "rawr-big" clip, falls back to the standard "rawr" clip.
+export function rawr(big = false): void {
+  play(big ? 'rawr-big' : 'rawr', 'rawr');
 }
 
 export function playHmm(): void {
