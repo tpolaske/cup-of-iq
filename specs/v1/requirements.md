@@ -43,7 +43,7 @@ Progression is the parent's own design: three perfect rounds (zero wrong taps) a
 
 **#24 signed off 2026-08-29** (parent request):
 
-24. **New level inserted between Tracks and Tracks + numbers.** L2 "Tracks (more)" is identical to L1 in every respect — footprint-only patches, no numerals, `scatter` layout in the nest scene, same wobble/hint/trail/audio behavior — except it has **5 targets (values 1–5)** instead of 3, and uses **≥ 88 px** target sizing (not L1's ≥ 100 px), matching the sizing already used at the numeral levels. The former L2–L5 (Tracks + numbers, Numbers, Bigger numbers, All numbers) shift to L3–L6; the ladder now runs six levels instead of five. Full board specs in the updated BRD-1.
+24. **New level inserted between Tracks and Tracks + numbers.** L2 "Tracks (more)" is identical to L1 in every respect — footprint-only patches, no numerals, `scatter` layout in the nest scene, same wobble/hint/trail/audio behavior — except it has **5 targets (values 1–5)** instead of 3, and uses **≥ 88 px** target sizing (not L1's ≥ 100 px), matching the sizing already used at the numeral levels. The former L2–L5 (Tracks + numbers, Numbers, Bigger numbers, All numbers) shift to L3–L6; the ladder now runs six levels instead of five. Full board specs in the updated BRD-1. Share text's "We followed the tracks" story line (SHR-3) now applies at L2 as well as L1, since L2 is a tracks level too.
 
 Launch: cupofiq.com purchased and live; `LAUNCH_DATE` set to 2026-08-03 and now immutable (sign-off #7).
 
@@ -128,7 +128,7 @@ Launch: cupofiq.com purchased and live; `LAUNCH_DATE` set to 2026-08-03 and now 
 
 - **SHR-1** WHEN the results screen renders, THE SYSTEM SHALL show the day's **recorded first attempt**: today's dinosaur, `wrongTaps`, the accuracy title per the ladder in `content/titles.json` (sign-off #19), and the level played. A replay SHALL NOT change any of these.
 - **SHR-2** WHEN the recorded `wrongTaps` is 0, THE SYSTEM SHALL show distinct perfect-round treatment on grown-up surfaces only: confetti burst, ⭐ badge, and progress toward level-up.
-- **SHR-3** WHEN the share button is tapped and the Web Share API is available, THE SYSTEM SHALL invoke the native share sheet with a plain-text result including: product name, day number, dinosaur, title, wrong-tap count, and https://cupofiq.com. At Level 1 the text MAY include the story line "We followed the tracks."
+- **SHR-3** WHEN the share button is tapped and the Web Share API is available, THE SYSTEM SHALL invoke the native share sheet with a plain-text result including: product name, day number, dinosaur, title, wrong-tap count, and https://cupofiq.com. At Levels 1–2 the text MAY include the story line "We followed the tracks." (sign-off #24: L2 is a tracks level too.)
 - **SHR-4** WHEN the Web Share API is unavailable, THE SYSTEM SHALL copy the same text to the clipboard and confirm with a brief "Copied!" toast; a separate always-visible Copy button SHALL do the same.
 - **SHR-5** THE SYSTEM SHALL transmit nothing anywhere except via the user-invoked share sheet or clipboard.
 - **SHR-6** WHEN the shared link is unfurled by a messaging app, the page SHALL present static OG title, description, and image tags producing an attractive preview.
