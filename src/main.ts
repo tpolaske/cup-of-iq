@@ -18,7 +18,9 @@ const dinos = dinosJson as Dino[];
 const titles = titlesJson as TitleDef[];
 const prompts = promptsJson as string[];
 
-const LEVEL_NAMES = ['Tracks', 'Tracks + numbers', 'Numbers', 'Bigger numbers', 'All numbers']; // BRD-1
+// BRD-1 — sign-off #24: "Tracks (more)" inserted between Tracks and
+// Tracks + numbers; six levels total, level cap raised from 5 to 6.
+const LEVEL_NAMES = ['Tracks', 'Tracks (more)', 'Tracks + numbers', 'Numbers', 'Bigger numbers', 'All numbers'];
 
 const storage = progress.safeStorage(); // null in private mode → stateless round (NFR-7)
 let state = progress.load(storage);
@@ -38,7 +40,7 @@ const story = document.getElementById('story')!;
 const app = document.getElementById('app')!;
 hdr.textContent = `Cup of IQ 🥚 Day ${day}`;
 
-const levelName = (l: number): string => LEVEL_NAMES[Math.min(Math.max(l, 1), 5) - 1];
+const levelName = (l: number): string => LEVEL_NAMES[Math.min(Math.max(l, 1), 6) - 1];
 
 function grownupsOpts() {
   return {
@@ -117,7 +119,9 @@ function runRound(record: boolean): void {
   const level = state.level;
   const spec = boardSpecForLevel(level); // BRD-1
   const assignment = seededShuffle(spec.values, boardSeed(day, level, attempt)); // DPS-3
-  story.textContent = level === 1 ? 'Follow the footprints to the egg!' : 'Tap the eggs in counting order!';
+  // Levels 1–2 are both "follow the tracks" footprint levels (sign-off #24);
+  // 3+ are the numeral egg levels.
+  story.textContent = level <= 2 ? 'Follow the footprints to the egg!' : 'Tap the eggs in counting order!';
   playRound(app, spec, assignment, (outcome) => {
     if (record) {
       const t = titleFor(outcome.wrongTaps, titles);

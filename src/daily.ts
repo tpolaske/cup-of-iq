@@ -63,7 +63,7 @@ export function dinoBadgeColor(id: string): string {
 }
 
 export type TargetFace = 'prints' | 'prints+numeral' | 'numeral';
-export type LayoutId = 'scatter3' | 'quincunx5' | 'grid10';
+export type LayoutId = 'scatter3' | 'scatter5' | 'quincunx5' | 'grid10';
 export type RevealStage = 'crackA' | 'crackA2' | 'crackB' | 'peek' | 'hatch';
 
 export interface BoardSpec {
@@ -74,28 +74,43 @@ export interface BoardSpec {
   revealAfterTap: Record<number, RevealStage>; // TRL-2 stage table
 }
 
+// TRL-2's "5 targets" reveal-stage row — shared by every 5-target level
+// (L2–L5) regardless of target face (BRD-1). One object, reused, so the four
+// levels can never drift out of sync with each other.
+const FIVE_TARGET_REVEAL: Record<number, RevealStage> = {
+  1: 'crackA', 2: 'crackA2', 3: 'crackB', 4: 'peek', 5: 'hatch',
+};
+
 // BRD-1 / BRD-5 / TRL-2 — one source of truth for the level ladder.
+// Sign-off #24: a new L2 "Tracks (more)" was inserted between the original
+// L1 and L2 — same footprint-scatter mechanic as L1, just 5 targets instead
+// of 3. The former L2–L5 shift up to L3–L6; the level cap is now 6.
 export function boardSpecForLevel(level: number): BoardSpec {
-  switch (Math.min(Math.max(Math.round(level), 1), 5)) {
+  switch (Math.min(Math.max(Math.round(level), 1), 6)) {
     case 1:
       return {
         values: [1, 2, 3], face: 'prints', layout: 'scatter3', minTargetPx: 100,
         revealAfterTap: { 1: 'crackA', 2: 'peek', 3: 'hatch' },
       };
-    case 2:
+    case 2: // "Tracks (more)" (sign-off #24) — L1 mechanic, 5 targets, ≥ 88 px
       return {
-        values: [1, 2, 3, 4, 5], face: 'prints+numeral', layout: 'quincunx5', minTargetPx: 88,
-        revealAfterTap: { 1: 'crackA', 2: 'crackA2', 3: 'crackB', 4: 'peek', 5: 'hatch' },
+        values: [1, 2, 3, 4, 5], face: 'prints', layout: 'scatter5', minTargetPx: 88,
+        revealAfterTap: FIVE_TARGET_REVEAL,
       };
     case 3:
       return {
-        values: [1, 2, 3, 4, 5], face: 'numeral', layout: 'quincunx5', minTargetPx: 88,
-        revealAfterTap: { 1: 'crackA', 2: 'crackA2', 3: 'crackB', 4: 'peek', 5: 'hatch' },
+        values: [1, 2, 3, 4, 5], face: 'prints+numeral', layout: 'quincunx5', minTargetPx: 88,
+        revealAfterTap: FIVE_TARGET_REVEAL,
       };
     case 4:
       return {
+        values: [1, 2, 3, 4, 5], face: 'numeral', layout: 'quincunx5', minTargetPx: 88,
+        revealAfterTap: FIVE_TARGET_REVEAL,
+      };
+    case 5:
+      return {
         values: [6, 7, 8, 9, 10], face: 'numeral', layout: 'quincunx5', minTargetPx: 88,
-        revealAfterTap: { 1: 'crackA', 2: 'crackA2', 3: 'crackB', 4: 'peek', 5: 'hatch' },
+        revealAfterTap: FIVE_TARGET_REVEAL,
       };
     default:
       return {

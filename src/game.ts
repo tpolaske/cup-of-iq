@@ -35,7 +35,9 @@ export function playRound(
       feedback.sayNumber(value); // AUD-1
       board.showWord(WORDS[value] ?? String(value)); // AUD-2
       const n = idx + 1;
-      if (spec.layout === 'scatter3') board.drawTrailSegment(n); // TRL-1
+      // TRL-1 — L1 and L2 both draw a trail (sign-off #24: L2 is identical to
+      // L1's mechanic, just with 5 targets instead of 3).
+      if (spec.layout === 'scatter3' || spec.layout === 'scatter5') board.drawTrailSegment(n);
       const stage = spec.revealAfterTap[n];
       if (stage && stage !== 'hatch') board.advanceReveal(stage); // TRL-2
       idx += 1;

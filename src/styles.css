@@ -38,6 +38,7 @@ body {
 
 /* --- game scenes --- */
 .scene { position: relative; width: 336px; height: 452px; margin: 4px auto 0; }
+.scene.scene-tall { height: 560px; } /* L2 "Tracks (more)" — 5 patches need a taller canvas (sign-off #24) */
 .scene-eggs { position: relative; width: 336px; margin: 4px auto 0; }
 .trail { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .nest { position: absolute; left: 50%; top: 2px; transform: translateX(-50%); }
@@ -54,6 +55,7 @@ body {
   touch-action: manipulation;
   animation: bob 3.2s ease-in-out infinite;
 }
+.patch.patch-sm { width: 88px; height: 81px; } /* L2 "Tracks (more)" — ≥ 88 px sizing (sign-off #24) */
 .egg-target {
   cursor: pointer;
   user-select: none;

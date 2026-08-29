@@ -7,7 +7,7 @@ export interface BoardHandles {
   wobble(value: number): void; // FBK-1
   hint(value: number): void; // FBK-3
   clearHint(): void;
-  drawTrailSegment(n: number): void; // TRL-1 (L1 only)
+  drawTrailSegment(n: number): void; // TRL-1 (L1/L2 only)
   advanceReveal(stage: RevealStage): void; // TRL-2
   showWord(word: string): void; // AUD-2
   showHmm(): void; // FBK-1
@@ -15,15 +15,28 @@ export interface BoardHandles {
 
 const SCENE_W = 336;
 const SCENE_H = 452;
+const SCENE_H5 = 560; // scatter5 canvas — taller to fit 5 patches (design.md §7b, sign-off #24)
 // Scatter slots A/B/C and nest anchor, scene units (design.md §7b).
 const SCATTER_SLOTS = [
   { x: 240, y: 212 },
   { x: 86, y: 300 },
   { x: 234, y: 384 },
 ];
+// scatter5 slots A–E (design.md §7b, sign-off #24). A loose zigzag, same
+// spirit as SCATTER_SLOTS above, so the fixed geometry never hints the order
+// on its own (BRD-3) — the daily shuffle (DPS-3) assigns values to these.
+const SCATTER5_SLOTS = [
+  { x: 72, y: 190 },
+  { x: 254, y: 170 },
+  { x: 84, y: 320 },
+  { x: 264, y: 360 },
+  { x: 144, y: 500 },
+];
 const NEST = { x: 172, y: 112 };
 const PATCH_W = 104;
 const PATCH_H = 96;
+const PATCH5_W = 88; // sign-off #24 — ≥ 88 px min per BRD-1 (numeral-level sizing, not L1's 100 px)
+const PATCH5_H = 81;
 // Quincunx egg centers: 92×104 eggs (≥ 88 px, BRD-1), rows 128 px apart → ≥ 24 px vertical gaps.
 const QUINCUNX = [
   { x: 70, y: 72 },
@@ -52,7 +65,9 @@ function printGlyph(cx: number, cy: number, s = 1): string {
   return `<g>${e(0, 0, 8, 9.6)}${e(-6.2, -10.4, 3, 4.4)}${e(0, -13.2, 3, 4.8)}${e(6.2, -10.4, 3, 4.4)}</g>`;
 }
 
-// Footprint placements inside a patch, per count (prototype geometry).
+// Footprint placements inside a patch, per count (prototype geometry for 1–3;
+// 4 and 5 added for L2 "Tracks (more)", sign-off #24 — same 104×96 viewBox,
+// just more clusters, spaced clear of each other with margin to spare).
 const PATCH_LAYOUTS: Record<number, [number, number, number][]> = {
   1: [[52, 52, 1.3]],
   2: [
@@ -63,6 +78,19 @@ const PATCH_LAYOUTS: Record<number, [number, number, number][]> = {
     [30, 34, 1],
     [66, 46, 1],
     [38, 66, 1],
+  ],
+  4: [
+    [24, 26, 0.82],
+    [78, 24, 0.82],
+    [26, 70, 0.82],
+    [80, 72, 0.82],
+  ],
+  5: [
+    [20, 20, 0.72],
+    [84, 20, 0.72],
+    [52, 48, 0.72],
+    [20, 76, 0.72],
+    [84, 76, 0.72],
   ],
 };
 
@@ -75,7 +103,7 @@ function patchSVG(count: number): string {
   </svg>`;
 }
 
-// Egg face for L2+ (BRD-1/BRD-4): huge numeral; L2 adds the matching prints row.
+// Egg face for L3+ (BRD-1/BRD-4): huge numeral; L3 adds the matching prints row.
 function eggSVG(value: number, withPrints: boolean): string {
   let prints = '';
   if (withPrints) {
@@ -93,7 +121,7 @@ function eggSVG(value: number, withPrints: boolean): string {
   </svg>`;
 }
 
-// Day-egg reveal layers (TRL-2), shared by the L1 nest scene and the L2+ header egg.
+// Day-egg reveal layers (TRL-2), shared by the L1/L2 nest scene and the L3+ header egg.
 function revealEggInner(): string {
   return `
     <path d="M75 8 C99 8 112 36 112 66 C112 94 96 108 75 108 C54 108 38 94 38 66 C38 36 51 8 75 8 Z" fill="#FFFDF7" stroke="#E8DCC8" stroke-width="4"/>
@@ -108,7 +136,7 @@ function revealEggInner(): string {
     </g>`;
 }
 
-// L1 nest scene: sand mound, twig arcs, day egg with reveal layers (prototype geometry).
+// L1/L2 nest scene: sand mound, twig arcs, day egg with reveal layers (prototype geometry).
 function nestSceneSVG(): string {
   return `<svg width="150" height="128" viewBox="0 0 150 128">
     <ellipse cx="75" cy="112" rx="58" ry="14" fill="#D9C1A0"/>
@@ -118,7 +146,7 @@ function nestSceneSVG(): string {
   </svg>`;
 }
 
-// L2+ header egg (no nest): the same reveal layers above the board (design.md §7b, L2 note).
+// L3+ header egg (no nest): the same reveal layers above the board (design.md §7b, L3 note).
 function dayEggSVG(): string {
   return `<svg width="72" height="94" viewBox="33 3 84 110">${revealEggInner()}</svg>`;
 }
@@ -138,17 +166,20 @@ export function mountBoard(
   onTap: (value: number) => void,
 ): BoardHandles {
   root.innerHTML = '';
+  const isScatter = spec.layout === 'scatter3' || spec.layout === 'scatter5';
+  const isFive = spec.layout === 'scatter5';
   const scene = document.createElement('div');
-  scene.className = spec.layout === 'scatter3' ? 'scene' : 'scene-eggs';
+  scene.className = isScatter ? 'scene' : 'scene-eggs';
+  if (isFive) scene.classList.add('scene-tall'); // sign-off #24 — taller canvas for 5 patches
   root.appendChild(scene);
 
   const valueEl = new Map<number, HTMLElement>();
   const trail: SVGLineElement[] = [];
   let revealHost: HTMLElement | null = null;
-  // Sign-off #21 (L2–L5 only): a completed egg slides out of the board and
+  // Sign-off #21 (L3–L6 only): a completed egg slides out of the board and
   // into this ordered tray so what's left on the board is what's left to do.
-  // L1 has its own "what's done" signal already — the growing trail — so it's
-  // exempt (BRD-2/TRL-1).
+  // L1/L2 have their own "what's done" signal already — the growing trail —
+  // so they're exempt (BRD-2/TRL-1).
   let tray: HTMLElement | null = null;
 
   const word = document.createElement('div');
@@ -162,17 +193,22 @@ export function mountBoard(
     });
   };
 
-  if (spec.layout === 'scatter3') {
+  if (isScatter) {
+    const slots = isFive ? SCATTER5_SLOTS : SCATTER_SLOTS;
+    const patchW = isFive ? PATCH5_W : PATCH_W;
+    const patchH = isFive ? PATCH5_H : PATCH_H;
+    const sceneH = isFive ? SCENE_H5 : SCENE_H;
+
     // Trail overlay under the patches. Segment endpoints are computed from the
     // slot centers *after* the daily shuffle — never hardcoded (design.md §7b).
     const slotOfValue = new Map<number, { x: number; y: number }>();
-    assignment.forEach((v, i) => slotOfValue.set(v, SCATTER_SLOTS[i]));
+    assignment.forEach((v, i) => slotOfValue.set(v, slots[i]));
     const waypoints = [...spec.values].sort((a, b) => a - b).map((v) => slotOfValue.get(v)!);
     waypoints.push(NEST);
 
     const NS = 'http://www.w3.org/2000/svg';
     const overlay = document.createElementNS(NS, 'svg');
-    overlay.setAttribute('viewBox', `0 0 ${SCENE_W} ${SCENE_H}`);
+    overlay.setAttribute('viewBox', `0 0 ${SCENE_W} ${sceneH}`);
     overlay.setAttribute('class', 'trail');
     for (let i = 0; i < waypoints.length - 1; i++) {
       const line = document.createElementNS(NS, 'line');
@@ -198,11 +234,11 @@ export function mountBoard(
     revealHost = nest;
 
     assignment.forEach((v, i) => {
-      const slot = SCATTER_SLOTS[i];
+      const slot = slots[i];
       const patch = document.createElement('div');
-      patch.className = 'patch';
-      patch.style.left = `${slot.x - PATCH_W / 2}px`;
-      patch.style.top = `${slot.y - PATCH_H / 2}px`;
+      patch.className = 'patch' + (isFive ? ' patch-sm' : '');
+      patch.style.left = `${slot.x - patchW / 2}px`;
+      patch.style.top = `${slot.y - patchH / 2}px`;
       patch.style.animationDelay = `${i * 0.35}s`;
       patch.innerHTML = patchSVG(v);
       attachTap(patch, v);
@@ -291,12 +327,12 @@ export function mountBoard(
       if (inner) {
         inner.classList.add('done'); // stamp pop plays here, not on the outer FLIP element (TRL-3)
       } else {
-        // scatter3 patches have no inner wrapper; stamp lives on the element itself.
+        // scatter3/scatter5 patches have no inner wrapper; stamp lives on the element itself.
       }
       e.querySelectorAll<SVGGElement>('.prints').forEach((g) => {
         g.style.fill = '#5F7F49';
       });
-      if (tray) moveToTray(e); // sign-off #21 — L2–L5 only
+      if (tray) moveToTray(e); // sign-off #21 — L3–L6 only
     },
     wobble(v) {
       const e = el(v);

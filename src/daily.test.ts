@@ -76,34 +76,43 @@ describe('boardSpecForLevel (BRD-1, BRD-5, TRL-2)', () => {
     expect(s.revealAfterTap[2]).toBe('peek'); // eyes at step two
   });
 
-  it('L2 pairs prints with numerals 1–5 (BRD-4)', () => {
+  it('L2 "Tracks (more)": quantities 1–5, prints only, scatter5, ≥ 88 px (sign-off #24)', () => {
     const s = boardSpecForLevel(2);
+    expect(s.values).toEqual([1, 2, 3, 4, 5]);
+    expect(s.face).toBe('prints');
+    expect(s.layout).toBe('scatter5');
+    expect(s.minTargetPx).toBe(88);
+    expect(s.revealAfterTap[5]).toBe('hatch');
+  });
+
+  it('L3 pairs prints with numerals 1–5 (BRD-4)', () => {
+    const s = boardSpecForLevel(3);
     expect(s.values).toEqual([1, 2, 3, 4, 5]);
     expect(s.face).toBe('prints+numeral');
     expect(s.layout).toBe('quincunx5');
   });
 
-  it('L3 is numerals only 1–5; L4 is numerals 6–10', () => {
-    expect(boardSpecForLevel(3).face).toBe('numeral');
-    expect(boardSpecForLevel(3).values).toEqual([1, 2, 3, 4, 5]);
-    expect(boardSpecForLevel(4).values).toEqual([6, 7, 8, 9, 10]);
+  it('L4 is numerals only 1–5; L5 is numerals 6–10', () => {
+    expect(boardSpecForLevel(4).face).toBe('numeral');
+    expect(boardSpecForLevel(4).values).toEqual([1, 2, 3, 4, 5]);
+    expect(boardSpecForLevel(5).values).toEqual([6, 7, 8, 9, 10]);
   });
 
-  it('L5 is all numbers on the ten-egg grid', () => {
-    const s = boardSpecForLevel(5);
+  it('L6 is all numbers on the ten-egg grid', () => {
+    const s = boardSpecForLevel(6);
     expect(s.values).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     expect(s.layout).toBe('grid10');
     expect(s.minTargetPx).toBe(64);
   });
 
   it('clamps out-of-range levels (BRD-5)', () => {
-    expect(boardSpecForLevel(99)).toEqual(boardSpecForLevel(5));
+    expect(boardSpecForLevel(99)).toEqual(boardSpecForLevel(6));
     expect(boardSpecForLevel(0)).toEqual(boardSpecForLevel(1));
     expect(boardSpecForLevel(-3)).toEqual(boardSpecForLevel(1));
   });
 
   it('every level hatches on its final tap (TRL-4)', () => {
-    for (let level = 1; level <= 5; level++) {
+    for (let level = 1; level <= 6; level++) {
       const s = boardSpecForLevel(level);
       expect(s.revealAfterTap[s.values.length]).toBe('hatch');
     }

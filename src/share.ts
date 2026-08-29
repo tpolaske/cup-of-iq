@@ -22,9 +22,10 @@ export interface ShareInput {
   title: TitleDef;
 }
 
-// SHR-3 — plain-text result. L1 carries the story line; L2+ omits it.
+// SHR-3 — plain-text result. L1 and L2 carry the story line (sign-off #24:
+// L2 "Tracks (more)" is a tracks level too); L3+ omits it.
 export function buildShareText(o: ShareInput): string {
-  const hatched = o.level === 1
+  const hatched = o.level === 1 || o.level === 2
     ? `We followed the tracks — ${o.dinoName} hatched!`
     : `${o.dinoName} hatched!`;
   const taps = `${o.wrongTaps} wrong tap${o.wrongTaps === 1 ? '' : 's'}`;

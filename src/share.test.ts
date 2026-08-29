@@ -30,7 +30,12 @@ describe('buildShareText (SHR-3)', () => {
     );
   });
 
-  it('L2+ omits the tracks line (design.md §8)', () => {
+  it('L2 "Tracks (more)" also carries the tracks line (sign-off #24)', () => {
+    const txt = buildShareText({ ...base, level: 2, wrongTaps: 1, title: titleFor(1, titles) });
+    expect(txt).toContain('We followed the tracks');
+  });
+
+  it('L3+ omits the tracks line (design.md §8, sign-off #24)', () => {
     const txt = buildShareText({ ...base, level: 3, wrongTaps: 2, title: titleFor(2, titles) });
     expect(txt).toContain('Baby Stegosaurus hatched!');
     expect(txt).not.toContain('followed the tracks');

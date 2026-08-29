@@ -35,10 +35,10 @@ describe('load/save (NFR-7, BRD-5)', () => {
     expect(load(s)).toEqual(defaultState());
   });
 
-  it('clamps a corrupt level to 5 (BRD-5)', () => {
+  it('clamps a corrupt level to 6 (BRD-5, sign-off #24)', () => {
     const s = fakeStorage();
     s.map.set(STORAGE_KEY, JSON.stringify({ schemaVersion: 1, level: 99, perfectsAtLevel: 0 }));
-    expect(load(s).level).toBe(5);
+    expect(load(s).level).toBe(6);
   });
 
   it('treats missing sound as on (pre-existing v1 payloads)', () => {
@@ -83,17 +83,17 @@ describe('level-up rules (PRG-1..5)', () => {
     expect(st.lastPlayed?.leveledUp).toBe(false);
   });
 
-  it('caps at level 5: the counter still resets, no phantom level-up (PRG-2)', () => {
-    let st = { ...defaultState(), level: 5, perfectsAtLevel: 2 };
+  it('caps at level 6: the counter still resets, no phantom level-up (PRG-2, sign-off #24)', () => {
+    let st = { ...defaultState(), level: 6, perfectsAtLevel: 2 };
     st = recordRound(st, perfect(20));
-    expect(st.level).toBe(5);
+    expect(st.level).toBe(6);
     expect(st.perfectsAtLevel).toBe(0);
     expect(st.lastPlayed?.leveledUp).toBe(false);
   });
 
   it('manual override clamps and resets the counter (PRG-4)', () => {
     const st = setLevel({ ...defaultState(), perfectsAtLevel: 2 }, 9);
-    expect(st.level).toBe(5);
+    expect(st.level).toBe(6);
     expect(st.perfectsAtLevel).toBe(0);
   });
 });

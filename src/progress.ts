@@ -64,6 +64,10 @@ function validLastPlayed(v: unknown): v is LastPlayed {
   );
 }
 
+// Level cap is 6 (sign-off #24 — L2 "Tracks (more)" inserted, shifting the
+// former L2–L5 up to L3–L6).
+const MAX_LEVEL = 6;
+
 export function load(storage: StorageLike | null): AppState {
   if (!storage) return defaultState();
   try {
@@ -73,7 +77,7 @@ export function load(storage: StorageLike | null): AppState {
     if (!p || p.schemaVersion !== 1) return defaultState(); // future: migration lives here
     return {
       schemaVersion: 1,
-      level: clampInt(p.level, 1, 5, 1), // BRD-5: corrupt storage clamps
+      level: clampInt(p.level, 1, MAX_LEVEL, 1), // BRD-5: corrupt storage clamps
       perfectsAtLevel: clampInt(p.perfectsAtLevel, 0, 2, 0),
       sound: typeof p.sound === 'boolean' ? p.sound : true,
       lastPlayed: validLastPlayed(p.lastPlayed) ? p.lastPlayed : null,
@@ -106,15 +110,15 @@ export interface RoundInput {
 }
 
 // PRG-1/2/5 — a perfect round increments the counter; at 3 the level advances
-// (capped at 5, effective tomorrow) and the counter resets. Nothing ever
-// decreases on a non-perfect round.
+// (capped at MAX_LEVEL, effective tomorrow) and the counter resets. Nothing
+// ever decreases on a non-perfect round.
 export function recordRound(state: AppState, r: RoundInput): AppState {
   const perfect = r.wrongTaps === 0;
   let perfects = state.perfectsAtLevel + (perfect ? 1 : 0);
   let level = state.level;
   let leveledUp = false;
   if (perfect && perfects >= 3) {
-    if (level < 5) {
+    if (level < MAX_LEVEL) {
       level += 1;
       leveledUp = true;
     }
@@ -125,7 +129,7 @@ export function recordRound(state: AppState, r: RoundInput): AppState {
 
 // PRG-4 — manual override applies from the next un-played round; resets the counter.
 export function setLevel(state: AppState, level: number): AppState {
-  return { ...state, level: clampInt(level, 1, 5, state.level), perfectsAtLevel: 0 };
+  return { ...state, level: clampInt(level, 1, MAX_LEVEL, state.level), perfectsAtLevel: 0 };
 }
 
 // GRN-3 — clear the namespace; caller reloads to a fresh state.
