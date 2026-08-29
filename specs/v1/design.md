@@ -124,7 +124,7 @@ Unchanged in content or behavior — see git history. Only the level number shif
 // We followed the tracks — Baby Stegosaurus hatched!
 // 🦖 Roar-some round — 0 wrong taps ⭐
 // https://cupofiq.com
-// (L2+ omits the tracks line)
+// (L3+ omits the tracks line — sign-off #24: L1 and L2 both keep it)
 ```
 
 Otherwise unchanged — see git history for Web Share/clipboard fallback and OG tags.
