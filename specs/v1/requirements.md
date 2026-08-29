@@ -1,4 +1,4 @@
-# Cup of IQ — Requirements (v2, 2026-07-08 · GRN-1 and LCK amended 2026-08-03 · titles & celebration amended 2026-08-10 · SHR-7 added 2026-08-15 · rawr-big budget carve-out 2026-08-28)
+# Cup of IQ — Requirements (v2, 2026-07-08 · GRN-1 and LCK amended 2026-08-03 · titles & celebration amended 2026-08-10 · SHR-7 added 2026-08-15 · rawr-big budget carve-out 2026-08-28 · L2 "Tracks (more)" inserted 2026-08-29)
 
 ## Product Vision
 
@@ -22,7 +22,7 @@ Progression is the parent's own design: three perfect rounds (zero wrong taps) a
 
 **#12–16 signed off 2026-07-08** (from `learning-review.md` R1–R8 and the prototyping session):
 
-12. **Developmental level ladder (supersedes #6).** L1 "Tracks" = quantities 1–3, three targets. L2 "Tracks + numbers" = footprints AND numerals together, 1–5, five targets. L3 "Numbers" = numerals only 1–5. L4 = numerals 6–10. L5 = numerals 1–10, ten targets. L6+ deliberately undefined. Full board specs in BRD-1.
+12. **Developmental level ladder (supersedes #6; ladder extended by #24).** L1 "Tracks" = quantities 1–3, three targets. L2 "Tracks + numbers" = footprints AND numerals together, 1–5, five targets. L3 "Numbers" = numerals only 1–5. L4 = numerals 6–10. L5 = numerals 1–10, ten targets. L6+ deliberately undefined. *(Superseded by #24: a new "Tracks (more)" level was inserted between the original L1 and L2, shifting everything from the original L2 onward up by one — see BRD-1 for the current, six-level table.)* Full board specs in BRD-1.
 13. **L1 mechanic: follow the tracks.** Footprint patches are scattered on the ground; correct taps in fewest-to-most order draw a dotted trail toward the nest.
 14. **Number-word audio ships in MVP.** On each correct tap a recorded "hatchling voice" speaks the number word. Parent-produced recording; **no text-to-speech in the product**.
 15. **Progressive reveal (supersedes single final reveal).** The day's one egg advances a crack stage with each correct tap (final stage = hatch). One species per day, identical for every player, is preserved.
@@ -40,6 +40,10 @@ Progression is the parent's own design: three perfect rounds (zero wrong taps) a
 **#23 signed off 2026-08-28** (parent request, after testing the perfect-round roar):
 
 23. **`rawr-big` gets a real recording and its own size budget; #19's design reaffirmed.** The perfect-round bonus clip is now `public/voice/Rawr-Pop.m4a` (65 KB) rather than the placeholder `rawr-big.m4a` name. Because the file is a multi-second celebratory roar rather than a one-word number clip, NFR-2's shared 25 KB voice budget is split: number words and the standard `rawr` stay ≤ 25 KB; `rawr-big` gets its own ≤ 70 KB ceiling. Along the way, the parent considered dropping the standard rawr entirely (perfect-round-only audio) as a stronger differentiation for the "Play again" habit; on review this would have quietly re-opened the exact scoreboard concern #19 already weighed and intentionally limited to one small, contained exception. #19's original design stands: AUD-5/AUD-6/CEL-2 behavior is unchanged — standard rawr plays every round (including every replay per #18), swapped for `rawr-big` only when `wrongTaps === 0`.
+
+**#24 signed off 2026-08-29** (parent request):
+
+24. **New level inserted between Tracks and Tracks + numbers.** L2 "Tracks (more)" is identical to L1 in every respect — footprint-only patches, no numerals, `scatter` layout in the nest scene, same wobble/hint/trail/audio behavior — except it has **5 targets (values 1–5)** instead of 3, and uses **≥ 88 px** target sizing (not L1's ≥ 100 px), matching the sizing already used at the numeral levels. The former L2–L5 (Tracks + numbers, Numbers, Bigger numbers, All numbers) shift to L3–L6; the ladder now runs six levels instead of five. Full board specs in the updated BRD-1.
 
 Launch: cupofiq.com purchased and live; `LAUNCH_DATE` set to 2026-08-03 and now immutable (sign-off #7).
 
@@ -60,15 +64,16 @@ Launch: cupofiq.com purchased and live; `LAUNCH_DATE` set to 2026-08-03 and now 
 | Level | Name (grown-ups panel) | Targets | Target face | Values | Layout | Min target size |
 |---|---|---|---|---|---|---|
 | 1 | Tracks | 3 footprint patches | 1 / 2 / 3 footprints, no numerals | [1, 2, 3] | `scatter3` + nest scene | **≥ 100 px** |
-| 2 | Tracks + numbers | 5 eggs | numeral AND matching footprints | [1..5] | `quincunx5` | ≥ 88 px |
-| 3 | Numbers | 5 eggs | numeral only | [1..5] | `quincunx5` | ≥ 88 px |
-| 4 | Bigger numbers | 5 eggs | numeral only | [6..10] | `quincunx5` | ≥ 88 px |
-| 5 | All numbers | 10 eggs | numeral only | [1..10] | `grid10` | ≥ 64 px |
+| 2 | Tracks (more) | 5 footprint patches | 1–5 footprints, no numerals | [1..5] | `scatter5` + nest scene | ≥ 88 px |
+| 3 | Tracks + numbers | 5 eggs | numeral AND matching footprints | [1..5] | `quincunx5` | ≥ 88 px |
+| 4 | Numbers | 5 eggs | numeral only | [1..5] | `quincunx5` | ≥ 88 px |
+| 5 | Bigger numbers | 5 eggs | numeral only | [6..10] | `quincunx5` | ≥ 88 px |
+| 6 | All numbers | 10 eggs | numeral only | [1..10] | `grid10` | ≥ 64 px |
 
-- **BRD-2** WHEN the level is 1, THE SYSTEM SHALL render the nest with the day's egg at the top of the scene and the three patches at fixed scatter-slot positions (design.md §7b); the shuffle SHALL assign quantities to slots.
-- **BRD-3** THE scatter-slot geometry SHALL be arranged such that the correct tap order is never inferable from spatial position alone.
-- **BRD-4** WHEN the level is 2, each egg SHALL display the numeral and, beneath it, the matching count of small footprints.
-- **BRD-5** WHEN a level beyond 5 is requested (corrupt storage), THE SYSTEM SHALL clamp to level 5.
+- **BRD-2** WHEN the level is 1 or 2, THE SYSTEM SHALL render the nest with the day's egg at the top of the scene and the patches (three at L1, five at L2) at fixed scatter-slot positions (design.md §7b); the shuffle SHALL assign quantities to slots.
+- **BRD-3** THE scatter-slot geometry (L1 and L2) SHALL be arranged such that the correct tap order is never inferable from spatial position alone.
+- **BRD-4** WHEN the level is 3, each egg SHALL display the numeral and, beneath it, the matching count of small footprints.
+- **BRD-5** WHEN a level beyond 6 is requested (corrupt storage), THE SYSTEM SHALL clamp to level 6.
 
 ## 3. Core Tap Sequence (TAP)
 
@@ -87,8 +92,8 @@ Launch: cupofiq.com purchased and live; `LAUNCH_DATE` set to 2026-08-03 and now 
 | Board size | After tap 1 | 2 | 3 | 4 | 5 … 9 | final tap |
 |---|---|---|---|---|---|---|
 | 3 targets (L1) | crack A | crack B + eyes peek | **hatch** | — | — | — |
-| 5 targets (L2–L4) | crack A | crack A grows | crack B | eyes peek | — | **hatch** |
-| 10 targets (L5) | stages spread evenly: crack A after 2, crack B after 5, peek after 8 | | | | | **hatch** |
+| 5 targets (L2–L5) | crack A | crack A grows | crack B | eyes peek | — | **hatch** |
+| 10 targets (L6) | stages spread evenly: crack A after 2, crack B after 5, peek after 8 | | | | | **hatch** |
 
 - **TRL-3** WHEN a patch is correctly tapped, its footprints SHALL darken ("stamped") with a brief pop (≈ 450 ms scale 1 → 1.18 → 1); stamped patches satisfy TAP-4.
 - **TRL-4** THE reveal SHALL always complete in-round: the hatch occurs on the final correct tap regardless of `wrongTaps`.
@@ -142,7 +147,7 @@ Launch: cupofiq.com purchased and live; `LAUNCH_DATE` set to 2026-08-03 and now 
 ## 10. Progression and Levels (PRG)
 
 - **PRG-1** WHEN the day's **first** round completes with `wrongTaps` = 0, THE SYSTEM SHALL increment `perfectsAtLevel`. Replays SHALL never increment it (LCK-5).
-- **PRG-2** WHEN `perfectsAtLevel` reaches 3, THE SYSTEM SHALL set `level = level + 1` (capped at level 5) and reset `perfectsAtLevel` to 0, effective the next day.
+- **PRG-2** WHEN `perfectsAtLevel` reaches 3, THE SYSTEM SHALL set `level = level + 1` (capped at level 6) and reset `perfectsAtLevel` to 0, effective the next day.
 - **PRG-3** WHEN a level-up is earned, THE SYSTEM SHALL announce it only on grown-up-facing surfaces.
 - **PRG-4** WHEN the grown-ups panel sets a level manually, THE SYSTEM SHALL apply it from the next un-played round and reset `perfectsAtLevel` to 0.
 - **PRG-5** A non-perfect round SHALL never decrease `level` or `perfectsAtLevel`.
