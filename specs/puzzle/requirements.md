@@ -138,6 +138,32 @@ reference for writing new puzzles — not a literal source to copy from
 verbatim, since even the sample questions in it are originals meant to be
 rewritten fresh for each real entry, not reused as-is indefinitely.
 
+### Question Spectrum (guide)
+
+A quick-reference spectrum for the tone and shape of each category, roughly
+ordered from most straightforward to most deceptive:
+
+🟢 **Quick Brain Teasers**
+→ pattern recognition, simple logic
+
+🔵 **Clever Math**
+→ percentages, ratios, rates, equations
+
+🟣 **SAT-style Reasoning**
+→ algebra, functions, data analysis, geometry
+
+🟠 **Logic/Puzzle**
+→ deduction, ordering, probability
+
+🔴 **1% Club**
+→ deceptively simple questions where the way you think about the problem is
+the challenge
+
+> **Open question:** this spectrum doesn't map 1:1 onto the `category` enum in
+> CNT-1 below (`wonderlic-style` vs. `Logic/Puzzle`; `1% Club` shown here as a
+> category rather than only a difficulty tier). Reconcile before this becomes
+> the literal schema — see disagreements log / needs a sign-off.
+
 - **CNT-1** Each puzzle entry SHALL include: `id`, `category`
   (`brain-teaser` | `clever-math` | `sat-style` | `wonderlic-style`),
   `difficulty` (`easy` | `medium` | `hard` | `1percent`), `prompt`,
