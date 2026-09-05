@@ -1030,6 +1030,323 @@ This tests careful reading over calculation, exactly per §4's 1% Club guidance 
 
 ---
 
+# 6c. Developer Logic — Worked Examples (Batch 3, draft)
+
+*Drafted for parent review — worked examples for the new ⚫ Developer Logic category (requirements.md §2's Question Spectrum). The rule for this category, same as it was pitched: don't ask anyone to write or read code — ask a reasoning question where programming concepts give a solver an edge, but a non-programmer can still get there by thinking it through.*
+
+---
+
+## 🟢 EASY — The Swap Bug
+
+### Question
+
+A developer wants to swap the values of two variables, `x` and `y`. They write:
+
+```
+x = 10
+y = 20
+x = y
+y = x
+```
+
+What are the values of `x` and `y` after these lines run?
+
+A) x = 10, y = 20  
+B) x = 20, y = 10  
+C) x = 20, y = 20  
+D) x = 10, y = 10
+
+### Answer
+
+**C) x = 20, y = 20**
+
+### Explanation
+
+`x = y` overwrites `x`'s original value (10) with `y`'s value (20) — so `x` is now 20, and the original 10 is gone for good.
+
+Then `y = x` just assigns `y` to whatever `x` currently is — which is now also 20.
+
+So both variables end up **20**. The real swap needs a temporary holding spot:
+
+```
+temp = x
+x = y
+y = temp
+```
+
+### App Design Note
+
+No visual needed here — the four lines of "code" are really just a sequence of assignments, readable by anyone regardless of programming background. This is a good opener for the category since it proves the "no code experience required" promise immediately.
+
+---
+
+## 🟢 EASY — The Robot's Path
+
+### Question
+
+A robot starts at a point and follows these moves in order:
+
+**Forward 3 → Turn right → Forward 2 → Turn right → Forward 3 → Turn right → Forward 2**
+
+Where does the robot end up, relative to where it started?
+
+A) 5 spaces from the start  
+B) 1 space east of the start  
+C) Exactly back at the start  
+D) 1 space south of the start
+
+### Answer
+
+**C) Exactly back at the start**
+
+### Explanation
+
+Each "turn right" rotates the robot 90°, so the four moves trace the four sides of a rectangle: 3 forward, turn, 2 forward, turn, 3 forward (back the other way), turn, 2 forward (back to start).
+
+Since a rectangle's opposite sides are equal, the path closes exactly where it began.
+
+### App Design Note
+
+This is a strong candidate for the Phase 2 diagram library (a simple grid with an arrow tracing the path) — visualizing "the robot walks a rectangle" makes the answer obvious in a way the text description doesn't.
+
+---
+
+## 🟡 MEDIUM-EASY — The Ticket Pile
+
+### Question
+
+A kitchen puts incoming order tickets on a spike, one on top of the other. When the kitchen has time, it grabs the **top ticket first** — never one from partway down the pile.
+
+Orders come in, in this order: **A, B, C, D**.
+
+The kitchen then pulls two tickets off the spike. Which two orders come out, and in what order?
+
+A) A, then B  
+B) B, then C  
+C) D, then C  
+D) C, then D
+
+### Answer
+
+**C) D, then C**
+
+### Explanation
+
+Every new ticket goes on top, so after A, B, C, D are placed, D is sitting on top of the pile.
+
+The kitchen always takes the top ticket — so it pulls **D first, then C**.
+
+This behavior — the last thing added is the first thing removed — is what programmers call a **stack**. The question never uses that word, but the logic is identical to how a stack works.
+
+### App Design Note
+
+A simple vertical "spike" diagram with tickets stacking and un-stacking would make this instantly readable, and doubles nicely as a teaching moment for the explanation.
+
+---
+
+## 🟡 MEDIUM-EASY — The Traffic Light
+
+### Question
+
+A traffic light repeats this cycle, in order, forever:
+
+**Green → Yellow → Red → Green → Yellow → Red → …**
+
+Right now, the light is **Yellow**. What color will it be after **17** more changes?
+
+A) Green  
+B) Yellow  
+C) Red  
+D) Impossible to tell
+
+### Answer
+
+**A) Green**
+
+### Explanation
+
+The cycle repeats every 3 changes, so only the remainder of 17 ÷ 3 matters:
+
+**17 ÷ 3 = 5 remainder 2**
+
+So we only need to count 2 steps forward from Yellow:
+
+**Yellow → Red (1 step) → Green (2 steps)**
+
+After 17 changes, the light is back to **Green**.
+
+### App Design Note
+
+A small 3-position circular diagram (green/yellow/red arranged in a triangle with a pointer that advances one step at a time) makes this kind of modular-arithmetic question visual instead of something the solver has to track purely by counting in their head.
+
+---
+
+## 🟠 MEDIUM-HARD — The Guessing Game
+
+### Question
+
+You need to find one specific person out of **1,000 people** standing in a line, **sorted alphabetically by last name**. You can only ask someone, "Is the person I'm looking for earlier or later in the line than you?"
+
+What's the smartest strategy?
+
+A) Start at the front and ask each person in turn  
+B) Start at the back and ask each person in turn  
+C) Start in the middle and eliminate half the remaining line each time  
+D) Ask every tenth person
+
+### Answer
+
+**C) Start in the middle and eliminate half the remaining line each time**
+
+### Explanation
+
+Because the line is sorted, asking the person in the middle tells you which half your target is in — instantly discarding the other 500 people.
+
+Repeating this, each question cuts the remaining group in half again: 500 → 250 → 125 → …
+
+This takes roughly **log₂(1000) ≈ 10 questions** — instead of up to 1,000 asking one at a time.
+
+Programmers call this **binary search**, but the trick works purely from the fact that the line is sorted — no programming knowledge required to see why it's faster.
+
+### App Design Note
+
+A shrinking line-segment diagram (1,000 → 500 → 250 → …) after each simulated question would sell the "cutting in half" insight far better than the number alone.
+
+---
+
+## 🟠 MEDIUM-HARD — The Phone Book Lookup
+
+### Question
+
+You have a phone book with **10 million names**, and you want to know whether "Tom Smith" is in it as fast as possible.
+
+Which approach finds the answer fastest?
+
+A) Check every name one at a time from the start  
+B) Keep the names sorted and repeatedly split the search in half  
+C) Use an index that jumps straight to where "Tom Smith" would be, in one step  
+D) Pick names at random and hope to get lucky
+
+### Answer
+
+**C) Use an index that jumps straight to where "Tom Smith" would be, in one step**
+
+### Explanation
+
+Checking one at a time (A) could take up to 10 million steps. Splitting in half repeatedly (B) — binary search — is much faster, around 24 steps, but still takes several steps.
+
+An index built specifically to jump straight to a name's location (what programmers call a **hash-based lookup**) can answer in roughly **one step**, regardless of how many names are in the book.
+
+### App Design Note
+
+This pairs naturally with "The Guessing Game" above as a two-question set showing two different flavors of "smart lookup" — the binary-search question rewards *sorted data*, this one rewards *pre-organized data*. Consider placing them back-to-back in the pool.
+
+---
+
+## 🔴 HARD — The Light Switches
+
+### Question
+
+There are **100 light switches** in a row, all starting **OFF**. You make 100 passes:
+
+- Pass 1: flip every switch.
+- Pass 2: flip every 2nd switch.
+- Pass 3: flip every 3rd switch.
+- …
+- Pass 100: flip only switch #100.
+
+After all 100 passes, which switches are ON?
+
+A) None of them  
+B) All of them  
+C) Only the perfect-square-numbered switches (1, 4, 9, 16, 25…)  
+D) Only the prime-numbered switches
+
+### Answer
+
+**C) Only the perfect-square-numbered switches**
+
+### Explanation
+
+A switch gets flipped once for every number that evenly divides its position. Switch #12, for example, gets flipped on passes 1, 2, 3, 4, 6, and 12 — six flips, which is an even number, so it ends up back OFF.
+
+Switch #16 gets flipped on passes 1, 2, 4, 8, and 16 — five flips, an odd number, so it ends up ON.
+
+Most numbers pair their divisors up evenly (like 3 and 4 for 12), giving an even flip count. Perfect squares are the exception — their square root pairs with itself (4×4 for 16) rather than with a different number, leaving one divisor unpaired and the total flip count odd.
+
+So only the perfect squares — **1, 4, 9, 16, 25, 36, 49, 64, 81, 100** — stay ON.
+
+### App Design Note
+
+This is a genuinely hard question and earns its 🔴 tier — a row of 100 small switch icons that visibly flip as you simulate a few passes (even just the first 4-5) would help a solver notice the divisor-pairing pattern instead of needing to hold it all in their head.
+
+---
+
+## 🔴 HARD — The Busy Host
+
+### Question
+
+A restaurant has 1,000 tables. Every time a customer asks whether a table is free, the host walks down the list of tables **from #1 onward** until finding an open one.
+
+The restaurant suddenly gets very busy — 10,000 customers ask in a row. What's the smartest fix?
+
+A) Hire more hosts to do the same walk-through faster  
+B) Have the host check tables in a random order instead  
+C) Have the host keep a running, always-up-to-date list of which tables are currently free  
+D) Ask customers to wait longer between requests
+
+### Answer
+
+**C) Have the host keep a running, always-up-to-date list of which tables are currently free**
+
+### Explanation
+
+The real problem isn't the number of customers — it's that the host **repeats the same table-by-table walk from scratch** for every single question, redoing work that a smarter setup would only need to do once.
+
+If the host instead keeps a running list that updates the moment a table opens or fills, answering "is anything free?" becomes instant, no matter how many times it's asked.
+
+Programmers call this idea **caching** — keeping a precomputed answer ready instead of recalculating it every time — but the insight ("stop redoing the same work over and over") holds with zero programming background.
+
+### App Design Note
+
+A little animated queue of customers hitting a slow "walk the whole restaurant" host vs. a fast "check the list" host would make the before/after contrast land quickly — a good use of the Phase 2 diagram library once it exists.
+
+---
+
+## 💯 1% CLUB — The Never-Ending Sequence
+
+### Question
+
+Start with the number **6** and repeat this rule:
+
+- If the number is even, divide it by 2.
+- If the number is odd, multiply it by 3 and add 1.
+
+What eventually happens?
+
+A) It eventually reaches 0  
+B) It eventually reaches 1, then cycles 1 → 4 → 2 → 1 forever  
+C) It gets stuck at 6 forever  
+D) It grows larger forever
+
+### Answer
+
+**B) It eventually reaches 1, then cycles 1 → 4 → 2 → 1 forever**
+
+### Explanation
+
+Following the rule from 6: **6 → 3 → 10 → 5 → 16 → 8 → 4 → 2 → 1**, and from there it loops **1 → 4 → 2 → 1** forever.
+
+Here's the twist that makes this a genuine 1% Club question: this always seems to happen, for every starting number anyone has ever tried — but **no one has ever mathematically proven it happens for every possible number**. It's a real, unsolved question in mathematics, known as the Collatz conjecture.
+
+So the question has a clean, checkable answer for this specific starting number, while quietly introducing the solver to a problem that has stumped mathematicians for decades.
+
+### Why This Is a 1% Club Question
+
+The insight isn't a trick of wording like the other 1% Club examples — it's the reveal that a simple-looking pattern anyone can compute by hand is secretly one of math's most famous open problems. That gap between "I can do this in 30 seconds" and "nobody on Earth can prove this always works" is exactly the "ohhh" moment this category is built around.
+
+---
+
 # 7. The Overall Question Mix
 
 A strong version of the app could combine these categories:
