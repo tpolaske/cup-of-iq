@@ -159,10 +159,15 @@ ordered from most straightforward to most deceptive:
 → deceptively simple questions where the way you think about the problem is
 the challenge
 
+⚫ **Developer Logic**
+→ algorithms, debugging, data structures, systems thinking — no code
+required, but developers have an edge
+
 > **Open question:** this spectrum doesn't map 1:1 onto the `category` enum in
 > CNT-1 below (`wonderlic-style` vs. `Logic/Puzzle`; `1% Club` shown here as a
-> category rather than only a difficulty tier). Reconcile before this becomes
-> the literal schema — see disagreements log / needs a sign-off.
+> category rather than only a difficulty tier; `Developer Logic` isn't in the
+> enum at all yet). Reconcile before this becomes the literal schema — see
+> disagreements log / needs a sign-off.
 
 - **CNT-1** Each puzzle entry SHALL include: `id`, `category`
   (`brain-teaser` | `clever-math` | `sat-style` | `wonderlic-style`),
