@@ -1347,6 +1347,393 @@ The insight isn't a trick of wording like the other 1% Club examples — it's th
 
 ---
 
+# 6d. SAT-Style Reasoning & 1% Club — Worked Examples (Batch 4, draft)
+
+*Drafted for parent review — filling out the two thinnest categories in the spectrum. SAT-style leans into algebra, functions, geometry, and data reasoning (never real SAT questions, just the format); 1% Club rounds out the weekly-special pool (WKS-1/WKS-2) with a wider mix of wording tricks, math-based counterintuitives, and pure lateral-thinking riddles than Batches 1–2 had.*
+
+---
+
+## 🟢 EASY — The Rectangle's Perimeter
+
+### Question
+
+A rectangular garden is **12 meters long** and **7 meters wide**.
+
+What is its perimeter?
+
+A) 19 meters  
+B) 38 meters  
+C) 84 meters  
+D) 42 meters
+
+### Answer
+
+**B) 38 meters**
+
+### Explanation
+
+Perimeter is the distance all the way around:
+
+**2 × (length + width) = 2 × (12 + 7) = 2 × 19 = 38 meters**
+
+---
+
+## 🟢 EASY — The Function Machine
+
+### Question
+
+A function is defined as **f(x) = 2x + 3**.
+
+What is **f(5)**?
+
+A) 8  
+B) 10  
+C) 13  
+D) 16
+
+### Answer
+
+**C) 13**
+
+### Explanation
+
+Plug 5 in for x:
+
+**f(5) = 2(5) + 3 = 10 + 3 = 13**
+
+---
+
+## 🟡 MEDIUM-EASY — The Sales Report
+
+### Question
+
+A small shop sold **40 items in January** and **52 items in February**.
+
+By what percent did sales increase?
+
+A) 12%  
+B) 20%  
+C) 23%  
+D) 30%
+
+### Answer
+
+**D) 30%**
+
+### Explanation
+
+The increase is **52 − 40 = 12 items**.
+
+Percent increase is the change divided by the *original* amount:
+
+**12 ÷ 40 = 0.30 = 30%**
+
+### App Design Note
+
+A simple two-bar chart (January vs. February) per §3's "Data → Simple chart" row would let a solver see the jump before doing any arithmetic.
+
+---
+
+## 🟡 MEDIUM-EASY — The Missing Angle
+
+### Question
+
+A triangle has two angles measuring **54°** and **61°**.
+
+What is the measure of the third angle?
+
+A) 55°  
+B) 65°  
+C) 115°  
+D) 125°
+
+### Answer
+
+**B) 65°**
+
+### Explanation
+
+Every triangle's angles add up to 180°:
+
+**180 − 54 − 61 = 65°**
+
+---
+
+## 🟠 MEDIUM-HARD — The Trail Mix Blend
+
+### Question
+
+Peanuts cost **$3 per pound** and cashews cost **$5 per pound**.
+
+A shopper buys **10 pounds total** of a peanut-cashew blend for **$38**.
+
+How many pounds of cashews did they buy?
+
+A) 2  
+B) 3  
+C) 4  
+D) 6
+
+### Answer
+
+**C) 4**
+
+### Explanation
+
+Let p = pounds of peanuts, c = pounds of cashews.
+
+**p + c = 10**
+
+**3p + 5c = 38**
+
+From the first equation, p = 10 − c. Substitute:
+
+**3(10 − c) + 5c = 38**
+
+**30 − 3c + 5c = 38**
+
+**2c = 8**
+
+**c = 4**
+
+So the shopper bought **4 pounds of cashews** (and 6 pounds of peanuts).
+
+---
+
+## 🟠 MEDIUM-HARD — The Function Chain
+
+### Question
+
+Let **f(x) = x²** and **g(x) = x + 3**.
+
+What is **f(g(2))**?
+
+A) 7  
+B) 10  
+C) 16  
+D) 25
+
+### Answer
+
+**D) 25**
+
+### Explanation
+
+Work from the inside out. First find g(2):
+
+**g(2) = 2 + 3 = 5**
+
+Then plug that result into f:
+
+**f(5) = 5² = 25**
+
+The trap is computing f(2) and g(2) separately and adding or multiplying them — function composition only works inside-out, one step at a time.
+
+---
+
+## 🔴 HARD — The Fence Problem
+
+### Question
+
+A farmer has **40 meters of fencing** and wants to build a rectangular pen using all of it, enclosing the **largest possible area**.
+
+What is the largest area they can enclose?
+
+A) 75 m²  
+B) 84 m²  
+C) 96 m²  
+D) 100 m²
+
+### Answer
+
+**D) 100 m²**
+
+### Explanation
+
+With 40 meters of fencing, the length and width must add up to 20 meters (since perimeter = 2 × (l + w) = 40).
+
+Try a few options: 9 × 11 = 99 m². 8 × 12 = 96 m². 10 × 10 = 100 m².
+
+For a fixed perimeter, a rectangle's area is always largest when it's a **square** — the closer the two sides are to equal, the more area you get. So the farmer should make a 10-by-10 square pen for **100 m²**.
+
+### App Design Note
+
+This is a good Phase 2 diagram candidate — a slider or a few side-by-side rectangle outlines (9×11, 8×12, 10×10) with their areas labeled would let a solver *see* the square winning rather than trusting the rule.
+
+---
+
+## 💯 1% CLUB — The Nine Count
+
+### Question
+
+How many times does the digit **9** appear when you write out every number from **1 to 100**?
+
+A) 10  
+B) 11  
+C) 19  
+D) 20
+
+### Answer
+
+**D) 20**
+
+### Explanation
+
+Count the two ways a 9 can show up separately.
+
+As the **units digit**: 9, 19, 29, 39, 49, 59, 69, 79, 89, 99 — that's **10** appearances.
+
+As the **tens digit**: 90 through 99 — that's another **10** appearances.
+
+**10 + 10 = 20**
+
+### Why This Is a 1% Club Question
+
+The instinctive answer is 10 — most people count only the "…9" pattern (9, 19, 29…) and forget the entire 90–99 block also contributes a 9 in the tens place. The math is just counting; the trap is only looking in one place.
+
+---
+
+## 💯 1% CLUB — The Crowded Room
+
+### Question
+
+How many people need to be in a room before there's a **better than 50% chance** that two of them share the same birthday (ignore leap years)?
+
+A) 183  
+B) 366  
+C) 57  
+D) 23
+
+### Answer
+
+**D) 23**
+
+### Explanation
+
+The intuitive guess is close to half of 365 — but the real driver isn't the number of *people*, it's the number of *pairs* of people, and that grows much faster.
+
+With 23 people, there are **23 × 22 ÷ 2 = 253 possible pairs** to compare. It only takes one matching pair among all 253 to succeed, and that's already enough to push the odds past 50%.
+
+### Why This Is a 1% Club Question
+
+This is the famous "birthday paradox" — it isn't really a paradox, just a case where our intuition tracks the wrong quantity (people instead of pairs). Once you reframe it around pairs, the surprising number stops being surprising.
+
+---
+
+## 💯 1% CLUB — Two Fathers, Two Sons
+
+### Question
+
+Two fathers and two sons go fishing together. They catch exactly **three fish**, and each person goes home with **one whole fish** — none split, none thrown back.
+
+How is this possible?
+
+A) One fish was unusually large and got counted twice  
+B) There were only three people: a grandfather, his son, and his grandson  
+C) One person didn't take a fish  
+D) It's a trick question — it's actually impossible
+
+### Answer
+
+**B) There were only three people: a grandfather, his son, and his grandson**
+
+### Explanation
+
+"Two fathers and two sons" sounds like four separate people — but a grandfather, father, and son form a group where the middle person is **both** a father (to the son) and a son (to the grandfather).
+
+So "two fathers" = grandfather + father, and "two sons" = father + son — only **three actual people**, which matches the three fish exactly.
+
+### Why This Is a 1% Club Question
+
+The entire trick lives in how you first parse the sentence. Once you see that one person can hold two roles at once, the arithmetic (3 people, 3 fish) is trivial.
+
+---
+
+## 💯 1% CLUB — The Rope Around the Earth
+
+### Question
+
+A rope is wrapped snugly around the Earth's equator (about 40,000 km long). If you add just **1 extra meter** to the rope and lift it evenly off the ground all the way around, roughly how high off the ground would the rope float?
+
+A) A fraction of a millimeter  
+B) About 16 centimeters  
+C) About 6 meters  
+D) It couldn't lift off the ground at all
+
+### Answer
+
+**B) About 16 centimeters**
+
+### Explanation
+
+Circumference relates to radius by **C = 2πr**. Adding a small amount to the circumference increases the radius by that amount divided by 2π — no matter how big the circle already is:
+
+**1 meter ÷ (2 × π) ≈ 0.159 meters ≈ 16 cm**
+
+The Earth's enormous size cancels out of the math completely; only the extra 1 meter matters.
+
+### Why This Is a 1% Club Question
+
+The gut reaction is "the Earth is gigantic, so one extra meter spread around it should do basically nothing." The reveal — that the planet's size is irrelevant to the answer — is the purest kind of "ohhh, I was thinking about this completely wrong."
+
+---
+
+## 💯 1% CLUB — The House With Four Southern Walls
+
+### Question
+
+A man builds a house where **all four walls face south**. A bear walks past his window.
+
+What color is the bear?
+
+A) Brown  
+B) Black  
+C) White  
+D) Not enough information
+
+### Answer
+
+**C) White**
+
+### Explanation
+
+The only place on Earth where *every* direction you face is south is the **North Pole**. A bear near the North Pole is a polar bear — white.
+
+### Why This Is a 1% Club Question
+
+There's no math here at all — the entire puzzle is realizing the premise (all four walls facing south) pins down one specific location on the planet, and the rest follows automatically once you place it.
+
+---
+
+## 💯 1% CLUB — The Tenth Flip
+
+### Question
+
+You flip a fair coin **9 times in a row** and get heads every single time.
+
+What is the probability the **10th flip** will also be heads?
+
+A) Very low — it's "due" for tails  
+B) Exactly 50%  
+C) About 1 in 1,000  
+D) Exactly 0%
+
+### Answer
+
+**B) Exactly 50%**
+
+### Explanation
+
+Each coin flip is independent — the coin has no memory of what happened before it. No matter how long a streak has run, the next flip is still a fresh 50/50 event.
+
+(Getting 9 heads in a row *was* a big coincidence in hindsight — about a 1-in-512 chance — but that's a fact about the 9 flips that already happened, not a force acting on the 10th one.)
+
+### Why This Is a 1% Club Question
+
+This is the classic "gambler's fallacy" — the instinct that a streak makes the opposite outcome more "due" is one of the most common intuition errors there is, and it stays counterintuitive even once you know the math cold.
+
+---
+
 # 7. The Overall Question Mix
 
 A strong version of the app could combine these categories:
