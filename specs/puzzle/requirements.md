@@ -1,4 +1,4 @@
-# Cup of IQ — Puzzle Mode Requirements (v1 draft, 2026-08-14)
+# Cup of IQ — Puzzle Mode Requirements (v2 draft, 2026-09-23)
 
 *Companion to the existing `requirements.md` (toddler dino mode). Same product,
 same repo, same no-backend static-files architecture — a second mode reached
@@ -8,20 +8,24 @@ in the same spirit as the dino project's sign-off list.*
 
 ## Product Vision
 
-Puzzle mode is a free, ad-free, one-puzzle-a-day brain-health ritual for teens
-and adults — the "grown-up" counterpart to the dino counting game, reached
-from the same landing page. Where the toddler game is Montessori-gentle and
+Puzzle mode is a free, ad-free, daily brain-health ritual for teens and
+adults — the "grown-up" counterpart to the dino counting game, reached from
+the same landing page. Where the toddler game is Montessori-gentle and
 judgment-free, Puzzle mode is deliberately a little sharper-edged: original
 puzzles
 in the spirit of *The 1% Club* (deceptively simple, "ohhh!" insight), SAT-style
 math reasoning, and Wonderlic-style quick logic — never actual questions from
-those copyrighted tests, only the format and flavor. Solve fast and you get a
-funny, escalating "which school wants you" banner; solve slow (or wrong) and
-you get a joke banner instead. Once a week, a special untimed "1% Club"
-puzzle offers a guaranteed shot at the top tier if you get it right. A
-Wordle-style accuracy streak keeps the ritual sticky. No accounts, no
-backend, no ads, no studying-for-a-test feeling — the goal every day is
-"ohhh, that's clever," not "I should review my algebra."
+those copyrighted tests, only the format and flavor. **As of v2, each day is a
+three-question round** — one easy, one medium, one hard, in that fixed order —
+answered and locked in together, then revealed all at once against a
+"which school wants you" banner. Solve the round well and fast and you get a
+funny, escalating banner; solve slowly, partially, or wrong and you get a
+gentler (or jokier) one instead. Every Sunday, the hard slot becomes a
+special, untimed, extra-tricky question with its own binary outcome —
+acceptance or waitlist. A Wordle-style perfect-day streak keeps the ritual
+sticky. No accounts, no backend, no ads, no studying-for-a-test feeling —
+the goal every day is "ohhh, that's clever," not "I should review my
+algebra."
 
 **Disagreements log:** Claude flagged that the "wrong answer" school tier
 uses real universities as a running joke (well-worn genre, low legal/ethical
@@ -102,6 +106,39 @@ blocks themselves (LND-1a), and the **chooser always shows on load** — no
 Remaining work is design (§ below) and content authoring, not further
 product decisions.
 
+### ✅ Resolved (2026-09-23 — v2: three-question daily round)
+
+13. **Three-question fixed-order round (supersedes #4, #5).** Puzzle mode
+    moves from one randomized-difficulty puzzle/day to three questions/day in
+    a fixed order — Q1 easy, Q2 medium, Q3 hard — every day. No more
+    per-day randomized single-tier selection; content authoring instead
+    needs roughly balanced-depth pools across all three difficulties
+    simultaneously, since every day draws from all three at once.
+14. **Single end-of-round lock-in (refines #3 / ANS-3).** All three answers
+    are selected first; one "Lock it in" confirms the whole round at once,
+    not per-question — keeps the one-shot-attempt spirit of #3/#11 without
+    three separate confirms, and avoids an early question's result leaking
+    before the later ones are answered.
+15. **New tier algorithm (supersedes #8 / TMR-1).** Correctness now drives
+    the tier, with total time as a tiebreaker only at 3/3, and the hard (Q3)
+    question weighted more heavily than a straight fraction would give it.
+    Full table in §4 (revised TMR-1/TMR-2).
+16. **Streak = perfect-day only (revises #9 / STK-1/STK-2).** The accuracy
+    streak now increments only on a true 3/3 day (including a 3/3 Sunday);
+    anything less — including a Sunday Waitlist outcome — resets it to 0.
+    `bestStreak` is unaffected either way.
+17. **Sunday special folded into the round (supersedes #6, WKS-1–4).** The
+    weekly special is no longer a standalone puzzle/page. Instead, Sunday's
+    Q3 slot becomes an extra-hard, untimed, 1%-Club-style question; Q1/Q2
+    stay timed as normal. The outcome is binary rather than tiered: 3/3 =
+    automatic Tier 1 ("acceptance"); anything less than 3/3 = **Waitlisted**,
+    drawn from the existing Tier-1 school pool for the "so close" joke
+    (e.g. "Princeton has put you on the waitlist 😅"). There is no
+    Tier 2/3/4/Fail breakdown on Sundays, and the old WKS-4 "separate
+    gentler fail pool" concept is retired — Waitlisted is the only
+    non-acceptance outcome, and it breaks the streak like any other
+    non-perfect day (no special carve-out).
+
 ---
 
 ## 1. Daily Puzzle Selection (PZL)
@@ -109,20 +146,25 @@ product decisions.
 - **PZL-1** WHEN the page loads, THE SYSTEM SHALL compute `dayNumber` using
   the identical local-midnight algorithm as the toddler mode (`daily.ts`,
   shared/reused function), including the pre-launch clamp to Day 1.
-- **PZL-2** WHEN `dayNumber` is computed, THE SYSTEM SHALL derive the
-  device-local day-of-week. IF it is Sunday, THE SYSTEM SHALL select today's
-  puzzle from `content/puzzles-1percent.json`; OTHERWISE it SHALL select a
-  difficulty tier via a seeded PRNG (`difficultySeed(dayNumber)`, mulberry32)
-  weighted toward easy — draft split **easy 50% / medium 35% / hard 15%**
-  (provisional, like the time bands in §4; tune after real play).
-- **PZL-3** WHEN a difficulty tier is chosen, THE SYSTEM SHALL select that
-  day's puzzle as `pool[(dayNumber) % pool.length]` from the matching tier's
-  array in `content/puzzles.json`, using a positive-modulo helper (same
-  pattern as `todaysDino`). Small pools repeating on a cycle is accepted,
+- **PZL-2** *(revised 2026-09-23, sign-off #13)* WHEN `dayNumber` is
+  computed, THE SYSTEM SHALL build today's round as exactly three
+  questions in a fixed order: Q1 from the `easy` pool, Q2 from the `medium`
+  pool, Q3 from the `hard` pool — each drawn as
+  `pool[dayNumber % pool.length]` from `content/puzzles.json`, using a
+  positive-modulo helper (same pattern as `todaysDino`). There is no
+  per-day randomized difficulty-tier selection; every day always has all
+  three difficulties present. Small pools repeating on a cycle is accepted,
   same as the dino roster.
+- **PZL-3** *(revised 2026-09-23, sign-off #17)* WHEN `dayNumber` is
+  computed, THE SYSTEM SHALL derive the device-local day-of-week. IF it is
+  Sunday, THE SYSTEM SHALL draw Q3 from `content/puzzles-1percent.json`
+  (same positive-modulo cycling) instead of the regular `hard` pool, and
+  SHALL flag that question as untimed (see ANS-2, TMR §4). Q1 and Q2 are
+  drawn from the regular `easy`/`medium` pools as on any other day.
 - **PZL-4** WHEN the same day is loaded twice, THE SYSTEM SHALL produce an
-  identical puzzle, difficulty, and (if applicable) special-day status —
-  same determinism guarantee as DPS-4.
+  identical round (all three questions, in the same order), and, on
+  Sundays, identical special-question status — same determinism guarantee
+  as DPS-4.
 - **PZL-5** THE SYSTEM SHALL make zero network requests; puzzle selection is
   fully determined by the date and files in the repo.
 
@@ -190,45 +232,73 @@ required, but developers have an edge
 
 ## 3. Answer Flow (ANS)
 
-- **ANS-1** THE SYSTEM SHALL allow exactly one attempt per puzzle per day
-  (confirmed 2026-08-14); once an answer is locked in, THE SYSTEM SHALL show
-  results immediately and SHALL NOT allow changing the answer.
-- **ANS-2** *(revised 2026-08-15 — was: visible stopwatch on regular days,
-  hidden on special days)* THE SYSTEM SHALL track elapsed time silently on
-  every puzzle, every day, including the weekly special — but SHALL NEVER
-  display a running clock, countdown, or numeric timer anywhere in the
-  play or reveal UI. The timing exists only to compute the banner tier
-  (§4); showing it was found to add test-taking pressure that worked
-  against the "this should be fun" goal. Difficulty context (not raw time)
-  may appear on the results screen only, after the fact (RES-1a).
-- **ANS-3** THE SYSTEM SHALL require the player to select an answer and then
-  separately confirm ("Lock it in") before submitting (confirmed
-  2026-08-14), to avoid an accidental tap consuming the day's one attempt.
-- **ANS-4** *(revised 2026-08-15)* THE SYSTEM SHALL stop the silent timer at
-  the moment of confirmation, not at selection — same instant as before,
-  just no visible readout tied to it.
+- **ANS-1** *(revised 2026-09-23, sign-off #14)* THE SYSTEM SHALL allow
+  exactly one attempt per round per day; once the round is locked in, THE
+  SYSTEM SHALL show results immediately and SHALL NOT allow changing any of
+  the three answers.
+- **ANS-2** *(revised 2026-09-23)* THE SYSTEM SHALL track elapsed time
+  silently for each question, every day — but SHALL NEVER display a
+  running clock, countdown, or numeric timer anywhere in the play or reveal
+  UI. On Sundays, Q3 (the special question, PZL-3) is untimed: THE SYSTEM
+  SHALL NOT start or accumulate a timer for that question, and it
+  contributes nothing to the total-time check in TMR-1. Timing exists only
+  to compute the banner tier (§4); showing it was found to add
+  test-taking pressure that worked against the "this should be fun" goal.
+  Difficulty context (not raw time) may appear on the results screen only,
+  after the fact (RES-1a).
+- **ANS-3** *(revised 2026-09-23, sign-off #14)* THE SYSTEM SHALL require
+  the player to answer all three questions and then separately confirm
+  ("Lock it in") once for the whole round before submitting — not a
+  per-question confirm — to avoid an accidental tap consuming the day's
+  one attempt, and to avoid revealing an early question's correctness
+  before the later two are answered.
+- **ANS-4** THE SYSTEM SHALL stop each question's silent timer the moment
+  that question's answer is selected (or, on Sunday's untimed Q3, not run
+  a timer at all) — the round-level "Lock it in" tap does not retroactively
+  extend any individual question's elapsed time.
 
-## 4. Timing & Banner Tiers (TMR)
+## 4. Correctness & Banner Tiers (TMR)
 
-- **TMR-1** THE SYSTEM SHALL evaluate correct-answer speed against a
-  per-difficulty time-band table (draft values below; explicitly provisional,
+*Rewritten 2026-09-23 (sign-off #15/#17) — supersedes the v1 per-difficulty
+speed-band design entirely. Weekdays now key primarily off how many of the
+three questions were correct, with total time as a 3/3 tiebreaker and Q3
+(the hard question) weighted more than a straight fraction; Sunday collapses
+to a binary acceptance/waitlist outcome. §5's "school pools" table is
+unchanged and still shared by both paths.*
+
+- **TMR-1** *(Mon–Sat)* WHEN a round is locked in on a non-Sunday, THE
+  SYSTEM SHALL assign the banner tier as follows (values provisional,
   expect to retune after real play — same spirit as the toddler game's
   animation timings):
 
-| Difficulty | Tier 1 (top) | Tier 2 | Tier 3 | Tier 4 (slow) |
-|---|---|---|---|---|
-| Easy | 0–5s | 5–15s | 15–20s | 20s+ |
-| Medium | 0–10s | 10–30s | 30–40s | 40s+ |
-| Hard | 0–15s | 15–45s | 45–60s | 60s+ |
-| 1% Club | untimed — correct = automatic Tier 1 | — | — | — |
+| Result | Tier |
+|---|---|
+| 3/3 correct, total time (Q1+Q2+Q3) ≤ 30s | **Tier 1** |
+| 3/3 correct, total time > 30s | Tier 2 |
+| 2/3 correct, Q3 (hard) among the correct answers | Tier 2 |
+| 2/3 correct, Q3 missed | Tier 3 |
+| 1/3 correct | Tier 4 |
+| 0/3 correct | Fail |
 
-- **TMR-2** WHEN the answer is incorrect, THE SYSTEM SHALL assign the Fail
-  tier regardless of time elapsed.
-- **TMR-3** WHEN a tier is assigned, THE SYSTEM SHALL randomly select one
-  school name from that tier's pool (below) using a seeded random draw, and
-  SHALL persist the chosen school in `lastPlayed` at the moment of
-  completion — it SHALL NOT be re-rolled on subsequent views of the same
-  day's results (preserves the same-day-same-result invariant, PZL-4).
+- **TMR-2** *(Sunday — sign-off #17)* WHEN a round is locked in on a
+  Sunday, THE SYSTEM SHALL ignore the Mon–Sat table above entirely and
+  assign a binary outcome instead: 3/3 correct (including the untimed
+  special Q3, ANS-2) SHALL yield **Tier 1 ("acceptance")**; any other
+  result (0, 1, or 2 correct) SHALL yield **Waitlisted**, a distinct
+  non-tiered outcome. There is no Sunday Tier 2/3/4/Fail.
+- **TMR-3** WHEN a Mon–Sat tier (Tier 1–4 or Fail) is assigned, THE SYSTEM
+  SHALL randomly select one school name from that tier's pool (§ below)
+  using a seeded random draw, and SHALL persist the chosen school in
+  `lastPlayed` at the moment of completion — it SHALL NOT be re-rolled on
+  subsequent views of the same day's results (preserves the
+  same-day-same-result invariant, PZL-4).
+- **TMR-3a** *(Sunday — sign-off #17)* WHEN the Sunday outcome is
+  **Waitlisted**, THE SYSTEM SHALL draw the displayed school from the same
+  **Tier 1** pool (§ below) rather than a separate pool, for the "so close"
+  joke (e.g. "Princeton has put you on the waitlist 😅"). A Sunday
+  **Tier 1 acceptance** also draws from the Tier 1 pool as usual. This
+  retires the old WKS-4 "separate gentler fail pool" concept — Waitlisted
+  is the only non-acceptance Sunday outcome.
 
 | Tier | Schools |
 |---|---|
@@ -239,19 +309,20 @@ required, but developers have an edge
 | Fail | Coastal Carolina, Central Connecticut State, Cape Cod CC, Arizona State, Ole Miss |
 
 - **TMR-4** THE SYSTEM SHALL display the banner as a short, warm line (e.g.
-  "Yale is calling. 🎓") rather than a bare school name, so a Fail-tier
-  result reads as a joke, not an insult.
-- **TMR-5** *(new 2026-08-15)* WHEN an answer is confirmed (ANS-3), THE
-  SYSTEM SHALL first show a brief, standalone **reveal** screen — the
-  pennant (full size) plus a short correct/incorrect word, and nothing
-  else: no tier name, no school subtitle beyond the pennant's own text, no
-  numeric time. THE SYSTEM SHALL auto-advance from reveal to the results
-  screen after a short pause (exact duration TBD in design, expect shorter
-  than the toddler game's 4–8s hatch celebration since there's no
-  dance/confetti sequence to run — a quieter moment). The fuller context
-  (tier-appropriate difficulty word, compact pennant badge, explanation)
-  lives on the results screen that follows, not on reveal itself — see
-  RES-1a.
+  "Yale is calling. 🎓" / "Princeton has put you on the waitlist 😅")
+  rather than a bare school name, so a Fail-tier or Waitlisted result reads
+  as a joke, not an insult.
+- **TMR-5** WHEN a round is confirmed (ANS-3), THE SYSTEM SHALL first show
+  a brief, standalone **reveal** screen — the pennant (full size) plus a
+  short per-question correct/incorrect summary (e.g. three check/x marks),
+  and nothing else: no tier name, no school subtitle beyond the pennant's
+  own text, no numeric time. THE SYSTEM SHALL auto-advance from reveal to
+  the results screen after a short pause (exact duration TBD in design,
+  expect shorter than the toddler game's 4–8s hatch celebration since
+  there's no dance/confetti sequence to run — a quieter moment). The fuller
+  context (tier-appropriate difficulty word, compact pennant badge,
+  per-question explanations) lives on the results screen that follows, not
+  on reveal itself — see RES-1/RES-1a.
 
 ## 5. Explanations & Feedback (EXP)
 
@@ -269,22 +340,24 @@ required, but developers have an edge
 
 ## 6. Results & Sharing (RES / SHR)
 
-- **RES-1** *(revised 2026-08-15)* WHEN the results screen renders, THE
-  SYSTEM SHALL show: the puzzle prompt, the player's answer,
-  correct/incorrect status, a **compact pennant badge** (small pennant icon
-  + school name + short line, e.g. "Nice work" — not the full-size pennant,
-  which is reserved for the reveal moment per TMR-5), the explanation
-  (collapsed by default, EXP-1), and current accuracy streak. Raw elapsed
-  time is never shown (ANS-2).
-- **RES-1a** *(new 2026-08-15)* THE SYSTEM SHALL show a short, plain
-  difficulty word near the pennant badge (e.g. "Medium puzzle") — context,
-  not a mechanic explainer. THE SYSTEM SHALL NOT state the actual time
-  thresholds (no "under 10s gets top tier" language) — keeping the exact
-  banner mechanic a little mysterious was judged more fun than fully
-  transparent.
+- **RES-1** *(revised 2026-09-23, sign-off #13/#15)* WHEN the results
+  screen renders, THE SYSTEM SHALL show: a **per-question breakdown** for
+  all three questions (prompt, the player's answer, correct/incorrect
+  status, and an explanation collapsed by default per EXP-1), the round's
+  **compact pennant badge** (small pennant icon + school name + short line,
+  e.g. "Nice work" — not the full-size pennant, which is reserved for the
+  reveal moment per TMR-5), and current (perfect-day) streak. Raw elapsed
+  time is never shown (ANS-2) for any question, including the untimed
+  Sunday special.
+- **RES-1a** THE SYSTEM SHALL show a short, plain difficulty word next to
+  each question in the breakdown (e.g. "Medium," "Hard," or, on Sunday,
+  something like "Special") — context, not a mechanic explainer. THE
+  SYSTEM SHALL NOT state the actual tier rule (no "3/3 under 30s gets top
+  tier" language) — keeping the exact banner mechanic a little mysterious
+  was judged more fun than fully transparent.
 - **RES-2** WHEN the results screen renders, THE SYSTEM SHALL also show a
   short, permanent line pairing the once-a-day cadence with the streak —
-  e.g. "🔥 New puzzle tomorrow — keep the streak going." Always shown, not
+  e.g. "🔥 New round tomorrow — keep the streak going." Always shown, not
   first-time-only; no dismiss action, no extra localStorage state. Mirrors
   the equivalent decision for the toddler mode (see
   `toddler-results-clarity-addendum.md`, SHR-7) — kept consistent across
@@ -292,33 +365,37 @@ required, but developers have an edge
   audience needs the reminder less (the daily-puzzle genre is already
   familiar from Wordle-adjacent games). Cheap to include since the streak
   it's paired with is already rendered per RES-1.
-- **SHR-1** WHEN the share button is tapped, THE SYSTEM SHALL build
-  plain-text share content including: product name, day number, category,
-  correct/incorrect + time (or "1% Club — solved it" for the special), the
-  school banner line, current streak, and https://cupofiq.com/puzzle.
-  Mechanism (Web Share API → clipboard fallback) matches SHR-3/SHR-4 in the
-  toddler spec.
+- **SHR-1** *(revised 2026-09-23)* WHEN the share button is tapped, THE
+  SYSTEM SHALL build plain-text share content including: product name, day
+  number, score (e.g. "2/3" or, on a Sunday acceptance, "3/3 — accepted!"),
+  the school/waitlist banner line, current streak, and
+  https://cupofiq.com/puzzle. Mechanism (Web Share API → clipboard
+  fallback) matches SHR-3/SHR-4 in the toddler spec.
 - **SHR-2** Share text SHALL contain no PII beyond what the player chooses
   to add themselves.
 
 ## 7. Once-a-Day Lock (LCK)
 
-- **LCK-1** WHEN today's puzzle has already been completed on this device,
-  THE SYSTEM SHALL show a come-back card instead of the puzzle: today's
-  result (correct/incorrect, banner, explanation still visible), a "new
-  puzzle tomorrow" message, and share/copy controls — same pattern as the
-  toddler mode's comeback card (LCK-1..4 in requirements.md).
-- **LCK-2** In-progress state (selected-but-not-locked-in answer, running
-  timer) SHALL NOT persist across reload; a reload before confirming
-  restarts that day's timer from zero. This SHALL NOT count as a completed
-  attempt.
+- **LCK-1** WHEN today's round has already been completed on this device,
+  THE SYSTEM SHALL show a come-back card instead of the round: today's
+  result (per-question breakdown, banner, explanations still visible), a
+  "new round tomorrow" message, and share/copy controls — same pattern as
+  the toddler mode's comeback card (LCK-1..4 in requirements.md).
+- **LCK-2** In-progress state (any selected-but-not-locked-in answers,
+  running per-question timers) SHALL NOT persist across reload; a reload
+  before confirming restarts that day's round (and all three timers) from
+  the beginning. This SHALL NOT count as a completed attempt.
 
 ## 8. Streaks (STK)
 
-- **STK-1** WHEN a round completes correctly, THE SYSTEM SHALL increment
-  `accuracyStreak`.
-- **STK-2** WHEN a round completes incorrectly, THE SYSTEM SHALL reset
-  `accuracyStreak` to 0.
+- **STK-1** *(revised 2026-09-23, sign-off #16)* WHEN a round completes
+  with a **perfect result** — 3/3 correct on a weekday, or a 3/3 Sunday
+  acceptance — THE SYSTEM SHALL increment `accuracyStreak`.
+- **STK-2** *(revised 2026-09-23, sign-off #16)* WHEN a round completes
+  with any other result — 0/3, 1/3, or 2/3 on a weekday, or a Sunday
+  Waitlisted outcome — THE SYSTEM SHALL reset `accuracyStreak` to 0. There
+  is no partial-credit carve-out: only a true perfect day keeps the streak
+  alive.
 - **STK-3** THE SYSTEM SHALL separately track `bestStreak`, which SHALL
   never decrease.
 - **STK-4** THE current streak SHALL be shown on the results screen and
@@ -327,19 +404,17 @@ required, but developers have an edge
 
 ## 9. Weekly "1% Club" Special (WKS)
 
-- **WKS-1** THE SYSTEM SHALL designate **Sunday** (device-local, confirmed
-  2026-08-14) as the 1% Club day.
-- **WKS-2** On that day, THE SYSTEM SHALL select the puzzle from
-  `content/puzzles-1percent.json` using the same positive-modulo cycling as
-  PZL-3, and SHALL display no timer (ANS-2).
-- **WKS-3** WHEN the 1% Club answer is correct, THE SYSTEM SHALL assign
-  Tier 1 automatically, regardless of how long it took.
-- **WKS-4** WHEN the 1% Club answer is incorrect, THE SYSTEM SHALL assign a
-  dedicated **Sunday Fail** tier — a separate, gentler pool from the regular
-  weekday Fail tier (TMR-3), reflecting that an untimed miss on the week's
-  hardest puzzle deserves softer treatment than a rushed weekday miss.
-  Content for this pool (school names + copy tone) is a content-writing task,
-  not a further product decision.
+*Rewritten 2026-09-23 (sign-off #17) — the special is no longer a
+standalone puzzle/page; it is folded into the regular three-question round
+as Sunday's Q3 slot. See PZL-3 (selection), ANS-2 (untimed), and TMR-2/3a
+(binary acceptance/waitlist outcome) for the mechanics; this section now
+just anchors the day-of-week rule.*
+
+- **WKS-1** THE SYSTEM SHALL designate **Sunday** (device-local) as the
+  special day, per PZL-3.
+- **WKS-2** *(superseded by TMR-2/TMR-3a)* ~~Standalone 1% Club
+  tiering~~ — retired. Sunday's outcome is binary (acceptance/Waitlisted),
+  not tiered; see TMR-2.
 
 ## 10. Landing Page / Mode Chooser (LND)
 
@@ -373,10 +448,10 @@ directly — same repo, same principles, same architecture:
   third-party scripts, no cookies (mirrors NFR-3/NFR-5).
 - **NFR-S2** Static files only, deployed via the existing GitHub Pages
   pipeline; recurring cost stays the domain only (mirrors NFR-4).
-- **NFR-S3** Adding a new puzzle SHALL require appending one JSON entry —
-  no code change (mirrors NFR-6).
+- **NFR-S3** Adding a new puzzle SHALL require appending one JSON entry to
+  the relevant difficulty pool — no code change (mirrors NFR-6).
 - **NFR-S4** WHEN localStorage is unavailable (private browsing), THE
-  SYSTEM SHALL still run today's puzzle normally, with no lock and no
+  SYSTEM SHALL still run today's round normally, with no lock and no
   streak persistence (mirrors NFR-7).
 - **NFR-S5** Shared modules (`daily.ts`'s date math, `share.ts`'s
   share/clipboard logic, `progress.ts`'s localStorage patterns) SHOULD be
