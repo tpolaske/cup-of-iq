@@ -1,4 +1,4 @@
-# Cup of IQ — Puzzle Mode Design (v1 draft, 2026-08-15)
+# Cup of IQ — Puzzle Mode Design (v2 draft, 2026-09-23)
 
 *Companion to `design.md` (toddler dino mode) and `requirements-puzzle.md`.
 Same repo, same stack, same no-backend static-files architecture — this
@@ -27,15 +27,15 @@ isn't worth it for a joke banner. Full design in §9.
 ## 2. Architecture overview
 
 ```
-                    ┌────────────────────────────────────┐
+                    ┌───────────────────────────────────┐
                     │  index.html (static landing router) │
                     │  root "/" — two-icon chooser        │
                     │  no persistence, always shown       │
-                    └───────┬──────────────────┬──────────┘
+                    └───┬───────────────┬──────────┘
                             │                   │
                      "/dino/"             "/puzzle/"
                             │                   │
-              (existing toddler app)   ┌────────▼─────────────┐
+              (existing toddler app)   ┌────────▼─────────┐
                                         │ main.ts — decide      │
                                         │ today's screen        │
                                         │  played today? ─yes─► │
@@ -44,13 +44,12 @@ isn't worth it for a joke banner. Full design in §9.
                                         │       ▼               │
                                         │  puzzle.ts (state      │
                                         │  machine)              │
-                                        └──┬─────────┬──────────┘
+                                        └──┬─────────┬────────┘
                                            │         │
                                     daily.ts   progress.ts
                                  (dayNumber,   (localStorage,
-                                  difficulty    streak rules)
-                                  seed, puzzle
-                                  pick)              │
+                                  fixed 3-Q     streak rules)
+                                  round pick)         │
                                            banner.ts  share.ts
                                         (tier calc,   (text builder,
                                          school pick)  Web Share/
@@ -66,27 +65,29 @@ module rather than reimplemented — per NFR-S5, this is exactly the kind of
 genuinely-shared logic worth extracting once both modes exist. Puzzle
 selection, banner tiers, and the timer are new, Puzzle-mode-only logic.
 
-**States:** *(revised 2026-08-15)* `idle → awaiting_answer → locked_in →
-reveal → results`, plus the standalone `comeback` screen (post-completion).
-A `reveal` state was added after visual review — a brief, standalone
-pennant moment (full-size pennant, correct/incorrect word, nothing else)
-that auto-advances into `results`. This actually brings Puzzle mode's state
-shape closer to the toddler game's `celebration → results` pattern than
-originally planned, just quieter (no dance loop, no confetti unless it's a
-Tier-1/Sunday-solved result).
+**States:** *(revised 2026-09-23, requirements.md sign-off #13/#14)*
+`idle → answering_round → locked_in → reveal → results`, plus the
+standalone `comeback` screen (post-completion). `answering_round` now
+covers all three questions at once — the player moves Q1→Q2→Q3 within a
+single screen/step sequence, with nothing submitted until the round-level
+"Lock it in" (ANS-3) fires. A `reveal` state runs after lock-in — a brief,
+standalone pennant moment (full-size pennant, a per-question
+correct/incorrect summary, nothing else) that auto-advances into `results`.
+This brings Puzzle mode's state shape closer to the toddler game's
+`celebration → results` pattern than the v1 single-question design did,
+just quieter (no dance loop, no confetti unless it's a Tier-1/Sunday-
+acceptance result).
 
-## 3. Daily Puzzle Selection
+## 3. Daily Round Selection
+
+*Rewritten 2026-09-23 (requirements.md sign-off #13/#17) — replaces the v1
+randomized-single-difficulty pick with a fixed three-question round.*
 
 ```ts
 // puzzle-daily.ts
 
 export type Difficulty = 'easy' | 'medium' | 'hard' | '1percent';
-
-const DIFFICULTY_WEIGHTS: Record<Exclude<Difficulty, '1percent'>, number> = {
-  easy: 0.50,
-  medium: 0.35,
-  hard: 0.15,
-}; // provisional — see requirements-puzzle.md PZL-2, retune after real play
+export type Slot = 'q1' | 'q2' | 'q3';
 
 function posMod(n: number, m: number): number { return ((n % m) + m) % m; }
 
@@ -102,66 +103,91 @@ function mulberry32(seed: number): () => number {
 }
 
 export function isSpecialDay(now = new Date()): boolean {
-  return now.getDay() === 0; // Sunday, device-local — WKS-1
+  return now.getDay() === 0; // Sunday, device-local — PZL-3
 }
 
-export function pickDifficulty(dayNumber: number): Exclude<Difficulty, '1percent'> {
-  const rand = mulberry32(dayNumber * 7 + 3)(); // distinct seed space from board/dino seeds
-  let cum = 0;
-  for (const [tier, weight] of Object.entries(DIFFICULTY_WEIGHTS)) {
-    cum += weight;
-    if (rand < cum) return tier as Exclude<Difficulty, '1percent'>;
-  }
-  return 'hard'; // float-rounding fallback
+export interface RoundQuestion {
+  slot: Slot;
+  difficulty: Difficulty;
+  puzzle: Puzzle;
+  timed: boolean; // false only for Sunday's Q3 (ANS-2)
 }
 
-export function todaysPuzzle(dayNumber: number, now: Date, content: PuzzleContent): Puzzle {
-  if (isSpecialDay(now)) {
-    const pool = content.onePercent;
-    return pool[posMod(dayNumber, pool.length)];
-  }
-  const difficulty = pickDifficulty(dayNumber);
-  const pool = content.byDifficulty[difficulty];
-  return pool[posMod(dayNumber, pool.length)];
+// PZL-2/PZL-3: fixed order every day — Q1 easy, Q2 medium, Q3 hard
+// (Q3 becomes the 1percent pool, untimed, on Sundays).
+export function todaysRound(dayNumber: number, now: Date, content: PuzzleContent): RoundQuestion[] {
+  const q1 = content.byDifficulty.easy[posMod(dayNumber, content.byDifficulty.easy.length)];
+  const q2 = content.byDifficulty.medium[posMod(dayNumber, content.byDifficulty.medium.length)];
+  const sunday = isSpecialDay(now);
+  const q3Pool = sunday ? content.onePercent : content.byDifficulty.hard;
+  const q3 = q3Pool[posMod(dayNumber, q3Pool.length)];
+  return [
+    { slot: 'q1', difficulty: 'easy',   puzzle: q1, timed: true },
+    { slot: 'q2', difficulty: 'medium', puzzle: q2, timed: true },
+    { slot: 'q3', difficulty: sunday ? '1percent' : 'hard', puzzle: q3, timed: !sunday },
+  ];
 }
 ```
 
 Same determinism guarantee as the toddler game (PZL-4/DPS-4): same
-`dayNumber` + same content files → same puzzle, same difficulty, same
-special-day status, every time, every device, no network call.
+`dayNumber` + same content files → same three-question round, same
+special-question status on Sundays, every time, every device, no network
+call. There is no more `pickDifficulty`/weighted-PRNG step — every day
+always draws from all three difficulty pools, in the same fixed order.
 
-## 4. Timing & Banner Tiers
+## 4. Correctness & Banner Tiers
+
+*Rewritten 2026-09-23 (requirements.md sign-off #15/#17) — replaces the v1
+per-difficulty speed-band table entirely. Weekday tiers now key off how
+many of the three answers were correct, with total time as a 3/3
+tiebreaker and Q3 (hard) weighted above a straight fraction. Sunday
+collapses to a binary outcome instead of a tier.*
 
 ```ts
 // banner.ts
 
-export type Tier = 'tier1' | 'tier2' | 'tier3' | 'tier4' | 'fail' | 'sundayFail';
+export type WeekdayTier = 'tier1' | 'tier2' | 'tier3' | 'tier4' | 'fail';
+export type SundayOutcome = 'accepted' | 'waitlisted';
 
-const TIME_BANDS: Record<Exclude<Difficulty, '1percent'>, { tier1: number; tier2: number; tier3: number }> = {
-  easy:   { tier1: 5,  tier2: 15, tier3: 20 },
-  medium: { tier1: 10, tier2: 30, tier3: 40 },
-  hard:   { tier1: 15, tier2: 45, tier3: 60 },
-}; // provisional, TMR-1 — expect to retune after real play, same spirit as
-   // the toddler game's animation timings
-
-export function computeTier(
-  difficulty: Difficulty,
-  correct: boolean,
-  seconds: number
-): Tier {
-  if (difficulty === '1percent') {
-    return correct ? 'tier1' : 'sundayFail'; // WKS-3/WKS-4 — separate, gentler fail pool
-  }
-  if (!correct) return 'fail';
-  const b = TIME_BANDS[difficulty];
-  if (seconds <= b.tier1) return 'tier1';
-  if (seconds <= b.tier2) return 'tier2';
-  if (seconds <= b.tier3) return 'tier3';
-  return 'tier4';
+export interface RoundResult {
+  q1Correct: boolean;
+  q2Correct: boolean;
+  q3Correct: boolean; // the "hard" slot, or Sunday's untimed special
+  totalSeconds: number; // Q1+Q2 elapsed, plus Q3 only when timed (ANS-2)
 }
 
-export function pickSchool(tier: Tier, seed: number, schools: SchoolContent): string {
-  const pool = schools[tier];
+const TIER1_TOTAL_SECONDS = 30; // provisional, TMR-1 — expect to retune after real play
+
+// TMR-1 — Mon–Sat only. Correctness drives the tier; total time is a
+// 3/3 tiebreaker only; Q3 correctness outweighs a straight fraction at 2/3.
+export function computeWeekdayTier(r: RoundResult): WeekdayTier {
+  const correctCount = [r.q1Correct, r.q2Correct, r.q3Correct].filter(Boolean).length;
+  if (correctCount === 3) {
+    return r.totalSeconds <= TIER1_TOTAL_SECONDS ? 'tier1' : 'tier2';
+  }
+  if (correctCount === 2) {
+    return r.q3Correct ? 'tier2' : 'tier3';
+  }
+  if (correctCount === 1) return 'tier4';
+  return 'fail';
+}
+
+// TMR-2 — Sunday only. Binary: 3/3 (including the untimed special Q3) or
+// anything less. No Tier 2/3/4/Fail on Sundays.
+export function computeSundayOutcome(r: RoundResult): SundayOutcome {
+  return r.q1Correct && r.q2Correct && r.q3Correct ? 'accepted' : 'waitlisted';
+}
+
+// TMR-3/TMR-3a — a Sunday outcome maps onto the *same* school pools as the
+// weekday tiers: 'accepted' → tier1 pool, 'waitlisted' → tier1 pool too
+// (the "so close" joke), never a separate sundayFail pool.
+export function pickSchool(
+  tier: WeekdayTier | 'accepted' | 'waitlisted',
+  seed: number,
+  schools: SchoolContent
+): string {
+  const poolKey = tier === 'accepted' || tier === 'waitlisted' ? 'tier1' : tier;
+  const pool = schools[poolKey];
   const rand = mulberry32(seed)();
   return pool[Math.floor(rand * pool.length)];
 }
@@ -173,38 +199,52 @@ reproducible if the page reloads the same day) — the chosen school is then
 written into `lastPlayed` and read back on subsequent views, never
 recomputed. This mirrors the toddler game's DPS-4 same-day-same-result
 invariant; re-rolling the school on every results-screen view would look
-like a bug ("wait, it said Yale a second ago").
+like a bug ("wait, it said Yale a second ago"). Note there is no more
+`sundayFail` school pool — Waitlisted reuses `tier1`'s names (TMR-3a).
 
 ## 5. localStorage Schema
 
-Own namespaced key, `cupofiq.puzzle.v1` — separate from the toddler game's
-`cupofiq.v1` (NFR-S5: separate mode-specific state, not shared):
+Own namespaced key, `cupofiq.puzzle.v2` — separate from the toddler game's
+`cupofiq.v1` (NFR-S5: separate mode-specific state, not shared). Schema
+version bumped from the old single-puzzle shape; a v1→v2 migration just
+drops the old `lastPlayed` shape rather than trying to translate it (one
+day of stale "last played" state isn't worth preserving):
 
 ```json
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "accuracyStreak": 4,
   "bestStreak": 11,
   "lastPlayed": {
     "dayNumber": 96,
-    "difficulty": "medium",
     "isSpecialDay": false,
-    "correct": true,
-    "seconds": 14,
-    "tier": "tier2",
-    "school": "Northwestern",
-    "puzzleId": "sneaky-discount-01"
+    "questions": [
+      { "slot": "q1", "difficulty": "easy",   "puzzleId": "shape-seq-04",     "correct": true,  "seconds": 6 },
+      { "slot": "q2", "difficulty": "medium", "puzzleId": "sneaky-discount-01", "correct": true,  "seconds": 11 },
+      { "slot": "q3", "difficulty": "hard",   "puzzleId": "seating-logic-02", "correct": false, "seconds": 22 }
+    ],
+    "totalSeconds": 17,
+    "outcome": "tier2",
+    "school": "Northwestern"
   }
 }
 ```
 
+On a Sunday, `outcome` is `"accepted"` or `"waitlisted"` instead of a
+weekday tier, `questions[2].difficulty` is `"1percent"`, and
+`questions[2].seconds` is omitted/ignored (untimed, ANS-2) — `totalSeconds`
+reflects Q1+Q2 only that day.
+
 - Lock check (mirrors LCK-1): `lastPlayed.dayNumber === dayNumber(now)`.
-- `accuracyStreak` increments on correct, resets to 0 on incorrect (STK-1/2).
+- `accuracyStreak` increments only on a perfect result — weekday 3/3 or
+  Sunday `"accepted"` — and resets to 0 on anything else, including
+  `"waitlisted"` (STK-1/2, no partial-credit carve-out).
 - `bestStreak` never decreases (STK-3).
-- In-progress state (selected-but-not-confirmed answer, running timer) is
-  never persisted — a same-day reload restarts the timer from zero and does
-  not count as an attempt (LCK-2), same accepted-loophole spirit as the
-  toddler game's sign-off #9.
+- In-progress state (any selected-but-not-confirmed answers, running
+  per-question timers) is never persisted — a same-day reload restarts the
+  whole round (and all three timers) from the beginning and does not count
+  as an attempt (LCK-2), same accepted-loophole spirit as the toddler
+  game's sign-off #9.
 - Private-mode fallback identical to NFR-7: no localStorage → game still
   runs, no lock, no streak persistence, share still works from the same
   session.
@@ -214,55 +254,62 @@ Own namespaced key, `cupofiq.puzzle.v1` — separate from the toddler game's
 | Module | Responsibility |
 |---|---|
 | `src/landing.ts` | Root route: renders the two-icon chooser, routes to `/dino/` or `/puzzle/`. No persistence (LND-3). |
-| `src/puzzle/main.ts` | Boot: read state, compute day, route to puzzle screen or comeback screen |
-| `src/puzzle/puzzle.ts` | State machine: `idle → awaiting_answer → locked_in → results` |
-| `src/puzzle/puzzle-daily.ts` | `todaysPuzzle`, `pickDifficulty`, `isSpecialDay` — pure, fully unit-tested (§3) |
-| `src/puzzle/banner.ts` | `computeTier`, `pickSchool` — pure, fully unit-tested (§4) |
-| `src/puzzle/progress.ts` | localStorage read/write, schema migration, streak rules — pure core, tested |
-| `src/puzzle/timer.ts` | Stopwatch: starts on mount (skipped entirely on special days), stops on lock-in |
+| `src/puzzle/main.ts` | Boot: read state, compute day, route to round screen or comeback screen |
+| `src/puzzle/puzzle.ts` | State machine: `idle → answering_round → locked_in → reveal → results` |
+| `src/puzzle/puzzle-daily.ts` | `todaysRound`, `isSpecialDay` — pure, fully unit-tested (§3) |
+| `src/puzzle/banner.ts` | `computeWeekdayTier`, `computeSundayOutcome`, `pickSchool` — pure, fully unit-tested (§4) |
+| `src/puzzle/progress.ts` | localStorage read/write (schema v2, §5), schema migration, perfect-day streak rules — pure core, tested |
+| `src/puzzle/timer.ts` | Per-question stopwatch: starts on each question's mount (skipped entirely for Sunday's Q3), stops when that question's answer is selected |
 | `src/puzzle/share.ts` | `buildShareText(result)`, `share()` — Web Share → clipboard fallback, same pattern as toddler `share.ts` |
-| `src/puzzle/screens/play.ts` | Puzzle prompt, answer selection, "Lock it in" confirm (ANS-3) |
-| `src/puzzle/screens/results.ts` | Recap, explanation (always shown), banner, streak, share/copy |
-| `src/puzzle/screens/comeback.ts` | Come-back card: today's result recap, "new puzzle tomorrow," share controls |
-| `content/puzzles.json` | Regular-day puzzles, keyed by difficulty |
-| `content/puzzles-1percent.json` | Weekly special pool |
-| `content/schools.json` | Tier → school name arrays (§4), plus the separate Sunday-fail pool |
+| `src/puzzle/screens/play.ts` | Q1→Q2→Q3 prompt + answer selection within one round, round-level "Lock it in" confirm (ANS-3) |
+| `src/puzzle/screens/reveal.ts` | Full pennant + per-question correct/incorrect summary, auto-advances to results (TMR-5) |
+| `src/puzzle/screens/results.ts` | Per-question breakdown (RES-1), banner, streak, share/copy |
+| `src/puzzle/screens/comeback.ts` | Come-back card: today's round recap, "new round tomorrow," share controls |
+| `content/puzzles.json` | Regular-day puzzles, keyed by difficulty — every day now draws from all three (`easy`/`medium`/`hard`) at once |
+| `content/puzzles-1percent.json` | Sunday Q3 special pool |
+| `content/schools.json` | Tier → school name arrays (§4): `tier1`..`tier4`, `fail`. No separate Sunday pool — Waitlisted reuses `tier1` (TMR-3a). |
 | `assets/landing/` | `icon-badge.webp` (corner mark), inline SVG for the two mode-chooser icons (no separate files — inlined in `landing.ts` for zero extra requests) |
 
 ## 7. Answer Flow — implementation notes
 
-- **Select-then-confirm (ANS-3):** tapping a choice highlights it but does
-  not submit; a separate "Lock it in" button commits the answer and stops
-  the (invisible) timer. Prevents a mis-tap from burning the day's one
-  attempt.
-- **One attempt only (ANS-1):** once locked in, the play screen is
+- **Select-then-round-level-confirm (ANS-3, revised 2026-09-23, sign-off
+  #14):** tapping a choice on Q1, Q2, or Q3 highlights it but does not
+  submit anything; the player can move between all three questions freely
+  before locking in. A single "Lock it in" button, shown once all three
+  are answered, commits the whole round at once and stops any still-running
+  per-question timers. This replaced a per-question confirm specifically
+  to avoid leaking Q1's correctness before Q2/Q3 are answered, on top of
+  the original fat-finger protection.
+- **One attempt per round (ANS-1):** once locked in, the play screen is
   replaced by the reveal moment, then results; there is no path back to
-  `awaiting_answer` for that puzzle that day.
-- **Timer: tracked, never shown (ANS-2, revised 2026-08-15).** `timer.ts`
-  still starts on mount and stops on lock-in exactly as before — the value
-  feeds `computeTier()` (§4) — but no component ever renders it. This
-  applies uniformly now, including regular (non-special) days; the earlier
-  design only hid it on the weekly special. Visual review showed a visible
-  stopwatch reads as test-taking pressure, which works against the
-  "this should be fun" goal running through the whole mode.
+  `answering_round` for that day.
+- **Timer: tracked per-question, never shown (ANS-2).** `timer.ts` starts
+  a fresh stopwatch when each question mounts and stops it the moment that
+  question's answer is selected — no component ever renders any of the
+  three readouts. Sunday's Q3 (the special) never starts a timer at all
+  and contributes nothing to `totalSeconds` (§4). A visible stopwatch was
+  found to read as test-taking pressure, which works against the "this
+  should be fun" goal running through the whole mode.
 - **Reveal is deliberately minimal (TMR-5).** `screens/reveal.ts` renders
-  only the full-size pennant and a short correct/incorrect word — no tier
-  name, no numeric time, no difficulty label. It auto-advances to
-  `results.ts` after a short pause (duration TBD — likely 1.5–2.5s, shorter
-  than the toddler game's 4–8s hatch celebration since there's no
-  dance/confetti sequence to run through on a typical result).
+  only the full-size pennant and a short per-question correct/incorrect
+  summary (e.g. three check/x marks) — no tier name, no numeric time, no
+  difficulty label. It auto-advances to `results.ts` after a short pause
+  (duration TBD — likely 1.5–2.5s, shorter than the toddler game's 4–8s
+  hatch celebration since there's no dance/confetti sequence to run
+  through on a typical result).
 
 ## 8. Explanations
 
-*(Revised 2026-08-15 — was: always rendered unconditionally.)* Every
-puzzle's `explanation` field (CNT-1) is available on the results screen
-behind a single "Show the trick" tap, collapsed by default (EXP-1). This is
-a decluttering change only — the explanation is never harder to reach than
-one tap, never gated behind re-solving or any cost. No visual distinction
-in *how* it reads based on correctness once expanded; same "here's the
-clever reasoning" framing either way (EXP-2). Diagram support
-(EXP-3) is Phase 2 — MVP explanations are text-only, matching the
-text-only puzzle content decision.
+Every question's `explanation` field (CNT-1) is available on the results
+screen behind its own "Show the trick" tap, collapsed by default (EXP-1) —
+now one such control per question in the per-question breakdown (RES-1),
+not a single explanation for the day. The explanation is never harder to
+reach than one tap, never gated behind re-solving or any cost. No visual
+distinction in *how* it reads based on correctness once expanded; same
+"here's the clever reasoning" framing either way (EXP-2), for all three
+questions including Sunday's special. Diagram support (EXP-3) is Phase 2 —
+MVP explanations are text-only, matching the text-only puzzle content
+decision.
 
 ## 9. Asset Plan
 
@@ -323,27 +370,38 @@ scoped to stay on the safe side of the IP line discussed in §1:
   official seal, or the specific proprietary lettering/logo treatment of
   their real wordmark (§1). Generic collegiate *style*, never a specific
   school's registered mark.
-- **Per-tier variation:** Tier 1 and a solved Sunday special get the
-  richest treatment (brightest colors, confetti); the fail tiers (both the
-  regular weekday fail and the separate, gentler Sunday-fail pool per
-  WKS-4) use a deliberately muted, low-saturation felt color regardless of
-  which school name lands — the joke stays gentle, never visually harsh.
+- **Per-tier variation:** *(revised 2026-09-23)* Weekday Tier 1 and a
+  Sunday "accepted" result get the richest treatment (brightest colors,
+  confetti). Weekday Fail uses a deliberately muted, low-saturation felt
+  color — the joke stays gentle, never visually harsh. Sunday's
+  **Waitlisted** outcome reuses the Tier 1 school names (TMR-3a) but gets
+  its own *muted* felt treatment, distinct from both the vivid Tier 1
+  acceptance look and the weekday Fail color — visually it should read as
+  "so close," not "you failed." There is no longer a separate
+  `sundayFail` school pool (WKS-4 retired).
 
 ## 10. Sharing Implementation
 
 ```ts
-// puzzle/share.ts — regular day output:
+// puzzle/share.ts — weekday output:
 // Cup of IQ · Puzzle  Day 96
-// 🔢 Medium — solved in 14s
+// 2/3 correct
 // Northwestern is calling. 🎓
 // 🔥 4-day streak
 // https://cupofiq.com/puzzle
 
-// special-day output:
-// Cup of IQ · Puzzle  Day 98 · 💯 1% Club Sunday
-// Solved it, untimed.
+// Sunday, accepted:
+// Cup of IQ · Puzzle  Day 98 · 💯 Sunday special
+// 3/3 — accepted!
 // Yale is calling. 🎓
 // 🔥 5-day streak
+// https://cupofiq.com/puzzle
+
+// Sunday, waitlisted:
+// Cup of IQ · Puzzle  Day 98 · 💯 Sunday special
+// 2/3 — so close
+// Princeton has put you on the waitlist. 😅
+// 🔥 0-day streak
 // https://cupofiq.com/puzzle
 ```
 
@@ -358,10 +416,14 @@ Mirrors the toddler project's content test pattern:
 - Every puzzle: unique `id`, non-empty `explanation`, exactly one correct
   choice (multiple-choice) or non-empty `answer` + `acceptedAlternates`
   (free-text), `difficulty` and `category` within the enum (CNT-2).
+- `content/puzzles.json` has non-empty `easy`, `medium`, and `hard` pools —
+  every day draws from all three now, so an empty or thin pool in any one
+  of them breaks that day's round, not just a rare randomized pick (PZL-2).
 - `content/puzzles-1percent.json` entries are all `difficulty: "1percent"`
   and don't appear in the regular pools.
-- `content/schools.json` has all five tiers (`tier1`..`tier4`, `fail`) plus
-  `sundayFail`, each non-empty.
+- `content/schools.json` has all five tiers — `tier1`..`tier4`, `fail` —
+  each non-empty. *(Revised 2026-09-23: no separate `sundayFail` pool
+  anymore — Waitlisted reuses `tier1`, TMR-3a.)*
 - *(Should-have, not launch-blocking, CNT-3)* Where feasible, an automated
   arithmetic check for math-flavored puzzles — the sample doc's own
   "Movie Theater" question needed hand-correcting, which is exactly the
@@ -387,6 +449,9 @@ layer between them would mean bending one mode's natural shape to fit the
 other's, or building a generic abstraction neither actually needs — the
 exact "build the engine" trap CLAUDE.md already warns against, just
 arriving from a different direction (mode count instead of feature count).
+*(Note: Puzzle mode's v2 three-question round, §3, is still a single
+select-then-confirm decision at the round level — the shape argument holds
+unchanged, just "one decision" now covers three answers instead of one.)*
 
 ### What's actually identical (worth sharing)
 
@@ -461,7 +526,10 @@ same bar as any other change that touches shipped behavior.
 - Pennant refinements: fringe/tassel detail at the tip, rounded vs. sharp
   corners, size variants for results screen vs. share-image use, and final
   font pick from the Bevan/Alfa Slab One/Playfair Display shortlist (§9)
-- Exact confetti/celebration treatment for a Tier-1 or Sunday-solved result
-- Full ranked school-name list finalization (tiers 1-4 + both fail pools),
-  each paired with its felt/accent color — content-writing task, not a
-  design decision
+- Exact confetti/celebration treatment for a Tier-1 or Sunday-accepted result
+- Full ranked school-name list finalization (tiers 1-4 + the fail pool),
+  each paired with its felt/accent color, plus the distinct muted
+  Waitlisted felt treatment (§9) — content-writing task, not a design
+  decision
+- Per-question breakdown layout on the results screen (RES-1) — three
+  prompt/answer/explanation rows plus the round banner; not mocked up yet
