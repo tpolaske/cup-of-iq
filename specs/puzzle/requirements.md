@@ -209,7 +209,14 @@ required, but developers have an edge
 > CNT-1 below (`wonderlic-style` vs. `Logic/Puzzle`; `1% Club` shown here as a
 > category rather than only a difficulty tier; `Developer Logic` isn't in the
 > enum at all yet). Reconcile before this becomes the literal schema — see
-> disagreements log / needs a sign-off.
+> disagreements log / needs a sign-off. Separately, since sign-off #13
+> (three-question round): the reference doc's 5-tier difficulty ladder
+> (Easy / Medium-Easy / Medium-Hard / Hard / 1% Club) needs collapsing to
+> CNT-1's actual 3-tier `easy | medium | hard` (+ `1percent` special) when
+> content is converted to JSON — `Medium-Easy` and `Medium-Hard` both become
+> `medium`. Worth deciding now whether new prose examples should keep using
+> the 5-tier labels (current practice, for continuity with Batches 1–4) or
+> switch to labeling directly against the 3-tier schema going forward.
 
 - **CNT-1** Each puzzle entry SHALL include: `id`, `category`
   (`brain-teaser` | `clever-math` | `sat-style` | `wonderlic-style`),
