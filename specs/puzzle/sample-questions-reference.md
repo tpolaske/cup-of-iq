@@ -1734,6 +1734,276 @@ This is the classic "gambler's fallacy" — the instinct that a streak makes the
 
 ---
 
+# 6e. Additional Question Bank — Batch 5 (Draft, easy-skewed)
+
+*Drafted for parent review — deliberately all 🟢 Easy, 2 per non-1%-Club category, to shore up the thinnest tier now that puzzle mode draws one Easy + one Medium + one Hard every single day (v2 three-question round). Each question's category is tagged in its header for easier conversion into `content/puzzles.json` later.*
+
+---
+
+## 🟢 EASY [Brain Teasers] — The Letter Pattern
+
+### Question
+
+Look at this sequence of letters:
+
+**A → C → E → G → ?**
+
+What letter comes next?
+
+A) H  
+B) I  
+C) J  
+D) F
+
+### Answer
+
+**B) I**
+
+### Explanation
+
+The sequence skips one letter each time: A (skip B) → C (skip D) → E (skip F) → G (skip H) → **I**.
+
+---
+
+## 🟢 EASY [Brain Teasers] — The Weight Comparison
+
+### Question
+
+- A weighs more than B.
+- C weighs less than B.
+
+Who is the lightest?
+
+A) A  
+B) B  
+C) C  
+D) Can't tell
+
+### Answer
+
+**C) C**
+
+### Explanation
+
+Put it in order: **C < B < A**.
+
+C is lighter than B, and B is already lighter than A — so C is the lightest of the three, with no extra steps needed.
+
+---
+
+## 🟢 EASY [Clever Math] — The Coffee Change
+
+### Question
+
+A coffee costs **$3.25**. You pay with a **$5 bill**.
+
+How much change do you get back?
+
+A) $1.25  
+B) $1.50  
+C) $1.75  
+D) $2.25
+
+### Answer
+
+**C) $1.75**
+
+### Explanation
+
+**$5.00 − $3.25 = $1.75**
+
+---
+
+## 🟢 EASY [Clever Math] — The Half Off
+
+### Question
+
+A shirt costs **$40**. It's on sale for **half off**.
+
+What's the sale price?
+
+A) $15  
+B) $20  
+C) $25  
+D) $30
+
+### Answer
+
+**B) $20**
+
+### Explanation
+
+Half off means 50% off:
+
+**$40 × 0.50 = $20**
+
+---
+
+## 🟢 EASY [SAT-Style Reasoning] — The Substitution
+
+### Question
+
+If **x = 4**, what is **3x − 2**?
+
+A) 8  
+B) 10  
+C) 12  
+D) 14
+
+### Answer
+
+**B) 10**
+
+### Explanation
+
+**3(4) − 2 = 12 − 2 = 10**
+
+---
+
+## 🟢 EASY [SAT-Style Reasoning] — The Average Score
+
+### Question
+
+A student scores **80, 90, and 100** on three tests.
+
+What is their average score?
+
+A) 85  
+B) 88  
+C) 90  
+D) 95
+
+### Answer
+
+**C) 90**
+
+### Explanation
+
+Add the scores and divide by how many there are:
+
+**(80 + 90 + 100) ÷ 3 = 270 ÷ 3 = 90**
+
+### App Design Note
+
+A simple three-bar chart per §3's "Data → Simple chart" row would let a solver visually "level out" the bars to see the average before calculating it.
+
+---
+
+## 🟢 EASY [Logic/Puzzle] — The Locked Door
+
+### Question
+
+A prize is hidden in one of three boxes: **A, B, or C**.
+
+You're told:
+
+- The prize is **not** in Box A.
+- The prize is **not** in Box C.
+
+Which box has the prize?
+
+A) Box A  
+B) Box B  
+C) Box C  
+D) Not enough information
+
+### Answer
+
+**B) Box B**
+
+### Explanation
+
+With only three boxes and the prize ruled out of two of them (A and C), the only one left is **Box B**.
+
+---
+
+## 🟢 EASY [Logic/Puzzle] — The Three Pets
+
+### Question
+
+Max, Nora, and Priya each own exactly one pet — a cat, a dog, or a fish.
+
+- Max doesn't own the fish.
+- Nora doesn't own the cat.
+- Priya owns the dog.
+
+What pet does Max own?
+
+A) Cat  
+B) Dog  
+C) Fish  
+D) Can't tell
+
+### Answer
+
+**A) Cat**
+
+### Explanation
+
+Priya already has the dog, so the cat and fish are split between Max and Nora.
+
+Max doesn't own the fish — so Max must own the **cat**. (That leaves the fish for Nora, which also fits her clue: she doesn't own the cat.)
+
+### App Design Note
+
+A tiny 3-person × 3-pet grid, per §3's "Logic → Grid" row, would let a solver check off clues as they read them rather than holding all three names and pets in their head at once — good early practice for the harder multi-clue logic-grid questions later (e.g. "The Elevator Logic").
+
+---
+
+## 🟢 EASY [Developer Logic] — The Countdown
+
+### Question
+
+A program starts at **5**. As long as the number is at least 1, it prints the number, then subtracts 1.
+
+What is the **last** number this program prints?
+
+A) 5  
+B) 0  
+C) 1  
+D) It never stops
+
+### Answer
+
+**C) 1**
+
+### Explanation
+
+The program prints: **5, 4, 3, 2, 1** — then checks again, sees the number is now 0 (less than 1), and stops.
+
+The trap is assuming the count keeps going down to 0 and prints that too — but the check happens *before* printing, so 0 is never printed.
+
+---
+
+## 🟢 EASY [Developer Logic] — The Four Flips
+
+### Question
+
+A light switch starts **OFF**. You flip it **4 times in a row**.
+
+What state is it in at the end?
+
+A) ON  
+B) OFF  
+C) Impossible to tell  
+D) It depends on how fast you flip it
+
+### Answer
+
+**B) OFF**
+
+### Explanation
+
+Track it flip by flip: OFF → ON → OFF → ON → **OFF**.
+
+Every pair of flips cancels out and returns to the starting state, so an even number of flips (4) always ends up back where it began.
+
+### App Design Note
+
+This is a nice "gentle preview" of the divisor-parity idea behind the harder "Light Switches" question already in the bank (§6c) — worth considering placing them a few weeks apart in the rotation so the harder one feels like a callback rather than a repeat.
+
+---
+
 # 7. The Overall Question Mix
 
 A strong version of the app could combine these categories:
