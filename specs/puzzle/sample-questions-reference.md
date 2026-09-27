@@ -1210,7 +1210,7 @@ Programmers call this **binary search**, but the trick works purely from the fac
 
 ### App Design Note
 
-A shrinking line-segment diagram (1,000 → 500 → 250 → …) after each simulated question would sell the "cutting in half" insight far better than the number alone.
+A shrinking line-segment diagram (1,000 → 500 → 125 → …) after each simulated question would sell the "cutting in half" insight far better than the number alone.
 
 ---
 
@@ -2001,6 +2001,422 @@ Every pair of flips cancels out and returns to the starting state, so an even nu
 ### App Design Note
 
 This is a nice "gentle preview" of the divisor-parity idea behind the harder "Light Switches" question already in the bank (§6c) — worth considering placing them a few weeks apart in the rotation so the harder one feels like a callback rather than a repeat.
+
+---
+
+# 6f. Additional Question Bank — Batch 6 (Draft, toward the 170 target)
+
+*Drafted for parent review — one Easy + one Medium + one Hard per category (Brain Teasers, Clever Math, SAT-Style Reasoning, Logic/Puzzle, Developer Logic), 15 questions total, working toward the 170-question target (70 easy / 55 medium / 35 hard / 10 1% Club, 1% Club pool already complete). **First batch labeled directly against the production 3-tier schema** — "Medium" replaces the old "Medium-Easy"/"Medium-Hard" split from Batches 1–4, since the 70/55/35 target confirms the schema going forward is the flat 3-tier one. Earlier batches aren't being relabeled retroactively; see requirements.md's open-question note.*
+
+---
+
+## 🟢 EASY [Brain Teasers] — The Odd Number
+
+### Question
+
+Which number doesn't belong?
+
+**2, 4, 6, 9, 8**
+
+A) 2  
+B) 6  
+C) 9  
+D) 8
+
+### Answer
+
+**C) 9**
+
+### Explanation
+
+2, 4, 6, and 8 are all even. **9** is the only odd number in the group.
+
+---
+
+## 🟡 MEDIUM [Brain Teasers] — The Height Order
+
+### Question
+
+- Amy is taller than Ben.
+- Ben is taller than Cara.
+- Dana is shorter than Cara.
+
+Who is the shortest?
+
+A) Amy  
+B) Ben  
+C) Cara  
+D) Dana
+
+### Answer
+
+**D) Dana**
+
+### Explanation
+
+Chain the clues together: **Amy > Ben > Cara > Dana**.
+
+Dana is shorter than Cara, who is already the shortest of the first three named — so Dana is shortest overall.
+
+---
+
+## 🔴 HARD [Brain Teasers] — The Two Ropes
+
+### Question
+
+You have two ropes. Each one takes **exactly 60 minutes** to burn completely, but neither burns at a steady rate along its length (some sections burn faster than others).
+
+Using only these two ropes and a lighter, how can you measure exactly **45 minutes**?
+
+A) Light one rope at both ends; when it finishes, light the second rope at one end  
+B) Light both ropes at one end each, at the same time  
+C) Light one rope at both ends and the other rope at one end, at the same time; when the first rope finishes, light the second end of the second rope  
+D) It can't be done without a clock
+
+### Answer
+
+**C) Light one rope at both ends and the other rope at one end, at the same time; when the first rope finishes, light the second end of the second rope**
+
+### Explanation
+
+Light **Rope A at both ends** and **Rope B at one end**, simultaneously.
+
+Rope A always takes exactly **half its total time to burn from both ends at once** — 30 minutes — no matter how unevenly it burns, because two flames consuming it together always finish in half the single-end time.
+
+The moment Rope A finishes (30 minutes in), light the **second end of Rope B**. Rope B already has 30 minutes of unevenly-distributed burn time left; lighting its other end now means those two flames finish it in half of that remaining time — **15 more minutes**.
+
+**30 + 15 = 45 minutes.**
+
+### App Design Note
+
+A visual timeline showing both ropes burning (with flame markers moving from both ends where lit) would make the "two flames = half the time, regardless of unevenness" insight click much faster than the text explanation alone.
+
+---
+
+## 🟢 EASY [Clever Math] — The Sales Tax
+
+### Question
+
+An item costs **$20** before tax. Sales tax is **5%**.
+
+What's the total cost?
+
+A) $20.50  
+B) $21.00  
+C) $21.50  
+D) $25.00
+
+### Answer
+
+**B) $21.00**
+
+### Explanation
+
+**$20 × 1.05 = $21.00**
+
+---
+
+## 🟡 MEDIUM [Clever Math] — The Recipe Ratio
+
+### Question
+
+A recipe calls for **2 cups of flour for every 3 cups of sugar**.
+
+If you use **9 cups of sugar**, how many cups of flour do you need?
+
+A) 4  
+B) 5  
+C) 6  
+D) 7
+
+### Answer
+
+**C) 6**
+
+### Explanation
+
+The ratio is **2 : 3** (flour : sugar). Scale it up so the sugar side becomes 9:
+
+**3 × 3 = 9**, so multiply the flour side by 3 too: **2 × 3 = 6**
+
+You need **6 cups of flour**.
+
+---
+
+## 🔴 HARD [Clever Math] — The Two Pipes
+
+### Question
+
+Pipe A can fill a pool in **6 hours** by itself. Pipe B can fill the same pool in **3 hours** by itself.
+
+If both pipes run together, how long will it take to fill the pool?
+
+A) 1.5 hours  
+B) 2 hours  
+C) 4.5 hours  
+D) 9 hours
+
+### Answer
+
+**B) 2 hours**
+
+### Explanation
+
+The tempting-but-wrong answer is to average 6 and 3 to get 4.5 hours — but rates add, not times.
+
+Pipe A fills **1/6 of the pool per hour**; Pipe B fills **1/3 per hour**. Together:
+
+**1/6 + 1/3 = 1/6 + 2/6 = 3/6 = 1/2 of the pool per hour**
+
+Filling the whole pool at that combined rate takes **2 hours**.
+
+---
+
+## 🟢 EASY [SAT-Style Reasoning] — The Linear Equation
+
+### Question
+
+Solve for x: **2x + 5 = 15**
+
+A) 4  
+B) 5  
+C) 6  
+D) 10
+
+### Answer
+
+**B) 5**
+
+### Explanation
+
+**2x = 15 − 5 = 10**, so **x = 10 ÷ 2 = 5**
+
+---
+
+## 🟡 MEDIUM [SAT-Style Reasoning] — The Sum and Difference
+
+### Question
+
+The sum of two numbers is **15**. One number is **3 more** than the other.
+
+What are the two numbers?
+
+A) 5 and 10  
+B) 6 and 9  
+C) 7 and 8  
+D) 4 and 11
+
+### Answer
+
+**B) 6 and 9**
+
+### Explanation
+
+Let the smaller number be x. Then the other is x + 3.
+
+**x + (x + 3) = 15**
+
+**2x + 3 = 15**
+
+**2x = 12, so x = 6**
+
+The two numbers are **6 and 9**.
+
+---
+
+## 🔴 HARD [SAT-Style Reasoning] — The Leaning Ladder
+
+### Question
+
+A **15-foot ladder** leans against a wall, with its base **9 feet** from the wall.
+
+How high up the wall does the ladder reach?
+
+A) 6 feet  
+B) 10 feet  
+C) 12 feet  
+D) 13 feet
+
+### Answer
+
+**C) 12 feet**
+
+### Explanation
+
+The ladder, the wall, and the ground form a right triangle, with the ladder as the hypotenuse. Use the Pythagorean theorem:
+
+**height² + 9² = 15²**
+
+**height² = 225 − 81 = 144**
+
+**height = √144 = 12 feet**
+
+### App Design Note
+
+A simple right-triangle diagram (ladder, wall, ground labeled with the two known lengths) per §3's "Geometry → Diagram" row helps a solver see which sides are which before reaching for the formula.
+
+---
+
+## 🟢 EASY [Logic/Puzzle] — The Feathers and Steel
+
+### Question
+
+Which is heavier: **1,000 grams of feathers** or **1 kilogram of steel**?
+
+A) The feathers  
+B) The steel  
+C) They weigh the same  
+D) Not enough information
+
+### Answer
+
+**C) They weigh the same**
+
+### Explanation
+
+**1 kilogram = 1,000 grams** — so 1,000 grams of feathers and 1 kilogram of steel are exactly the same weight. Only their *volume* and density differ, not their weight.
+
+---
+
+## 🟡 MEDIUM [Logic/Puzzle] — The Four Drinks
+
+### Question
+
+Jax, Kim, Lee, and Mo each prefer a different drink: **coffee, tea, juice, or water**.
+
+- Jax doesn't like coffee or tea.
+- Kim likes juice.
+- Lee doesn't like water.
+- Mo likes coffee.
+
+What drink does Jax prefer?
+
+A) Coffee  
+B) Tea  
+C) Juice  
+D) Water
+
+### Answer
+
+**D) Water**
+
+### Explanation
+
+Kim already has juice, and Mo already has coffee, leaving tea and water for Jax and Lee.
+
+Jax doesn't like coffee or tea — so Jax must have **water**. (That leaves tea for Lee, which fits: Lee just doesn't like water.)
+
+### App Design Note
+
+A 4-person × 4-drink grid (per §3's "Logic → Grid" row) is a natural next step up in complexity from "The Three Pets" (§6e) — same mechanic, one more person and one more option.
+
+---
+
+## 🔴 HARD [Logic/Puzzle] — The Impossible Statement
+
+### Question
+
+Alex and Bo are two people. One of them **always tells the truth**; the other **always lies**. You don't know which is which.
+
+Alex says: **"I am the liar."**
+
+What can you conclude?
+
+A) Alex is the liar  
+B) Alex is the truth-teller  
+C) The statement leads to a contradiction either way — it couldn't actually have been said under the puzzle's own rules  
+D) Bo is the liar
+
+### Answer
+
+**C) The statement leads to a contradiction either way — it couldn't actually have been said under the puzzle's own rules**
+
+### Explanation
+
+Test both possibilities:
+
+If Alex is the **truth-teller**, then "I am the liar" would have to be true — meaning Alex is the liar. Contradiction.
+
+If Alex is the **liar**, then "I am the liar" would have to be false — meaning Alex is *not* the liar. Contradiction.
+
+Neither assignment survives — the statement is self-defeating, so a strict truth-teller/liar couldn't consistently say it in the first place.
+
+---
+
+## 🟢 EASY [Developer Logic] — The Reversed List
+
+### Question
+
+A program takes the list **[1, 2, 3]** and reverses it.
+
+What is the **first** item printed from the reversed list?
+
+A) 1  
+B) 2  
+C) 3  
+D) It depends on the programming language
+
+### Answer
+
+**C) 3**
+
+### Explanation
+
+Reversing **[1, 2, 3]** gives **[3, 2, 1]** — so the first item is **3**.
+
+---
+
+## 🟡 MEDIUM [Developer Logic] — The First Match
+
+### Question
+
+A program checks numbers **in order** and stops at the first one greater than 50, from this list:
+
+**12, 34, 45, 61, 22, 78**
+
+Which number does it return?
+
+A) 78  
+B) 61  
+C) 45  
+D) 22
+
+### Answer
+
+**B) 61**
+
+### Explanation
+
+Checking in the list's own order: 12 (no), 34 (no), 45 (no), **61 (yes — stop here)**.
+
+The trap is assuming it returns the *largest* number over 50 (78) — but the program stops at the *first* one it finds, and 78 comes later in the list, so it's never reached.
+
+---
+
+## 🔴 HARD [Developer Logic] — The Recursive Countdown
+
+### Question
+
+A function is defined as: **count(n)** — if n is 0 or less, stop; otherwise print n, then call **count(n − 2)**.
+
+If you call **count(7)**, what is the **last** number printed before it stops?
+
+A) 7  
+B) 0  
+C) 1  
+D) -1
+
+### Answer
+
+**C) 1**
+
+### Explanation
+
+Trace it step by step:
+
+**count(7)** → print 7 → **count(5)** → print 5 → **count(3)** → print 3 → **count(1)** → print 1 → **count(-1)** → -1 is ≤ 0, so it stops without printing.
+
+The last number actually printed is **1** — the trap is assuming it counts down to exactly 0, but stepping by 2 from an odd start skips right past it.
 
 ---
 
