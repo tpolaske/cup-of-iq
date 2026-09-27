@@ -2420,6 +2420,413 @@ The last number actually printed is **1** — the trap is assuming it counts dow
 
 ---
 
+# 6g. Additional Question Bank — Batch 7 (Draft, toward the 170 target)
+
+*Drafted for parent review — same structure as Batch 6: one Easy + one Medium + one Hard per category, 15 questions total, continuing to build toward 70/55/35 (easy/medium/hard).*
+
+---
+
+## 🟢 EASY [Brain Teasers] — The Vowel Count
+
+### Question
+
+How many vowels (A, E, I, O, U) are in the word **ELEPHANT**?
+
+A) 2  
+B) 3  
+C) 4  
+D) 5
+
+### Answer
+
+**B) 3**
+
+### Explanation
+
+Spelling it out: **E-L-E-P-H-A-N-T**. The vowels are **E, E, A** — three total.
+
+---
+
+## 🟡 MEDIUM [Brain Teasers] — The Siblings' Ages
+
+### Question
+
+Sam is twice as old as his sister Mia. **In 4 years, Sam will be 20.**
+
+How old is Mia right now?
+
+A) 6  
+B) 7  
+C) 8  
+D) 10
+
+### Answer
+
+**C) 8**
+
+### Explanation
+
+If Sam will be 20 in 4 years, Sam is **16 now**.
+
+Sam is twice Mia's age, so Mia is **16 ÷ 2 = 8**.
+
+---
+
+## 🔴 HARD [Brain Teasers] — The Three Switches
+
+### Question
+
+Outside a closed room, there are **three switches**. Exactly one of them controls a lightbulb inside the room. You may flip the switches however you like, but you may only **enter the room and look at the bulb once**.
+
+How can you determine, with certainty, which switch controls the bulb?
+
+A) It's impossible with only one look  
+B) Flip each switch on and off quickly, then enter and see which one left a smell  
+C) Turn one switch on for a few minutes, then turn it off and turn a second switch on; the bulb's state and warmth (on / off-but-warm / off-and-cold) tell you which switch is which  
+D) Flip all three on, then enter — whichever bulb is on is the answer
+
+### Answer
+
+**C) Turn one switch on for a few minutes, then turn it off and turn a second switch on; the bulb's state and warmth (on / off-but-warm / off-and-cold) tell you which switch is which**
+
+### Explanation
+
+Turn **Switch 1** on and leave it for a few minutes (long enough to warm up a bulb), then turn it **off** and immediately turn **Switch 2** on. Now go look:
+
+- If the bulb is **on** → it's **Switch 2**.
+- If the bulb is **off but warm** → it was recently on, so it's **Switch 1**.
+- If the bulb is **off and cold** → it was never on at all, so it's **Switch 3**.
+
+One look gives you three distinguishable outcomes instead of just two (on/off), because heat gives you a third piece of information.
+
+---
+
+## 🟢 EASY [Clever Math] — The Movie Tickets
+
+### Question
+
+Two movie tickets cost **$9 each**. Popcorn costs **$6** total.
+
+What's the total cost?
+
+A) $15  
+B) $18  
+C) $24  
+D) $30
+
+### Answer
+
+**C) $24**
+
+### Explanation
+
+**2 × $9 = $18** for tickets, plus **$6** for popcorn:
+
+**$18 + $6 = $24**
+
+---
+
+## 🟡 MEDIUM [Clever Math] — The Simple Interest
+
+### Question
+
+You deposit **$1,000** in an account earning **5% simple interest per year**.
+
+How much interest will you have earned after **2 years**?
+
+A) $50  
+B) $100  
+C) $105  
+D) $110
+
+### Answer
+
+**B) $100**
+
+### Explanation
+
+Simple interest doesn't compound — it's the same amount each year:
+
+**$1,000 × 0.05 × 2 years = $100**
+
+---
+
+## 🔴 HARD [Clever Math] — The Three Workers
+
+### Question
+
+Worker A can finish a job alone in **6 days**. Worker B alone in **12 days**. Worker C alone in **4 days**.
+
+If all three work together, how long will the job take?
+
+A) 1.5 days  
+B) 2 days  
+C) 2.5 days  
+D) 4 days
+
+### Answer
+
+**B) 2 days**
+
+### Explanation
+
+Add their rates (jobs per day), using a common denominator of 12:
+
+**1/6 + 1/12 + 1/4 = 2/12 + 1/12 + 3/12 = 6/12 = 1/2 job per day**
+
+At half a job per day, the whole job takes **2 days**.
+
+---
+
+## 🟢 EASY [SAT-Style Reasoning] — The Coordinate Distance
+
+### Question
+
+A point is located at **(3, 4)** on a coordinate grid.
+
+How far is this point from the origin, (0, 0)?
+
+A) 4  
+B) 5  
+C) 6  
+D) 7
+
+### Answer
+
+**B) 5**
+
+### Explanation
+
+Use the distance formula (really just the Pythagorean theorem):
+
+**√(3² + 4²) = √(9 + 16) = √25 = 5**
+
+---
+
+## 🟡 MEDIUM [SAT-Style Reasoning] — The Quadratic Roots
+
+### Question
+
+What are the solutions to **x² − 5x + 6 = 0**?
+
+A) x = 1, 6  
+B) x = 2, 3  
+C) x = -2, -3  
+D) x = 2, 6
+
+### Answer
+
+**B) x = 2, 3**
+
+### Explanation
+
+Factor the quadratic: you need two numbers that multiply to 6 and add to -5 — that's **-2 and -3**.
+
+**x² − 5x + 6 = (x − 2)(x − 3) = 0**
+
+So **x = 2** or **x = 3**.
+
+---
+
+## 🔴 HARD [SAT-Style Reasoning] — The Father and Son
+
+### Question
+
+A father is currently **3 times as old** as his son. **In 12 years, the father will be twice as old** as his son.
+
+How old is the son right now?
+
+A) 8  
+B) 10  
+C) 12  
+D) 14
+
+### Answer
+
+**C) 12**
+
+### Explanation
+
+Let the son's current age be x, so the father is 3x.
+
+In 12 years: **3x + 12 = 2(x + 12)**
+
+**3x + 12 = 2x + 24**
+
+**x = 12**
+
+Check: the father is 36 now; in 12 years, father = 48, son = 24, and 48 is indeed twice 24. ✓
+
+---
+
+## 🟢 EASY [Logic/Puzzle] — The Coin Sequences
+
+### Question
+
+You flip a fair coin **3 times** in a row.
+
+How many different possible sequences of heads/tails are there?
+
+A) 3  
+B) 6  
+C) 8  
+D) 9
+
+### Answer
+
+**C) 8**
+
+### Explanation
+
+Each flip has 2 possible outcomes, and there are 3 flips:
+
+**2 × 2 × 2 = 8**
+
+---
+
+## 🟡 MEDIUM [Logic/Puzzle] — The Four Cards
+
+### Question
+
+Four cards — red, blue, green, and yellow — lie face down in a row, positions 1 through 4.
+
+- The red card is not in position 1 or position 4.
+- The blue card is immediately to the left of the green card.
+- The yellow card is in position 4.
+
+What position is the red card in?
+
+A) 1  
+B) 2  
+C) 3  
+D) 4
+
+### Answer
+
+**C) 3**
+
+### Explanation
+
+Yellow is fixed at position 4. Red can't be in 1 or 4, so red is in 2 or 3.
+
+Try red in position 2: that leaves positions 1 and 3 for blue and green — but they aren't next to each other, so blue can't be "immediately left of" green there. Contradiction.
+
+So red must be in **position 3**, leaving positions 1 and 2 for blue and green: blue in 1, green in 2 — which are adjacent, satisfying the clue.
+
+### App Design Note
+
+A simple 4-slot card row (per §3's "Deduction → Boxes and objects" row) that fills in as each clue is applied would make this easier to track than reading the clues as pure text.
+
+---
+
+## 🔴 HARD [Logic/Puzzle] — The Census Taker
+
+### Question
+
+A census taker asks a woman for her three children's ages. She says: **"The product of their ages is 36, and the sum of their ages is my house number."**
+
+The census taker looks at the house number and says he still can't determine the ages. She adds: **"The oldest one has red hair."**
+
+Now the census taker knows the ages. What are the three ages?
+
+A) 1, 6, 6  
+B) 2, 2, 9  
+C) 3, 3, 4  
+D) 2, 3, 6
+
+### Answer
+
+**B) 2, 2, 9**
+
+### Explanation
+
+List every way three positive whole ages can multiply to 36, along with each set's sum:
+
+1,1,36 (38) · 1,2,18 (21) · 1,3,12 (16) · 1,4,9 (14) · **1,6,6 (13)** · **2,2,9 (13)** · 2,3,6 (11) · 3,3,4 (10)
+
+Every sum is unique **except 13**, which two different triples share: {1, 6, 6} and {2, 2, 9}. That's exactly why knowing the house number (the sum) wasn't enough for the census taker — his house number must be 13, and it's genuinely ambiguous between those two options.
+
+The final clue — "the **oldest** one" (singular) — rules out {1, 6, 6}, where two children are tied for oldest at age 6. That leaves **{2, 2, 9}**.
+
+---
+
+## 🟢 EASY [Developer Logic] — The Boolean Flip
+
+### Question
+
+A variable starts as **True**. It gets flipped (negated) **3 times** in a row.
+
+What is its value at the end?
+
+A) True  
+B) False  
+C) Impossible to tell  
+D) It depends on the starting value
+
+### Answer
+
+**B) False**
+
+### Explanation
+
+Track it: True → False → True → **False**.
+
+An **odd** number of flips always ends up opposite to where it started; an even number always returns to the original value.
+
+---
+
+## 🟡 MEDIUM [Developer Logic] — The Cache Eviction
+
+### Question
+
+A cache holds the **3 most recently looked-up items**, most recent at the front: **[banana, cherry, date]**.
+
+A lookup for **"apple"** happens next — it's not in the cache, so it gets fetched and placed at the front. Since the cache only holds 3 items, the oldest (last) item is removed.
+
+What does the cache contain after this lookup?
+
+A) [apple, banana, cherry, date]  
+B) [apple, banana, cherry]  
+C) [banana, cherry, date, apple]  
+D) [apple, date, cherry]
+
+### Answer
+
+**B) [apple, banana, cherry]**
+
+### Explanation
+
+Adding "apple" to the front gives **[apple, banana, cherry, date]** — but that's 4 items, one too many.
+
+The oldest item (the last one, "date") gets evicted, leaving **[apple, banana, cherry]**.
+
+---
+
+## 🔴 HARD [Developer Logic] — The Deadlock
+
+### Question
+
+Alex is holding flour; Bo is holding eggs — both needed to bake a cake. Alex won't hand over the flour until he gets the eggs first. Bo won't hand over the eggs until he gets the flour first. Neither budges.
+
+What is this situation called, and how is it typically resolved?
+
+A) A race condition — solved by having them act in a random order  
+B) A deadlock — solved by having one side yield and go first  
+C) An infinite loop — solved by adding a counter that stops it  
+D) A memory leak — solved by cleaning up unused resources
+
+### Answer
+
+**B) A deadlock — solved by having one side yield and go first**
+
+### Explanation
+
+This is a classic **deadlock**: two sides are each waiting on the other, and neither will make the first move, so nothing ever happens.
+
+The only way out is for one side to **break the symmetry** — someone has to hand something over first, on trust, before getting anything back. Neither more time nor more patience fixes it; only one side yielding does.
+
+---
+
 # 7. The Overall Question Mix
 
 A strong version of the app could combine these categories:
