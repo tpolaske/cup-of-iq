@@ -2827,6 +2827,412 @@ The only way out is for one side to **break the symmetry** — someone has to ha
 
 ---
 
+# 6h. Additional Question Bank — Batch 8 (Draft, toward the 170 target)
+
+*Drafted for parent review — same structure as Batches 6–7: one Easy + one Medium + one Hard per category, 15 questions total.*
+
+---
+
+## 🟢 EASY [Brain Teasers] — The Synonym
+
+### Question
+
+Which word means the same as **"happy"**?
+
+A) Sad  
+B) Joyful  
+C) Angry  
+D) Tired
+
+### Answer
+
+**B) Joyful**
+
+### Explanation
+
+"Joyful" describes feeling happy or delighted — a direct synonym. The other three describe different emotional or physical states entirely.
+
+---
+
+## 🟡 MEDIUM [Brain Teasers] — The Seating Order
+
+### Question
+
+Three friends — Al, Bo, and Cy — sit in a row of three seats (1st, 2nd, 3rd).
+
+- Al is not in the 1st seat.
+- Bo is not in the 3rd seat.
+- Cy is in the middle seat.
+
+What is the seating order, from 1st to 3rd?
+
+A) Al, Cy, Bo  
+B) Bo, Cy, Al  
+C) Cy, Al, Bo  
+D) Bo, Al, Cy
+
+### Answer
+
+**B) Bo, Cy, Al**
+
+### Explanation
+
+Cy is fixed in the middle (2nd seat).
+
+Al isn't in 1st, and 2nd is taken — so Al must be in **3rd**.
+
+That leaves **1st** for Bo, which also fits: Bo isn't in 3rd, and 3rd is already taken by Al anyway.
+
+Order: **Bo, Cy, Al**.
+
+---
+
+## 🔴 HARD [Brain Teasers] — The Monk on the Mountain
+
+### Question
+
+A monk starts climbing a mountain path at 6 AM and reaches the top by evening. The next day, he starts back down the same path at 6 AM and reaches the bottom by evening (walking at whatever varying pace he likes each day — no need for the same speed).
+
+Must there be some exact time of day at which the monk is at the **exact same point on the path** on both days?
+
+A) No — his pace varies too much to guarantee that  
+B) Only if he walks at a constant speed both days  
+C) Yes — there must be such a point, regardless of pace  
+D) It depends on how long the path is
+
+### Answer
+
+**C) Yes — there must be such a point, regardless of pace**
+
+### Explanation
+
+Here's the trick: imagine **two monks** instead of one — one starting at the bottom at 6 AM walking up (repeating day 1's trip), and the other starting at the top at 6 AM walking down (repeating day 2's trip), both on the very same day.
+
+One monk is heading up the path while the other is heading down it, on the same path, during the same hours. They **must cross paths** at some moment — there's no way to avoid it.
+
+That crossing point and time is exactly the point where the real monk (on his two separate days) occupied the same spot at the same time of day.
+
+### App Design Note
+
+This is a classic case where a thought experiment is more convincing than any diagram — but a simple two-line graph (position vs. time, one line for "up," one for "down") crossing at one point would still help a visual solver see why it must happen.
+
+---
+
+## 🟢 EASY [Clever Math] — The Book Bundle
+
+### Question
+
+Four books cost **$12 each**. You get **$10 off** the total.
+
+What's the final price?
+
+A) $28  
+B) $38  
+C) $42  
+D) $48
+
+### Answer
+
+**B) $38**
+
+### Explanation
+
+**4 × $12 = $48**, then subtract the discount:
+
+**$48 − $10 = $38**
+
+---
+
+## 🟡 MEDIUM [Clever Math] — The Restaurant Tip
+
+### Question
+
+A restaurant bill is **$64**. You want to leave a **20% tip**.
+
+What is the total amount you'll pay (bill + tip)?
+
+A) $70.40  
+B) $73.60  
+C) $76.80  
+D) $80.00
+
+### Answer
+
+**C) $76.80**
+
+### Explanation
+
+A 20% tip on $64 is **$64 × 0.20 = $12.80**.
+
+Total: **$64 + $12.80 = $76.80** (or equivalently, $64 × 1.20 = $76.80).
+
+---
+
+## 🔴 HARD [Clever Math] — The Discount Order
+
+### Question
+
+A $200 item gets a **10% discount**, then an **additional 15% discount** off the new price.
+
+Would the final price be any different if the **15% discount were applied first**, followed by the 10%?
+
+A) Yes — applying the bigger discount first always saves more  
+B) Yes — applying the smaller discount first always saves more  
+C) No — the final price is the same either way  
+D) It depends on whether the discounts are added or multiplied
+
+### Answer
+
+**C) No — the final price is the same either way**
+
+### Explanation
+
+Either order gives:
+
+**$200 × 0.90 × 0.85 = $153**
+
+**$200 × 0.85 × 0.90 = $153**
+
+Multiplication doesn't care about order (it's commutative), so stacking percentage discounts always lands on the same final price no matter which one is applied first — unlike a percentage *increase followed by a decrease* (see "The Sneaky Discount," §6), where order-independence does **not** hold in the same way, because that mixes an increase with a decrease rather than two decreases.
+
+---
+
+## 🟢 EASY [SAT-Style Reasoning] — The Slope
+
+### Question
+
+A line passes through the points **(0, 2)** and **(4, 10)**.
+
+What is the slope of the line?
+
+A) 1  
+B) 2  
+C) 4  
+D) 8
+
+### Answer
+
+**B) 2**
+
+### Explanation
+
+Slope = (change in y) ÷ (change in x):
+
+**(10 − 2) ÷ (4 − 0) = 8 ÷ 4 = 2**
+
+---
+
+## 🟡 MEDIUM [SAT-Style Reasoning] — The Exponent Rule
+
+### Question
+
+Simplify: **2³ × 2⁴**
+
+A) 2⁷  
+B) 2¹²  
+C) 4⁷  
+D) 16⁷
+
+### Answer
+
+**A) 2⁷**
+
+### Explanation
+
+When multiplying powers with the same base, add the exponents:
+
+**2³ × 2⁴ = 2^(3+4) = 2⁷** (which equals 128, but the question only asks for the simplified form)
+
+---
+
+## 🔴 HARD [SAT-Style Reasoning] — The Combination Lock
+
+### Question
+
+A lock uses a **3-digit code**, each digit from 0–9, with **no digit allowed to repeat**.
+
+How many different codes are possible?
+
+A) 1,000  
+B) 900  
+C) 720  
+D) 504
+
+### Answer
+
+**C) 720**
+
+### Explanation
+
+The first digit has **10** choices. The second digit can't repeat the first, so it has **9** choices. The third can't repeat either of the first two, so it has **8** choices:
+
+**10 × 9 × 8 = 720**
+
+---
+
+## 🟢 EASY [Logic/Puzzle] — The Odd Ball
+
+### Question
+
+You have **3 identical-looking balls**; exactly one is heavier than the other two, which weigh the same as each other.
+
+Using a balance scale **just once**, how can you guarantee finding the heavier ball?
+
+A) It's impossible in one weighing  
+B) Weigh all three at once  
+C) Weigh any two of the balls against each other — if they balance, the third ball is heavier; if not, the heavier side has it  
+D) Weigh one ball against nothing
+
+### Answer
+
+**C) Weigh any two of the balls against each other — if they balance, the third ball is heavier; if not, the heavier side has it**
+
+### Explanation
+
+Pick any two balls and put one on each side of the scale.
+
+- If they **balance**, neither of them is the heavy one — so it must be the **third ball**, the one left off the scale.
+- If they **don't balance**, the heavier side is holding the odd ball out.
+
+Either outcome tells you exactly which ball is heavier, in a single weighing.
+
+---
+
+## 🟡 MEDIUM [Logic/Puzzle] — The Cancelled Game
+
+### Question
+
+You're told: **"If it rains, the game is cancelled."**
+
+The game was **not** cancelled.
+
+What can you conclude?
+
+A) It rained  
+B) It did not rain  
+C) Nothing can be determined  
+D) The game was rescheduled
+
+### Answer
+
+**B) It did not rain**
+
+### Explanation
+
+The rule "if it rains, the game is cancelled" only tells us what happens *when it rains* — it doesn't say the game can *only* be cancelled because of rain, but it does guarantee that rain always leads to cancellation.
+
+So if the game **wasn't** cancelled, rain couldn't have happened — otherwise the rule would have been broken. This kind of reasoning (denying the result to conclude the condition didn't happen) is called *modus tollens*, and it's valid — unlike concluding "it rained" from a cancellation, which would wrongly assume rain is the *only* possible cause.
+
+---
+
+## 🔴 HARD [Logic/Puzzle] — The Poisoned Wine
+
+### Question
+
+You have **1,000 bottles of wine**, exactly one of which is poisoned. The poison is undetectable and symptom-free until it kills — exactly **24 hours** after being tasted, no matter how diluted the dose. You have **10 prisoners** willing to test it, and only 24 hours before a big party where you must know which single bottle is poisoned.
+
+How can you identify the poisoned bottle using only these 10 prisoners and a single round of testing?
+
+A) It's impossible — you'd need one prisoner per bottle  
+B) Have each prisoner taste one bottle each; test 10 bottles per day until you find it  
+C) Number the bottles in binary (up to 10 digits); each prisoner is assigned one digit position and drinks from every bottle whose binary number has a 1 in that position — the pattern of who dies (in binary) reveals the exact bottle number  
+D) Mix a few drops from every bottle into one glass for one prisoner to test
+
+### Answer
+
+**C) Number the bottles in binary (up to 10 digits); each prisoner is assigned one digit position and drinks from every bottle whose binary number has a 1 in that position — the pattern of who dies (in binary) reveals the exact bottle number**
+
+### Explanation
+
+10 prisoners can each represent one "bit" of information — and with 10 bits, you can uniquely represent any number from 0 up to 2¹⁰ − 1 = 1,023, which comfortably covers all 1,000 bottles.
+
+Number the bottles 1 through 1,000, and write each number in binary using 10 digits. Prisoner #1 tastes every bottle whose binary number has a **1** in the first digit position; prisoner #2 tastes every bottle with a 1 in the second position; and so on.
+
+After 24 hours, look at which prisoners died. Read "died" as a 1 and "survived" as a 0 for each position, in order — the resulting 10-digit binary number is exactly the poisoned bottle's number.
+
+### App Design Note
+
+This is one of the hardest questions in the bank so far and benefits enormously from a visual — a small grid (bottles as columns, prisoners as rows, checkmarks showing who drinks from what) would make the binary-encoding idea far more graspable than the text description alone.
+
+---
+
+## 🟢 EASY [Developer Logic] — The Inclusive Loop
+
+### Question
+
+A program runs a loop: **"for i from 1 to 5, print i."**
+
+How many numbers does it print in total?
+
+A) 4  
+B) 5  
+C) 6  
+D) It depends on the language
+
+### Answer
+
+**B) 5**
+
+### Explanation
+
+The loop prints **1, 2, 3, 4, 5** — that's every whole number from 1 through 5, inclusive, which is **5 numbers** total.
+
+---
+
+## 🟡 MEDIUM [Developer Logic] — The Duplicate Finder
+
+### Question
+
+A program scans this list of numbers looking for a duplicate:
+
+**4, 2, 7, 2, 9**
+
+Which number appears twice?
+
+A) 4  
+B) 2  
+C) 7  
+D) 9
+
+### Answer
+
+**B) 2**
+
+### Explanation
+
+Scanning left to right: 4 (new), 2 (new), 7 (new), **2 (seen already!)**, 9 (new).
+
+The number **2** appears at both the 2nd and 4th positions.
+
+---
+
+## 🔴 HARD [Developer Logic] — The Repeated Work
+
+### Question
+
+A function computes Fibonacci numbers the simple recursive way: **fib(n) = fib(n − 1) + fib(n − 2)**.
+
+When computing **fib(5)** this way, how many separate times does the function end up calling **fib(3)**?
+
+A) Once  
+B) Twice  
+C) Three times  
+D) It never calls fib(3) directly
+
+### Answer
+
+**B) Twice**
+
+### Explanation
+
+Trace the calls: **fib(5)** calls **fib(4)** and **fib(3)** — that's one call to fib(3) right there.
+
+But **fib(4)** *itself* calls **fib(3)** and **fib(2)** — that's a second, completely separate call to fib(3), redoing all the same work the first call already did.
+
+This kind of repeated recomputation is exactly what techniques like **memoization** (caching each result the first time it's computed) are designed to eliminate — a real-world cousin of "The Cache Eviction" and "The Busy Host" questions already in the bank.
+
+---
+
 # 7. The Overall Question Mix
 
 A strong version of the app could combine these categories:
