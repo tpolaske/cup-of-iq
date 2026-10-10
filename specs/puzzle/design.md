@@ -1,6 +1,6 @@
 # Cup of IQ — Puzzle Mode Design (v2 draft, 2026-09-23)
 
-*Companion to `design.md` (toddler dino mode) and `requirements-puzzle.md`.
+*Companion to `design.md` (toddler dino mode) and `requirements.md`.
 Same repo, same stack, same no-backend static-files architecture — this
 document covers what's specific to Puzzle mode: puzzle selection, the
 timing/banner algorithm, content schema, and component breakdown.*
@@ -13,7 +13,7 @@ GitHub Pages + Actions deploy, same Vitest for logic tests, same
 project's §1 reasoning (small state machine, solo maintainer, dependency
 risk over rendering scale) applies identically here — if anything more so,
 since Puzzle mode is *less* visually complex than the L1 tracks scene (no
-SVG scene geometry, no audio, text-only for MVP per requirements-puzzle.md
+SVG scene geometry, no audio, text-only for MVP per requirements.md
 decision #12).
 
 **One explicit legal/design decision this doc bakes in:** school "banner"
@@ -135,6 +135,18 @@ special-question status on Sundays, every time, every device, no network
 call. There is no more `pickDifficulty`/weighted-PRNG step — every day
 always draws from all three difficulty pools, in the same fixed order.
 
+**Capture once (PZL-6, sign-off #20):** `main.ts` computes `dayNumber`, the
+Sunday flag, and `todaysRound(...)` exactly once at boot and passes those
+values through the whole round — never re-reading the clock at lock-in. A
+round started before midnight and locked in after it is saved against the
+day it started.
+
+**Pool-length rule (sign-off #21):** Sundays skip the `hard` pool and
+the Sunday-only `1percent` pool steps by 7 days between draws, so a pool
+whose length is a multiple of 7 would strand part of it (e.g. a 35-question
+`hard` pool would never show 5 of its questions). `hard` and `1percent`
+pool lengths must not be multiples of 7; the content test (§11) enforces it.
+
 ## 4. Correctness & Banner Tiers
 
 *Rewritten 2026-09-23 (requirements.md sign-off #15/#17) — replaces the v1
@@ -153,7 +165,7 @@ export interface RoundResult {
   q1Correct: boolean;
   q2Correct: boolean;
   q3Correct: boolean; // the "hard" slot, or Sunday's untimed special
-  totalSeconds: number; // Q1+Q2 elapsed, plus Q3 only when timed (ANS-2)
+  totalSeconds: number; // single round timer, Lock-it-in stop; excludes time with Sunday's untimed Q3 on screen (ANS-2/ANS-4)
 }
 
 const TIER1_TOTAL_SECONDS = 30; // provisional, TMR-1 — expect to retune after real play
@@ -219,32 +231,35 @@ day of stale "last played" state isn't worth preserving):
     "dayNumber": 96,
     "isSpecialDay": false,
     "questions": [
-      { "slot": "q1", "difficulty": "easy",   "puzzleId": "shape-seq-04",     "correct": true,  "seconds": 6 },
-      { "slot": "q2", "difficulty": "medium", "puzzleId": "sneaky-discount-01", "correct": true,  "seconds": 11 },
-      { "slot": "q3", "difficulty": "hard",   "puzzleId": "seating-logic-02", "correct": false, "seconds": 22 }
+      { "slot": "q1", "difficulty": "easy",   "puzzleId": "shape-seq-04",     "correct": true  },
+      { "slot": "q2", "difficulty": "medium", "puzzleId": "sneaky-discount-01", "correct": true  },
+      { "slot": "q3", "difficulty": "hard",   "puzzleId": "seating-logic-02", "correct": false }
     ],
-    "totalSeconds": 17,
+    "totalSeconds": 27,
     "outcome": "tier2",
     "school": "Northwestern"
   }
 }
 ```
 
-On a Sunday, `outcome` is `"accepted"` or `"waitlisted"` instead of a
-weekday tier, `questions[2].difficulty` is `"1percent"`, and
-`questions[2].seconds` is omitted/ignored (untimed, ANS-2) — `totalSeconds`
-reflects Q1+Q2 only that day.
+There are no per-question times since sign-off #18 — only the round's
+`totalSeconds`. On a Sunday, `outcome` is `"accepted"` or `"waitlisted"`
+instead of a weekday tier and `questions[2].difficulty` is `"1percent"`;
+`totalSeconds` excludes any time Q3 was on screen (untimed, ANS-2).
+`lastPlayed.dayNumber` is the day the round *started* (PZL-6).
 
 - Lock check (mirrors LCK-1): `lastPlayed.dayNumber === dayNumber(now)`.
 - `accuracyStreak` increments only on a perfect result — weekday 3/3 or
   Sunday `"accepted"` — and resets to 0 on anything else, including
   `"waitlisted"` (STK-1/2, no partial-credit carve-out).
 - `bestStreak` never decreases (STK-3).
-- In-progress state (any selected-but-not-confirmed answers, running
-  per-question timers) is never persisted — a same-day reload restarts the
-  whole round (and all three timers) from the beginning and does not count
-  as an attempt (LCK-2), same accepted-loophole spirit as the toddler
-  game's sign-off #9.
+- A day with no completed round never touches `accuracyStreak` (STK-5,
+  sign-off #19) — only a completed round can increment or reset it.
+- In-progress state (any selected-but-not-confirmed answers, the running
+  round timer) is never persisted — a same-day reload restarts the whole
+  round (and its timer) from the beginning and does not count as an
+  attempt (LCK-2), same accepted-loophole spirit as the toddler game's
+  sign-off #9.
 - Private-mode fallback identical to NFR-7: no localStorage → game still
   runs, no lock, no streak persistence, share still works from the same
   session.
@@ -259,9 +274,9 @@ reflects Q1+Q2 only that day.
 | `src/puzzle/puzzle-daily.ts` | `todaysRound`, `isSpecialDay` — pure, fully unit-tested (§3) |
 | `src/puzzle/banner.ts` | `computeWeekdayTier`, `computeSundayOutcome`, `pickSchool` — pure, fully unit-tested (§4) |
 | `src/puzzle/progress.ts` | localStorage read/write (schema v2, §5), schema migration, perfect-day streak rules — pure core, tested |
-| `src/puzzle/timer.ts` | Per-question stopwatch: starts on each question's mount (skipped entirely for Sunday's Q3), stops when that question's answer is selected |
+| `src/puzzle/timer.ts` | Single round stopwatch: starts when the round first renders, pauses while the page is hidden or while Sunday's untimed Q3 is on screen, stops at "Lock it in" (ANS-4) |
 | `src/puzzle/share.ts` | `buildShareText(result)`, `share()` — Web Share → clipboard fallback, same pattern as toddler `share.ts` |
-| `src/puzzle/screens/play.ts` | Q1→Q2→Q3 prompt + answer selection within one round, round-level "Lock it in" confirm (ANS-3) |
+| `src/puzzle/screens/play.ts` | Q1→Q2→Q3 prompt + answer selection with free back/forward navigation and editable answers, round-level "Lock it in" confirm (ANS-3) |
 | `src/puzzle/screens/reveal.ts` | Full pennant + per-question correct/incorrect summary, auto-advances to results (TMR-5) |
 | `src/puzzle/screens/results.ts` | Per-question breakdown (RES-1), banner, streak, share/copy |
 | `src/puzzle/screens/comeback.ts` | Come-back card: today's round recap, "new round tomorrow," share controls |
@@ -276,18 +291,20 @@ reflects Q1+Q2 only that day.
   #14):** tapping a choice on Q1, Q2, or Q3 highlights it but does not
   submit anything; the player can move between all three questions freely
   before locking in. A single "Lock it in" button, shown once all three
-  are answered, commits the whole round at once and stops any still-running
-  per-question timers. This replaced a per-question confirm specifically
+  are answered, commits the whole round at once and stops the round timer.
+  This replaced a per-question confirm specifically
   to avoid leaking Q1's correctness before Q2/Q3 are answered, on top of
   the original fat-finger protection.
 - **One attempt per round (ANS-1):** once locked in, the play screen is
   replaced by the reveal moment, then results; there is no path back to
   `answering_round` for that day.
-- **Timer: tracked per-question, never shown (ANS-2).** `timer.ts` starts
-  a fresh stopwatch when each question mounts and stops it the moment that
-  question's answer is selected — no component ever renders any of the
-  three readouts. Sunday's Q3 (the special) never starts a timer at all
-  and contributes nothing to `totalSeconds` (§4). A visible stopwatch was
+- **Timer: one round stopwatch, never shown (ANS-2/ANS-4, sign-off #18).**
+  `timer.ts` starts when the round first renders and stops when "Lock it
+  in" is tapped; changing answers or navigating between questions neither
+  resets nor stops it. It pauses while the page is hidden
+  (`visibilitychange`) and, on Sundays, while the untimed Q3 is on screen,
+  so the special question contributes nothing to `totalSeconds` (§4). No
+  component ever renders the readout. A visible stopwatch was
   found to read as test-taking pressure, which works against the "this
   should be fun" goal running through the whole mode.
 - **Reveal is deliberately minimal (TMR-5).** `screens/reveal.ts` renders
@@ -334,7 +351,7 @@ respects `prefers-reduced-motion`).
 `--card`/`--card-line` treatment as the toddler game's patches. No new
 illustration work needed for MVP — the visual budget goes toward Phase 2's
 diagram-renderer library instead (seating-circle, clock-face, etc., per
-requirements-puzzle.md's parking lot).
+requirements.md's parking lot).
 
 **Banners: felt pennant design (built, `pennant-banner.html` prototype).**
 Result-screen banners render as a wool-felt-textured pennant — a genuine
@@ -419,6 +436,9 @@ Mirrors the toddler project's content test pattern:
 - `content/puzzles.json` has non-empty `easy`, `medium`, and `hard` pools —
   every day draws from all three now, so an empty or thin pool in any one
   of them breaks that day's round, not just a rare randomized pick (PZL-2).
+- `hard` and `1percent` pool lengths are **not multiples of 7** (sign-off
+  #21): Sundays skip `hard` and the Sunday-only `1percent` pool steps by 7,
+  so a multiple-of-7 length leaves part of the pool unreachable.
 - `content/puzzles-1percent.json` entries are all `difficulty: "1percent"`
   and don't appear in the regular pools.
 - `content/schools.json` has all five tiers — `tier1`..`tier4`, `fail` —
