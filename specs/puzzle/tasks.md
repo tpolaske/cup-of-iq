@@ -25,8 +25,10 @@ Mockup reference: `mockups/puzzle/landing-page.html`,
   streak survives skipped days, a round belongs to the day it started,
   category enum reconciled (`logic`, `developer-logic`; 1% Club is a
   difficulty only), `hard`/`1percent` pool lengths must not be multiples of
-  7 (`hard` target 35 → 36). Still open: free-text answers in MVP, and
-  share-text copy for low-scoring Sunday waitlists / zero streaks.
+  7 (`hard` target 35 → 36). Later the same day: #22 (multiple-choice only
+  for MVP) and #23 (Sunday is a single untimed 1% Club question; all four
+  pool lengths must avoid multiples of 7, `easy` target 70 → 71). Still
+  open: weekday share-text copy when the streak is 0.
 
 ## Phase 0 — Foundation shared with the toddler app
 
@@ -49,12 +51,11 @@ Mockup reference: `mockups/puzzle/landing-page.html`,
 - [ ] **Convert the prose question bank to JSON** per the sign-off #21
   mapping (requirements.md §2: categories + 5-tier → 3-tier difficulty),
   into `content/puzzles.json` / `content/puzzles-1percent.json`. Any
-  free-text question must become multiple-choice or be parked (pending the
-  open free-text decision).
+  free-text question must become multiple-choice or be parked (sign-off #22).
 - [ ] Upload `icon-badge.webp` to `mockups/puzzle/` (binary — GitHub web
   UI, connector is text-only)
 - [ ] `content/puzzles.json` (with non-empty `easy`/`medium`/`hard` arrays
-  — every day now draws from all three at once, §3), `content/puzzles-1percent.json`,
+  — every Mon–Sat now draws from all three at once, §3), `content/puzzles-1percent.json`,
   `content/schools.json` (`tier1`..`tier4`, `fail` — no `sundayFail`, §4):
   empty/skeleton structure matching the schema in design.md §3/§4, so
   content-validation tests can run before real content exists
@@ -67,15 +68,15 @@ Mockup reference: `mockups/puzzle/landing-page.html`,
 
 **Logic core (pure, tested first):**
 
-- [ ] `puzzle-daily.ts`: `isSpecialDay`, `todaysRound` (three fixed-order
-  draws — easy/medium/hard, hard swapped for the `1percent` pool and
-  flagged untimed on Sundays) + determinism tests — same day loaded twice
+- [ ] `puzzle-daily.ts`: `isSpecialDay`, `todaysRound` (Mon–Sat: three
+  fixed-order draws — easy/medium/hard; Sunday: a single untimed `1percent`
+  question, sign-off #23) + determinism tests — same day loaded twice
   → identical round, in the same order (PZL-2/3/4)
 - [ ] `banner.ts`: `computeWeekdayTier` against the new correctness/total-
   time table (TMR-1) + tests for every branch: 3/3 under/over the time
   cutoff, 2/3 with/without Q3 correct, 1/3, 0/3
-- [ ] `banner.ts`: `computeSundayOutcome` — 3/3 → `accepted`, anything else
-  → `waitlisted` (TMR-2)
+- [ ] `banner.ts`: `computeSundayOutcome` — correct → `accepted`, wrong
+  → `waitlisted` (TMR-2, single question)
 - [ ] `banner.ts`: `pickSchool` seeded-random determinism test — same
   `dayNumber` → same school every time, including that `accepted` and
   `waitlisted` both draw from the `tier1` pool (TMR-3/TMR-3a)
@@ -86,21 +87,22 @@ Mockup reference: `mockups/puzzle/landing-page.html`,
 - [ ] Content-validation test (CNT-2): unique ids, exactly one correct
   choice, non-empty explanations, difficulty/category enums,
   `1percent`-tier puzzles live only in the special pool,
-  `easy`/`medium`/`hard` pools are each non-empty (every day now draws
-  from all three), and `hard` / `1percent` pool lengths are not multiples
-  of 7 (sign-off #21)
+  `easy`/`medium`/`hard` pools are each non-empty (every Mon–Sat draws
+  from all three), every puzzle is `multipleChoice` (sign-off #22), and all
+  four pool lengths (`easy`/`medium`/`hard`/`1percent`) are not multiples
+  of 7 (sign-offs #21/#23)
 - [ ] `content/schools.json` validation: all tiers present (`tier1`..`tier4`,
   `fail`), each non-empty — no `sundayFail` pool anymore
 
 **Screens:**
 
 - [ ] `screens/play.ts` — Q1→Q2→Q3 prompt + choice selection within one
-  round, free back/forward navigation and editable answers, no visible
-  clock anywhere (ANS-2), single round-level "Lock it in" shown once all
+  round, free back/forward navigation and editable answers (Sunday: a single
+  special question), no visible clock anywhere (ANS-2), single round-level "Lock it in" shown once all
   three are answered (ANS-3)
 - [ ] `timer.ts` — single round stopwatch (ANS-4): starts at first render,
-  stops at Lock it in, pauses on `visibilitychange` hidden and while
-  Sunday's untimed Q3 is on screen; unit-test pause/resume math
+  stops at Lock it in, pauses on `visibilitychange` hidden; never starts
+  on Sundays (sign-off #23); unit-test pause/resume math
 - [ ] `main.ts` — capture `dayNumber`, Sunday flag, and the round once at
   boot and reuse at lock-in (PZL-6); test a round locked in after midnight
   is saved against its start day
@@ -154,16 +156,16 @@ Mockup reference: `mockups/puzzle/landing-page.html`,
 
 ## Phase 3 — Content pipeline for the long haul
 
-- [ ] Grow `puzzles.json` toward the pre-launch targets (70 easy / 55
-  medium / **36** hard / 10 `1percent`; hard is 36, not 35, so its length
-  isn't a multiple of 7 — sign-off #21) in batches, keeping `easy`/`medium`/`hard` at
-  roughly balanced depth — every day now draws from all three pools at
+- [ ] Grow `puzzles.json` toward the pre-launch targets (**71** easy /
+  55 medium / **36** hard / 10 `1percent`; no pool length may be a multiple
+  of 7 — easy is 71, not 70, and hard 36, not 35; sign-offs #21/#23) in batches, keeping `easy`/`medium`/`hard` at
+  roughly balanced depth — every Mon–Sat now draws from all three pools at
   once (v2), so an imbalanced pool (e.g. deep `easy`, thin `hard`) causes
   `hard` to repeat far more often than the others. Use
   `sample-questions-reference.md` as the tone/calibration guide, not a
   literal source
-- [ ] Grow `puzzles-1percent.json` alongside — this pool feeds Sunday's Q3
-  specifically now and likely needs the highest effort-per-entry, budget
+- [ ] Grow `puzzles-1percent.json` alongside — this pool feeds Sunday's single
+  question now and likely needs the highest effort-per-entry, budget
   accordingly
 - [ ] *(Should-have, CNT-3)* Explore automated arithmetic self-checking
   for math-flavored puzzles, to catch the class of bug the sample doc's
