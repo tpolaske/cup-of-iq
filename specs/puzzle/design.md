@@ -68,7 +68,7 @@ selection, banner tiers, and the timer are new, Puzzle-mode-only logic.
 **States:** *(revised 2026-09-23, requirements.md sign-off #13/#14)*
 `idle → answering_round → locked_in → reveal → results`, plus the
 standalone `comeback` screen (post-completion). `answering_round` now
-covers all three questions at once — the player moves Q1→Q2→Q3 within a
+covers all of the day's questions at once (three Mon–Sat, one on Sundays) — the player moves Q1→Q2→Q3 within a
 single screen/step sequence, with nothing submitted until the round-level
 "Lock it in" (ANS-3) fires. A `reveal` state runs after lock-in — a brief,
 standalone pennant moment (full-size pennant, a per-question
@@ -87,7 +87,7 @@ randomized-single-difficulty pick with a fixed three-question round.*
 // puzzle-daily.ts
 
 export type Difficulty = 'easy' | 'medium' | 'hard' | '1percent';
-export type Slot = 'q1' | 'q2' | 'q3';
+export type Slot = 'q1' | 'q2' | 'q3' | 'special';
 
 function posMod(n: number, m: number): number { return ((n % m) + m) % m; }
 
@@ -110,21 +110,23 @@ export interface RoundQuestion {
   slot: Slot;
   difficulty: Difficulty;
   puzzle: Puzzle;
-  timed: boolean; // false only for Sunday's Q3 (ANS-2)
+  timed: boolean; // false only for Sunday's special question (ANS-2)
 }
 
-// PZL-2/PZL-3: fixed order every day — Q1 easy, Q2 medium, Q3 hard
-// (Q3 becomes the 1percent pool, untimed, on Sundays).
+// PZL-2/PZL-3: Mon–Sat is a fixed three-question round — Q1 easy, Q2 medium,
+// Q3 hard. Sunday is a single untimed 1percent question (sign-off #23).
 export function todaysRound(dayNumber: number, now: Date, content: PuzzleContent): RoundQuestion[] {
+  if (isSpecialDay(now)) {
+    const special = content.onePercent[posMod(dayNumber, content.onePercent.length)];
+    return [{ slot: 'special', difficulty: '1percent', puzzle: special, timed: false }];
+  }
   const q1 = content.byDifficulty.easy[posMod(dayNumber, content.byDifficulty.easy.length)];
   const q2 = content.byDifficulty.medium[posMod(dayNumber, content.byDifficulty.medium.length)];
-  const sunday = isSpecialDay(now);
-  const q3Pool = sunday ? content.onePercent : content.byDifficulty.hard;
-  const q3 = q3Pool[posMod(dayNumber, q3Pool.length)];
+  const q3 = content.byDifficulty.hard[posMod(dayNumber, content.byDifficulty.hard.length)];
   return [
     { slot: 'q1', difficulty: 'easy',   puzzle: q1, timed: true },
     { slot: 'q2', difficulty: 'medium', puzzle: q2, timed: true },
-    { slot: 'q3', difficulty: sunday ? '1percent' : 'hard', puzzle: q3, timed: !sunday },
+    { slot: 'q3', difficulty: 'hard',   puzzle: q3, timed: true },
   ];
 }
 ```
@@ -132,8 +134,9 @@ export function todaysRound(dayNumber: number, now: Date, content: PuzzleContent
 Same determinism guarantee as the toddler game (PZL-4/DPS-4): same
 `dayNumber` + same content files → same three-question round, same
 special-question status on Sundays, every time, every device, no network
-call. There is no more `pickDifficulty`/weighted-PRNG step — every day
-always draws from all three difficulty pools, in the same fixed order.
+call. There is no more `pickDifficulty`/weighted-PRNG step — every
+Mon–Sat day always draws from all three difficulty pools, in the same fixed
+order, and Sunday draws only from the `1percent` pool (sign-off #23).
 
 **Capture once (PZL-6, sign-off #20):** `main.ts` computes `dayNumber`, the
 Sunday flag, and `todaysRound(...)` exactly once at boot and passes those
@@ -141,11 +144,12 @@ values through the whole round — never re-reading the clock at lock-in. A
 round started before midnight and locked in after it is saved against the
 day it started.
 
-**Pool-length rule (sign-off #21):** Sundays skip the `hard` pool and
-the Sunday-only `1percent` pool steps by 7 days between draws, so a pool
-whose length is a multiple of 7 would strand part of it (e.g. a 35-question
-`hard` pool would never show 5 of its questions). `hard` and `1percent`
-pool lengths must not be multiples of 7; the content test (§11) enforces it.
+**Pool-length rule (sign-offs #21/#23):** Sundays skip the `easy`,
+`medium`, and `hard` pools, and the Sunday-only `1percent` pool steps by 7
+days between draws, so a pool whose length is a multiple of 7 would strand
+part of it (e.g. a 35-question `hard` pool would never show 5 of its
+questions, and a 70-question `easy` pool would never show 10). No pool
+length may be a multiple of 7; the content test (§11) enforces it.
 
 ## 4. Correctness & Banner Tiers
 
@@ -164,8 +168,8 @@ export type SundayOutcome = 'accepted' | 'waitlisted';
 export interface RoundResult {
   q1Correct: boolean;
   q2Correct: boolean;
-  q3Correct: boolean; // the "hard" slot, or Sunday's untimed special
-  totalSeconds: number; // single round timer, Lock-it-in stop; excludes time with Sunday's untimed Q3 on screen (ANS-2/ANS-4)
+  q3Correct: boolean; // the "hard" slot (Mon–Sat only)
+  totalSeconds: number; // single round timer, stopped at Lock it in (ANS-4); Mon–Sat only — Sundays have no timer
 }
 
 const TIER1_TOTAL_SECONDS = 30; // provisional, TMR-1 — expect to retune after real play
@@ -184,10 +188,10 @@ export function computeWeekdayTier(r: RoundResult): WeekdayTier {
   return 'fail';
 }
 
-// TMR-2 — Sunday only. Binary: 3/3 (including the untimed special Q3) or
-// anything less. No Tier 2/3/4/Fail on Sundays.
-export function computeSundayOutcome(r: RoundResult): SundayOutcome {
-  return r.q1Correct && r.q2Correct && r.q3Correct ? 'accepted' : 'waitlisted';
+// TMR-2 — Sunday only. Binary on the single untimed 1% question (sign-off #23).
+// No Tier 2/3/4/Fail on Sundays.
+export function computeSundayOutcome(specialCorrect: boolean): SundayOutcome {
+  return specialCorrect ? 'accepted' : 'waitlisted';
 }
 
 // TMR-3/TMR-3a — a Sunday outcome maps onto the *same* school pools as the
@@ -243,9 +247,10 @@ day of stale "last played" state isn't worth preserving):
 ```
 
 There are no per-question times since sign-off #18 — only the round's
-`totalSeconds`. On a Sunday, `outcome` is `"accepted"` or `"waitlisted"`
-instead of a weekday tier and `questions[2].difficulty` is `"1percent"`;
-`totalSeconds` excludes any time Q3 was on screen (untimed, ANS-2).
+`totalSeconds`. On a Sunday (sign-off #23) `isSpecialDay` is `true`,
+`questions` holds a single entry (`slot: "special"`, `difficulty:
+"1percent"`), `outcome` is `"accepted"` or `"waitlisted"` instead of a
+weekday tier, and `totalSeconds` is omitted (no timer runs).
 `lastPlayed.dayNumber` is the day the round *started* (PZL-6).
 
 - Lock check (mirrors LCK-1): `lastPlayed.dayNumber === dayNumber(now)`.
@@ -274,14 +279,14 @@ instead of a weekday tier and `questions[2].difficulty` is `"1percent"`;
 | `src/puzzle/puzzle-daily.ts` | `todaysRound`, `isSpecialDay` — pure, fully unit-tested (§3) |
 | `src/puzzle/banner.ts` | `computeWeekdayTier`, `computeSundayOutcome`, `pickSchool` — pure, fully unit-tested (§4) |
 | `src/puzzle/progress.ts` | localStorage read/write (schema v2, §5), schema migration, perfect-day streak rules — pure core, tested |
-| `src/puzzle/timer.ts` | Single round stopwatch: starts when the round first renders, pauses while the page is hidden or while Sunday's untimed Q3 is on screen, stops at "Lock it in" (ANS-4) |
+| `src/puzzle/timer.ts` | Single round stopwatch: starts when the round first renders, pauses while the page is hidden, stops at "Lock it in" (ANS-4); never starts on Sundays |
 | `src/puzzle/share.ts` | `buildShareText(result)`, `share()` — Web Share → clipboard fallback, same pattern as toddler `share.ts` |
-| `src/puzzle/screens/play.ts` | Q1→Q2→Q3 prompt + answer selection with free back/forward navigation and editable answers, round-level "Lock it in" confirm (ANS-3) |
+| `src/puzzle/screens/play.ts` | Q1→Q2→Q3 prompt + answer selection with free back/forward navigation and editable answers (Sunday: the single special question, no timer), round-level "Lock it in" confirm (ANS-3) |
 | `src/puzzle/screens/reveal.ts` | Full pennant + per-question correct/incorrect summary, auto-advances to results (TMR-5) |
 | `src/puzzle/screens/results.ts` | Per-question breakdown (RES-1), banner, streak, share/copy |
 | `src/puzzle/screens/comeback.ts` | Come-back card: today's round recap, "new round tomorrow," share controls |
-| `content/puzzles.json` | Regular-day puzzles, keyed by difficulty — every day now draws from all three (`easy`/`medium`/`hard`) at once |
-| `content/puzzles-1percent.json` | Sunday Q3 special pool |
+| `content/puzzles.json` | Regular-day puzzles, keyed by difficulty — every Mon–Sat now draws from all three (`easy`/`medium`/`hard`) at once |
+| `content/puzzles-1percent.json` | Sunday special-question pool (one question per Sunday) |
 | `content/schools.json` | Tier → school name arrays (§4): `tier1`..`tier4`, `fail`. No separate Sunday pool — Waitlisted reuses `tier1` (TMR-3a). |
 | `assets/landing/` | `icon-badge.webp` (corner mark), inline SVG for the two mode-chooser icons (no separate files — inlined in `landing.ts` for zero extra requests) |
 
@@ -302,9 +307,9 @@ instead of a weekday tier and `questions[2].difficulty` is `"1percent"`;
   `timer.ts` starts when the round first renders and stops when "Lock it
   in" is tapped; changing answers or navigating between questions neither
   resets nor stops it. It pauses while the page is hidden
-  (`visibilitychange`) and, on Sundays, while the untimed Q3 is on screen,
-  so the special question contributes nothing to `totalSeconds` (§4). No
-  component ever renders the readout. A visible stopwatch was
+  (`visibilitychange`). On Sundays (sign-off #23) the round is a single
+  untimed question, so the timer never starts and no `totalSeconds` is
+  recorded (§4). No component ever renders the readout. A visible stopwatch was
   found to read as test-taking pressure, which works against the "this
   should be fun" goal running through the whole mode.
 - **Reveal is deliberately minimal (TMR-5).** `screens/reveal.ts` renders
@@ -407,18 +412,17 @@ scoped to stay on the safe side of the IP line discussed in §1:
 // 🔥 4-day streak
 // https://cupofiq.com/puzzle
 
-// Sunday, accepted:
+// Sunday, accepted (solved the 1% question):
 // Cup of IQ · Puzzle  Day 98 · 💯 Sunday special
-// 3/3 — accepted!
+// Solved the 1% question — accepted!
 // Yale is calling. 🎓
 // 🔥 5-day streak
 // https://cupofiq.com/puzzle
 
-// Sunday, waitlisted:
+// Sunday, waitlisted (a waitlist always resets the streak, so no streak line):
 // Cup of IQ · Puzzle  Day 98 · 💯 Sunday special
-// 2/3 — so close
+// The 1% question got me — waitlisted
 // Princeton has put you on the waitlist. 😅
-// 🔥 0-day streak
 // https://cupofiq.com/puzzle
 ```
 
@@ -430,15 +434,16 @@ the player appends themselves.
 
 Mirrors the toddler project's content test pattern:
 
-- Every puzzle: unique `id`, non-empty `explanation`, exactly one correct
-  choice (multiple-choice) or non-empty `answer` + `acceptedAlternates`
-  (free-text), `difficulty` and `category` within the enum (CNT-2).
+- Every puzzle: unique `id`, non-empty `explanation`, `answerFormat` is
+  `multipleChoice` with exactly one correct choice (MVP is multiple-choice
+  only, sign-off #22), `difficulty` and `category` within the enum (CNT-2).
 - `content/puzzles.json` has non-empty `easy`, `medium`, and `hard` pools —
-  every day draws from all three now, so an empty or thin pool in any one
+  every Mon–Sat draws from all three now, so an empty or thin pool in any one
   of them breaks that day's round, not just a rare randomized pick (PZL-2).
-- `hard` and `1percent` pool lengths are **not multiples of 7** (sign-off
-  #21): Sundays skip `hard` and the Sunday-only `1percent` pool steps by 7,
-  so a multiple-of-7 length leaves part of the pool unreachable.
+- `easy`, `medium`, `hard`, and `1percent` pool lengths are **not multiples
+  of 7** (sign-offs #21/#23): Sundays skip the first three pools and the
+  Sunday-only `1percent` pool steps by 7, so a multiple-of-7 length leaves
+  part of a pool unreachable.
 - `content/puzzles-1percent.json` entries are all `difficulty: "1percent"`
   and don't appear in the regular pools.
 - `content/schools.json` has all five tiers — `tier1`..`tier4`, `fail` —
