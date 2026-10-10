@@ -20,6 +20,13 @@ Mockup reference: `mockups/puzzle/landing-page.html`,
   accepted/waitlisted outcome. `requirements.md` and `design.md` are
   updated; task list below reflects v2 throughout. Nothing further to
   decide before continuing Phase 0/1 build work.
+- [x] **Pre-implementation review resolved** (2026-10-10, sign-offs
+  #18–#21): one round timer with free navigation (no per-question timers),
+  streak survives skipped days, a round belongs to the day it started,
+  category enum reconciled (`logic`, `developer-logic`; 1% Club is a
+  difficulty only), `hard`/`1percent` pool lengths must not be multiples of
+  7 (`hard` target 35 → 36). Still open: free-text answers in MVP, and
+  share-text copy for low-scoring Sunday waitlists / zero streaks.
 
 ## Phase 0 — Foundation shared with the toddler app
 
@@ -32,6 +39,18 @@ Mockup reference: `mockups/puzzle/landing-page.html`,
   toddler test suite green before and after, not just new puzzle tests.
 - [ ] Build `src/landing.ts` — root route two-icon chooser (LND-1..3),
   wire to `/dino/` and `/puzzle/`. Reference: `mockups/puzzle/landing-page.html`.
+- [ ] **Move the toddler app to `/dino/`**: Vite multi-page config
+  (`rollup.input` entries for landing, dino, puzzle; correct `base`), keep
+  `CNAME` in `public/`, update the toddler share link (toddler SHR-3 uses
+  the bare `https://cupofiq.com`, which will now land on the chooser —
+  decide whether it should point at `/dino/`), and confirm the toddler suite
+  and GitHub Pages deploy still pass. This changes shipped behavior, so
+  treat it like the `shared/` refactor above: green before and after.
+- [ ] **Convert the prose question bank to JSON** per the sign-off #21
+  mapping (requirements.md §2: categories + 5-tier → 3-tier difficulty),
+  into `content/puzzles.json` / `content/puzzles-1percent.json`. Any
+  free-text question must become multiple-choice or be parked (pending the
+  open free-text decision).
 - [ ] Upload `icon-badge.webp` to `mockups/puzzle/` (binary — GitHub web
   UI, connector is text-only)
 - [ ] `content/puzzles.json` (with non-empty `easy`/`medium`/`hard` arrays
@@ -66,18 +85,25 @@ Mockup reference: `mockups/puzzle/landing-page.html`,
   fallback (NFR-S4)
 - [ ] Content-validation test (CNT-2): unique ids, exactly one correct
   choice, non-empty explanations, difficulty/category enums,
-  `1percent`-tier puzzles live only in the special pool, and
+  `1percent`-tier puzzles live only in the special pool,
   `easy`/`medium`/`hard` pools are each non-empty (every day now draws
-  from all three)
+  from all three), and `hard` / `1percent` pool lengths are not multiples
+  of 7 (sign-off #21)
 - [ ] `content/schools.json` validation: all tiers present (`tier1`..`tier4`,
   `fail`), each non-empty — no `sundayFail` pool anymore
 
 **Screens:**
 
 - [ ] `screens/play.ts` — Q1→Q2→Q3 prompt + choice selection within one
-  round, per-question silent timer start/stop (skipped for Sunday's Q3),
-  no visible clock anywhere (ANS-2), single round-level "Lock it in" shown
-  once all three are answered (ANS-3)
+  round, free back/forward navigation and editable answers, no visible
+  clock anywhere (ANS-2), single round-level "Lock it in" shown once all
+  three are answered (ANS-3)
+- [ ] `timer.ts` — single round stopwatch (ANS-4): starts at first render,
+  stops at Lock it in, pauses on `visibilitychange` hidden and while
+  Sunday's untimed Q3 is on screen; unit-test pause/resume math
+- [ ] `main.ts` — capture `dayNumber`, Sunday flag, and the round once at
+  boot and reuse at lock-in (PZL-6); test a round locked in after midnight
+  is saved against its start day
 - [ ] `screens/reveal.ts` — full pennant + a per-question correct/incorrect
   summary (e.g. three check/x marks) only, auto-advance to results after a
   short pause (TMR-5; exact duration still TBD, start around 2s and tune
@@ -100,7 +126,9 @@ Mockup reference: `mockups/puzzle/landing-page.html`,
 
 - [ ] Perf/privacy pass (NFR-S1/S2) — same bar as the toddler app: no
   analytics, no third-party requests, static files only
-- [ ] Manual on-device checklist: does "Show the trick" feel discoverable
+- [ ] Manual on-device checklist: does the 30s Tier 1 cutoff still feel
+  right now that the round timer includes reading and navigation (retune
+  `TIER1_TOTAL_SECONDS` if not); does "Show the trick" feel discoverable
   without being pushed on you; does the reveal→results timing feel right;
   does the pennant read clearly at phone width; does an easy question ever
   feel like it needs the (now-hidden) timer back; does moving between
@@ -126,7 +154,9 @@ Mockup reference: `mockups/puzzle/landing-page.html`,
 
 ## Phase 3 — Content pipeline for the long haul
 
-- [ ] Grow `puzzles.json` in batches, keeping `easy`/`medium`/`hard` at
+- [ ] Grow `puzzles.json` toward the pre-launch targets (70 easy / 55
+  medium / **36** hard / 10 `1percent`; hard is 36, not 35, so its length
+  isn't a multiple of 7 — sign-off #21) in batches, keeping `easy`/`medium`/`hard` at
   roughly balanced depth — every day now draws from all three pools at
   once (v2), so an imbalanced pool (e.g. deep `easy`, thin `hard`) causes
   `hard` to repeat far more often than the others. Use
