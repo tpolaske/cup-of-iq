@@ -139,6 +139,32 @@ product decisions.
     non-acceptance outcome, and it breaks the streak like any other
     non-perfect day (no special carve-out).
 
+### ✅ Resolved (2026-10-10 — pre-implementation review)
+
+18. **One round timer, free navigation (supersedes the per-question timers
+    in ANS-2/ANS-4; refines #14).** Players may move freely between Q1–Q3
+    and change any answer before locking in. A single silent round timer
+    runs from the moment the round first renders until "Lock it in" is
+    tapped (which requires all three answered); `totalSeconds` is that
+    elapsed time. On Sundays the timer is paused while the untimed special
+    Q3 is on screen. The timer also pauses while the page is hidden
+    (backgrounded tab / locked screen).
+19. **Streak survives skipped days (confirms #16's scope).** The streak
+    resets only when a *completed* round is non-perfect. A day with no
+    round played neither increments nor resets it (STK-5).
+20. **A round belongs to the day it started.** `dayNumber`, Sunday status,
+    and the three questions are captured once when the round begins, and a
+    lock-in after midnight is recorded against that start day (PZL-6).
+21. **Content schema reconciliation + pool-length rule.** `category` enum
+    becomes `brain-teaser | clever-math | sat-style | logic |
+    developer-logic`; 1% Club is a *difficulty* (`1percent`), not a
+    category; prose-bank difficulty labels collapse to the 3-tier schema
+    at JSON conversion (mapping in §2). `hard` and `1percent` pool lengths
+    must not be multiples of 7 (CNT-2) — Sunday skips the `hard` pool and
+    the Sunday-only `1percent` pool steps by 7, so a multiple-of-7 length
+    would strand part of the pool. `hard` question-bank target moves from
+    35 → 36.
+
 ---
 
 ## 1. Daily Puzzle Selection (PZL)
@@ -160,13 +186,21 @@ product decisions.
   Sunday, THE SYSTEM SHALL draw Q3 from `content/puzzles-1percent.json`
   (same positive-modulo cycling) instead of the regular `hard` pool, and
   SHALL flag that question as untimed (see ANS-2, TMR §4). Q1 and Q2 are
-  drawn from the regular `easy`/`medium` pools as on any other day.
+  drawn from the regular `easy`/`medium` pools as on any other day. Because
+  Sundays skip the `hard` pool, the `hard` and `1percent` pool lengths
+  SHALL NOT be multiples of 7 (CNT-2, sign-off #21).
 - **PZL-4** WHEN the same day is loaded twice, THE SYSTEM SHALL produce an
   identical round (all three questions, in the same order), and, on
   Sundays, identical special-question status — same determinism guarantee
   as DPS-4.
 - **PZL-5** THE SYSTEM SHALL make zero network requests; puzzle selection is
   fully determined by the date and files in the repo.
+- **PZL-6** *(sign-off #20)* WHEN a round begins, THE SYSTEM SHALL capture
+  `dayNumber`, Sunday status, and the three questions once and use those
+  captured values for the entire round — including lock-in, persistence
+  (`lastPlayed.dayNumber`), and the share text. A round started before
+  midnight and locked in after it counts for the day it started; the next
+  page load after midnight presents the new day's round.
 
 ## 2. Content Schema (CNT)
 
@@ -205,21 +239,23 @@ the challenge
 → algorithms, debugging, data structures, systems thinking — no code
 required, but developers have an edge
 
-> **Open question:** this spectrum doesn't map 1:1 onto the `category` enum in
-> CNT-1 below (`wonderlic-style` vs. `Logic/Puzzle`; `1% Club` shown here as a
-> category rather than only a difficulty tier; `Developer Logic` isn't in the
-> enum at all yet). Reconcile before this becomes the literal schema — see
-> disagreements log / needs a sign-off. Separately, since sign-off #13
-> (three-question round): the reference doc's 5-tier difficulty ladder
-> (Easy / Medium-Easy / Medium-Hard / Hard / 1% Club) needs collapsing to
-> CNT-1's actual 3-tier `easy | medium | hard` (+ `1percent` special) when
-> content is converted to JSON — `Medium-Easy` and `Medium-Hard` both become
-> `medium`. Worth deciding now whether new prose examples should keep using
-> the 5-tier labels (current practice, for continuity with Batches 1–4) or
-> switch to labeling directly against the 3-tier schema going forward.
+> **Resolved 2026-10-10 (sign-off #21).** Spectrum → schema mapping:
+>
+> | Spectrum | CNT-1 `category` |
+> |---|---|
+> | 🟢 Quick Brain Teasers | `brain-teaser` |
+> | 🔵 Clever Math | `clever-math` |
+> | 🟣 SAT-style Reasoning | `sat-style` |
+> | 🟠 Logic/Puzzle | `logic` (renamed from `wonderlic-style`) |
+> | ⚫ Developer Logic | `developer-logic` |
+> | 🔴 1% Club | *not a category* — it is the `1percent` **difficulty** (Sunday pool); each 1% Club question still carries one of the five categories above |
+>
+> Difficulty labels in the prose bank keep their 5-tier names for authoring
+> continuity and collapse at JSON conversion: Easy → `easy`; Medium-Easy and
+> Medium-Hard → `medium`; Hard → `hard`; 1% Club → `1percent`.
 
 - **CNT-1** Each puzzle entry SHALL include: `id`, `category`
-  (`brain-teaser` | `clever-math` | `sat-style` | `wonderlic-style`),
+  (`brain-teaser` | `clever-math` | `sat-style` | `logic` | `developer-logic`),
   `difficulty` (`easy` | `medium` | `hard` | `1percent`), `prompt`,
   `answerFormat` (`multipleChoice` | `freeText`), the correct answer
   (`choices[]` + `correctIndex` for multiple-choice, or `answer` +
@@ -228,7 +264,8 @@ required, but developers have an edge
   pattern as the dino content test): unique ids, exactly one correct choice
   per multiple-choice question, non-empty explanation, `difficulty` and
   `category` within the enum, every `1percent`-tier puzzle living in the
-  dedicated special pool.
+  dedicated special pool, and `hard` / `1percent` pool lengths that are not
+  multiples of 7 (sign-off #21 — otherwise part of the pool is unreachable).
 - **CNT-3** *(should-have, not launch-blocking)* WHERE a puzzle's answer is
   independently computable (arithmetic word problems), content authoring
   SHOULD include enough structure for an automated check to catch
@@ -243,26 +280,30 @@ required, but developers have an edge
   exactly one attempt per round per day; once the round is locked in, THE
   SYSTEM SHALL show results immediately and SHALL NOT allow changing any of
   the three answers.
-- **ANS-2** *(revised 2026-09-23)* THE SYSTEM SHALL track elapsed time
-  silently for each question, every day — but SHALL NEVER display a
-  running clock, countdown, or numeric timer anywhere in the play or reveal
-  UI. On Sundays, Q3 (the special question, PZL-3) is untimed: THE SYSTEM
-  SHALL NOT start or accumulate a timer for that question, and it
-  contributes nothing to the total-time check in TMR-1. Timing exists only
+- **ANS-2** *(revised 2026-10-10, sign-off #18)* THE SYSTEM SHALL track
+  elapsed time silently with a single round timer, every day — but SHALL
+  NEVER display a running clock, countdown, or numeric timer anywhere in
+  the play or reveal UI. On Sundays, Q3 (the special question, PZL-3) is
+  untimed: THE SYSTEM SHALL pause the round timer for as long as that
+  question is on screen, so it contributes nothing to the total-time check
+  in TMR-1. Timing exists only
   to compute the banner tier (§4); showing it was found to add
   test-taking pressure that worked against the "this should be fun" goal.
   Difficulty context (not raw time) may appear on the results screen only,
   after the fact (RES-1a).
-- **ANS-3** *(revised 2026-09-23, sign-off #14)* THE SYSTEM SHALL require
-  the player to answer all three questions and then separately confirm
-  ("Lock it in") once for the whole round before submitting — not a
-  per-question confirm — to avoid an accidental tap consuming the day's
+- **ANS-3** *(revised 2026-10-10, sign-offs #14/#18)* THE SYSTEM SHALL
+  require the player to answer all three questions and then separately
+  confirm ("Lock it in") once for the whole round before submitting — not
+  a per-question confirm — to avoid an accidental tap consuming the day's
   one attempt, and to avoid revealing an early question's correctness
-  before the later two are answered.
-- **ANS-4** THE SYSTEM SHALL stop each question's silent timer the moment
-  that question's answer is selected (or, on Sunday's untimed Q3, not run
-  a timer at all) — the round-level "Lock it in" tap does not retroactively
-  extend any individual question's elapsed time.
+  before the later two are answered. Until lock-in, THE SYSTEM SHALL let
+  the player move freely between the three questions and change any
+  answer.
+- **ANS-4** *(revised 2026-10-10, sign-off #18)* THE SYSTEM SHALL start the
+  round timer when the round first renders and stop it the moment "Lock it
+  in" is tapped. THE SYSTEM SHALL also pause the timer while the page is
+  hidden (tab backgrounded or screen locked) and, on Sundays, while the
+  untimed special Q3 is on screen (ANS-2).
 
 ## 4. Correctness & Banner Tiers (TMR)
 
@@ -276,12 +317,13 @@ unchanged and still shared by both paths.*
 - **TMR-1** *(Mon–Sat)* WHEN a round is locked in on a non-Sunday, THE
   SYSTEM SHALL assign the banner tier as follows (values provisional,
   expect to retune after real play — same spirit as the toddler game's
-  animation timings):
+  animation timings; note that since sign-off #18 the round time includes
+  reading and navigating between questions, so 30s may prove tight):
 
 | Result | Tier |
 |---|---|
-| 3/3 correct, total time (Q1+Q2+Q3) ≤ 30s | **Tier 1** |
-| 3/3 correct, total time > 30s | Tier 2 |
+| 3/3 correct, total round time ≤ 30s | **Tier 1** |
+| 3/3 correct, total round time > 30s | Tier 2 |
 | 2/3 correct, Q3 (hard) among the correct answers | Tier 2 |
 | 2/3 correct, Q3 missed | Tier 3 |
 | 1/3 correct | Tier 4 |
@@ -388,10 +430,10 @@ unchanged and still shared by both paths.*
   result (per-question breakdown, banner, explanations still visible), a
   "new round tomorrow" message, and share/copy controls — same pattern as
   the toddler mode's comeback card (LCK-1..4 in requirements.md).
-- **LCK-2** In-progress state (any selected-but-not-locked-in answers,
-  running per-question timers) SHALL NOT persist across reload; a reload
-  before confirming restarts that day's round (and all three timers) from
-  the beginning. This SHALL NOT count as a completed attempt.
+- **LCK-2** In-progress state (any selected-but-not-locked-in answers, the
+  running round timer) SHALL NOT persist across reload; a reload before
+  confirming restarts that day's round (and its timer) from the
+  beginning. This SHALL NOT count as a completed attempt.
 
 ## 8. Streaks (STK)
 
@@ -408,6 +450,9 @@ unchanged and still shared by both paths.*
 - **STK-4** THE current streak SHALL be shown on the results screen and
   included in share text (STK-2's reset means a broken-streak share simply
   omits or shows "streak: 0" rather than hiding the stat).
+- **STK-5** *(sign-off #19)* A day on which no round is completed SHALL
+  NOT change `accuracyStreak`; only a completed round (STK-1/STK-2) can
+  increment or reset it.
 
 ## 9. Weekly "1% Club" Special (WKS)
 
@@ -481,7 +526,7 @@ directly — same repo, same principles, same architecture:
 - Full ranked school list bike-shedding (which specific schools land in
   which tier) — quick fun pass, not a structural decision.
 - **Performance metrics page** (new 2026-08-15): a stats view showing which
-  categories (brain-teaser / clever-math / sat-style / wonderlic-style) and
+  categories (brain-teaser / clever-math / sat-style / logic / developer-logic) and
   difficulty tiers a player performs best/worst on. Genuinely useful and a
   natural fit once enough history accumulates in `progress.ts`'s local
   data, but adds real scope (a new screen, richer localStorage schema
