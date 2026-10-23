@@ -3,11 +3,9 @@
 
 export const STORAGE_KEY = 'cupofiq.v1';
 
-export interface StorageLike {
-  getItem(key: string): string | null;
-  setItem(key: string, value: string): void;
-  removeItem(key: string): void;
-}
+import type { StorageLike } from './shared/storage';
+export type { StorageLike } from './shared/storage';
+export { safeStorage } from './shared/storage'; // NFR-7 wrapper now lives in shared/
 
 export interface LastPlayed {
   dayNumber: number;
@@ -30,19 +28,6 @@ export interface AppState {
 
 export function defaultState(): AppState {
   return { schemaVersion: 1, level: 1, perfectsAtLevel: 0, sound: true, lastPlayed: null };
-}
-
-// NFR-7 — private browsing throws on access; the game then runs stateless.
-export function safeStorage(): StorageLike | null {
-  try {
-    const s = window.localStorage;
-    const probe = '__cupofiq_probe__';
-    s.setItem(probe, '1');
-    s.removeItem(probe);
-    return s;
-  } catch {
-    return null;
-  }
 }
 
 function clampInt(v: unknown, lo: number, hi: number, dflt: number): number {
