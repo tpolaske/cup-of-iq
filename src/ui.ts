@@ -1,5 +1,7 @@
 // ui.ts — tiny shared DOM helpers: toast, share/copy (SHR-3/4).
 
+import { copyToClipboard, shareOrCopy } from './shared/share';
+
 let toastEl: HTMLElement | null = null;
 
 export function showToast(message: string): void {
@@ -16,26 +18,14 @@ export function showToast(message: string): void {
 }
 
 export async function copyText(text: string): Promise<void> {
-  try {
-    await navigator.clipboard.writeText(text);
-    showToast('Copied!'); // SHR-4
-  } catch {
-    showToast('Could not copy');
-  }
+  showToast((await copyToClipboard(text)) ? 'Copied!' : 'Could not copy'); // SHR-4
 }
 
-// SHR-3/4 — native share sheet when available; clipboard fallback otherwise.
+// SHR-3/4 — plumbing lives in shared/share.ts; only the toast is mode-specific.
 export async function shareResult(text: string): Promise<void> {
-  const nav = navigator as Navigator & { share?: (data: { text: string }) => Promise<void> };
-  if (typeof nav.share === 'function') {
-    try {
-      await nav.share({ text });
-      return;
-    } catch {
-      // Sheet dismissed or unsupported payload — fall through to copy.
-    }
-  }
-  await copyText(text);
+  const outcome = await shareOrCopy(text);
+  if (outcome === 'copied') showToast('Copied!');
+  else if (outcome === 'failed') showToast('Could not copy');
 }
 
 // GRN-1 — the grown-ups entry control. A plain tap: the gate was a 2 s

@@ -14,28 +14,10 @@ export interface Mission {
   count: number;
 }
 
-export const LAUNCH_DATE = new Date(2026, 7, 3); // 2026-08-03 — go-live day, Day 1.
-// ⚠️ IMMUTABLE (sign-off #7). Changing this renumbers every day and reshuffles
-// every board. Note the month is 0-indexed: 7 = August.
-
-const MS_PER_DAY = 86_400_000;
-
-// DPS-1 — device-local calendar days since launch, plus one. Math.round (not
-// floor) is deliberate: it absorbs DST's 23/25-hour days, since local-midnight
-// diffs are then ±1 h off an exact multiple of 24 h. Pre-launch visits clamp
-// to Day 1: JS % preserves sign, so day ≤ 0 would index dinos[-1] = undefined
-// (swarm.md ARCH-1). Beware: while LAUNCH_DATE is in the future the clamp
-// pins every visit to Day 1, which also pins the LCK-1 lock closed.
-export function dayNumber(now: Date = new Date(), launch: Date = LAUNCH_DATE): number {
-  const nowMid = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const launchMid = new Date(launch.getFullYear(), launch.getMonth(), launch.getDate());
-  const day = Math.round((nowMid.getTime() - launchMid.getTime()) / MS_PER_DAY) + 1;
-  return Math.max(1, day);
-}
-
-export function posMod(n: number, m: number): number {
-  return ((n % m) + m) % m;
-}
+// Date math + PRNG live in shared/ (puzzle design.md §12). Re-exported here so
+// existing imports keep working unchanged.
+import { mulberry32, posMod } from './shared/daily';
+export { LAUNCH_DATE, dayNumber, posMod } from './shared/daily';
 
 // DPS-2 / PRM-1 / MSN-1 — deterministic daily pick with open repeats (sign-off #11).
 export function pickDaily<T>(day: number, items: readonly T[]): T {
@@ -122,16 +104,6 @@ export function boardSpecForLevel(level: number): BoardSpec {
 
 // DPS-3 — mulberry32-driven Fisher–Yates; every device at the same level sees
 // the identical arrangement on the same day.
-function mulberry32(seed: number): () => number {
-  let a = seed | 0;
-  return () => {
-    a = (a + 0x6d2b79f5) | 0;
-    let t = Math.imul(a ^ (a >>> 15), 1 | a);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
 export function seededShuffle<T>(items: readonly T[], seed: number): T[] {
   const a = items.slice();
   const rnd = mulberry32(seed);
