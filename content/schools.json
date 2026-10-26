@@ -1,0 +1,132 @@
+{
+ "tier1": [
+  {
+   "name": "Harvard",
+   "base": "#A51C30",
+   "accent": "#F2E8D5"
+  },
+  {
+   "name": "Stanford",
+   "base": "#8C1515",
+   "accent": "#F4F1EA"
+  },
+  {
+   "name": "Princeton",
+   "base": "#E77500",
+   "accent": "#1C1C1C"
+  },
+  {
+   "name": "MIT",
+   "base": "#A31F34",
+   "accent": "#8A8B8C"
+  },
+  {
+   "name": "Yale",
+   "base": "#00356B",
+   "accent": "#D9A441"
+  }
+ ],
+ "tier2": [
+  {
+   "name": "Brown",
+   "base": "#4E3629",
+   "accent": "#E0C08E"
+  },
+  {
+   "name": "Northwestern",
+   "base": "#4E2A84",
+   "accent": "#E4E0EE"
+  },
+  {
+   "name": "Vanderbilt",
+   "base": "#1A1A1A",
+   "accent": "#CFAE70"
+  },
+  {
+   "name": "Notre Dame",
+   "base": "#0C2340",
+   "accent": "#C99700"
+  },
+  {
+   "name": "USC",
+   "base": "#990000",
+   "accent": "#FFC72C"
+  }
+ ],
+ "tier3": [
+  {
+   "name": "Michigan",
+   "base": "#00274C",
+   "accent": "#FFCB05"
+  },
+  {
+   "name": "Florida",
+   "base": "#0021A5",
+   "accent": "#FA4616"
+  },
+  {
+   "name": "Tulane",
+   "base": "#006747",
+   "accent": "#8CC7EA"
+  },
+  {
+   "name": "UNC",
+   "base": "#4B9CD3",
+   "accent": "#FFFFFF"
+  },
+  {
+   "name": "Villanova",
+   "base": "#00205B",
+   "accent": "#8FD3F4"
+  }
+ ],
+ "tier4": [
+  {
+   "name": "Providence",
+   "base": "#1B1B1B",
+   "accent": "#FFFFFF"
+  },
+  {
+   "name": "UConn",
+   "base": "#000E2F",
+   "accent": "#E4E7EC"
+  },
+  {
+   "name": "Fairfield",
+   "base": "#CC0000",
+   "accent": "#F2F2F2"
+  },
+  {
+   "name": "Pepperdine",
+   "base": "#00205B",
+   "accent": "#FF6C0C"
+  }
+ ],
+ "fail": [
+  {
+   "name": "Coastal Carolina",
+   "base": "#006F71",
+   "accent": "#D8B88A"
+  },
+  {
+   "name": "Central Connecticut State",
+   "base": "#0033A0",
+   "accent": "#F2F2F2"
+  },
+  {
+   "name": "Cape Cod CC",
+   "base": "#1F3A5F",
+   "accent": "#C8B28A"
+  },
+  {
+   "name": "Arizona State",
+   "base": "#8C1D40",
+   "accent": "#FFC627"
+  },
+  {
+   "name": "Ole Miss",
+   "base": "#CE1126",
+   "accent": "#14213D"
+  }
+ ]
+}
