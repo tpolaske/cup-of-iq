@@ -29,7 +29,7 @@ exactly as before. All tests green, privacy/perf bar met.
 
 - [~] `types.ts`, `puzzle-daily.ts` (todaysRound, isSpecialDay, buildContent), `banner.ts` (weekday tier, Sunday outcome, pickSchool, findSchool), `timer.ts` (+ pause-while-hidden) — branch `phase1-puzzle-logic`
 - [ ] `progress.ts` — schema v2 (`cupofiq.puzzle.v2`), lock check, perfect-day streak rules (STK-1..5), best streak, v1 drop-migration, private-mode fallback
-- [ ] `share.ts` — `buildShareText` for weekday, Sunday accepted, Sunday waitlisted (uses `shared/share.ts`)
+- [ ] `share.ts` — `buildShareText` for weekday, Sunday accepted, Sunday waitlisted (uses `shared/share.ts`); copy rules in *Decisions* below
 - [ ] `puzzle.ts` — state machine `idle → answering_round → locked_in → reveal → results`
 
 ## C. Screens & app shell
@@ -45,6 +45,7 @@ exactly as before. All tests green, privacy/perf bar met.
 
 - [ ] `src/landing.ts` — two-icon chooser (LND-1..3), reference `mockups/puzzle/landing-page.html`
 - [ ] Vite multi-page config (landing, dino, puzzle); move toddler code into `src/dino/`; keep `CNAME` in `public/`
+- [ ] Update the dino game's share text to link `https://cupofiq.com/dino/` (`src/share.ts`, plus its test)
 - [ ] Confirm the GitHub Pages deploy workflow still builds and serves all three pages
 - [ ] Toddler suite green before **and** after the move
 
@@ -68,11 +69,18 @@ exactly as before. All tests green, privacy/perf bar met.
 
 ---
 
-## Decisions still needed from Tom
+## Decisions
 
-1. **Dino share link** — toddler share text currently links the bare `https://cupofiq.com`, which will become the chooser. Point it at `/dino/` or leave it?
-2. **Share copy** for a Sunday Waitlisted result and a zero-streak result (STK-4 says show "streak: 0" or omit).
-3. **Day counter** — recommendation: leave `LAUNCH_DATE` (Aug 3) alone. Both modes share it; puzzle mode simply starts at whatever day it ships. A reset would restart the dino cycle and renumber its boards.
+**Made (2026-10-27):**
+
+1. **Dino share link → `/dino/`.** The bare `https://cupofiq.com` becomes the chooser, so the dino share text points at `/dino/` (task in §D).
+2. **Share copy.**
+   - Streak line appears only when the current streak is **2 or more** (e.g. "🔥 3-day streak"); omitted at 0 or 1 so a missing streak never reads as a scolding.
+   - Sunday **Waitlisted** keeps the light "so close" tone (e.g. "Waitlisted at Princeton 😅") and carries no streak line.
+
+**Still open:**
+
+3. **Day counter** — recommendation: leave `LAUNCH_DATE` (Aug 3) alone. Both modes share it; puzzle mode simply starts at whatever day it ships. A reset would restart the dino cycle and renumber its boards. Awaiting confirmation.
 
 ## Known launch risks
 
