@@ -1,0 +1,1400 @@
+{
+ "easy": [
+  {
+   "id": "easy-001",
+   "category": "brain-teaser",
+   "difficulty": "easy",
+   "title": "The Missing Number",
+   "prompt": "Look at this sequence:\n\n2 → 6 → 12 → 20 → 30 → ?\n\nWhat number should come next?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "36",
+    "40",
+    "44",
+    "42"
+   ],
+   "correctIndex": 3,
+   "explanation": "Look at the differences:\n\n- 2 → 6 = +4\n- 6 → 12 = +6\n- 12 → 20 = +8\n- 20 → 30 = +10\n\nThe increments increase by 2 each time.\n\nSo the next increase is +12:\n\n30 + 12 = 42\n\nThere is another way to see the pattern:\n\n- 1 × 2 = 2\n- 2 × 3 = 6\n- 3 × 4 = 12\n- 4 × 5 = 20\n- 5 × 6 = 30\n- 6 × 7 = 42"
+  },
+  {
+   "id": "easy-002",
+   "category": "brain-teaser",
+   "difficulty": "easy",
+   "title": "The Odd One Out",
+   "prompt": "Three of these four words are related. Which one doesn't belong?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "Sprint",
+    "Whisper",
+    "Shout",
+    "Mumble"
+   ],
+   "correctIndex": 0,
+   "explanation": "Whisper, shout, and mumble are all ways of speaking — they describe volume or clarity of voice.\n\nSprint is a way of running, not speaking.\n\nIt's the only word that isn't a \"manner of speaking\" verb."
+  },
+  {
+   "id": "easy-003",
+   "category": "brain-teaser",
+   "difficulty": "easy",
+   "title": "The Missing Shape",
+   "prompt": "Look at this sequence of shapes:\n\n●  ▲  ●  ▲  ●  ▲  ?\n\nWhat comes next?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "▲",
+    "●",
+    "■",
+    "★"
+   ],
+   "correctIndex": 1,
+   "explanation": "The shapes alternate strictly in pairs: circle, triangle, circle, triangle…\n\nThe sequence has completed three full pairs (●▲ ●▲ ●▲), so the next shape restarts the pattern:\n\n●"
+  },
+  {
+   "id": "easy-004",
+   "category": "developer-logic",
+   "difficulty": "easy",
+   "title": "The Swap Bug",
+   "prompt": "A developer wants to swap the values of two variables, x and y. They write:\n\nx = 10\ny = 20\nx = y\ny = x\n\nWhat are the values of x and y after these lines run?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "x = 10, y = 20",
+    "x = 20, y = 10",
+    "x = 20, y = 20",
+    "x = 10, y = 10"
+   ],
+   "correctIndex": 2,
+   "explanation": "x = y overwrites x's original value (10) with y's value (20) — so x is now 20, and the original 10 is gone for good.\n\nThen y = x just assigns y to whatever x currently is — which is now also 20.\n\nSo both variables end up 20. The real swap needs a temporary holding spot:\n\ntemp = x\nx = y\ny = temp"
+  },
+  {
+   "id": "easy-005",
+   "category": "developer-logic",
+   "difficulty": "easy",
+   "title": "The Robot's Path",
+   "prompt": "A robot starts at a point and follows these moves in order:\n\nForward 3 → Turn right → Forward 2 → Turn right → Forward 3 → Turn right → Forward 2\n\nWhere does the robot end up, relative to where it started?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "5 spaces from the start",
+    "1 space east of the start",
+    "1 space south of the start",
+    "Exactly back at the start"
+   ],
+   "correctIndex": 3,
+   "explanation": "Each \"turn right\" rotates the robot 90°, so the four moves trace the four sides of a rectangle: 3 forward, turn, 2 forward, turn, 3 forward (back the other way), turn, 2 forward (back to start).\n\nSince a rectangle's opposite sides are equal, the path closes exactly where it began."
+  },
+  {
+   "id": "easy-006",
+   "category": "sat-style",
+   "difficulty": "easy",
+   "title": "The Rectangle's Perimeter",
+   "prompt": "A rectangular garden is 12 meters long and 7 meters wide.\n\nWhat is its perimeter?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "19 meters",
+    "38 meters",
+    "84 meters",
+    "42 meters"
+   ],
+   "correctIndex": 1,
+   "explanation": "Perimeter is the distance all the way around:\n\n2 × (length + width) = 2 × (12 + 7) = 2 × 19 = 38 meters"
+  },
+  {
+   "id": "easy-007",
+   "category": "sat-style",
+   "difficulty": "easy",
+   "title": "The Function Machine",
+   "prompt": "A function is defined as f(x) = 2x + 3.\n\nWhat is f(5)?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "13",
+    "8",
+    "10",
+    "16"
+   ],
+   "correctIndex": 0,
+   "explanation": "Plug 5 in for x:\n\nf(5) = 2(5) + 3 = 10 + 3 = 13"
+  },
+  {
+   "id": "easy-008",
+   "category": "brain-teaser",
+   "difficulty": "easy",
+   "title": "The Letter Pattern",
+   "prompt": "Look at this sequence of letters:\n\nA → C → E → G → ?\n\nWhat letter comes next?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "H",
+    "J",
+    "I",
+    "F"
+   ],
+   "correctIndex": 2,
+   "explanation": "The sequence skips one letter each time: A (skip B) → C (skip D) → E (skip F) → G (skip H) → I."
+  },
+  {
+   "id": "easy-009",
+   "category": "brain-teaser",
+   "difficulty": "easy",
+   "title": "The Weight Comparison",
+   "prompt": "- A weighs more than B.\n- C weighs less than B.\n\nWho is the lightest?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "A",
+    "B",
+    "C",
+    "Can't tell"
+   ],
+   "correctIndex": 2,
+   "explanation": "Put it in order: C < B < A.\n\nC is lighter than B, and B is already lighter than A — so C is the lightest of the three, with no extra steps needed."
+  },
+  {
+   "id": "easy-010",
+   "category": "clever-math",
+   "difficulty": "easy",
+   "title": "The Coffee Change",
+   "prompt": "A coffee costs $3.25. You pay with a $5 bill.\n\nHow much change do you get back?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "$1.25",
+    "$1.50",
+    "$2.25",
+    "$1.75"
+   ],
+   "correctIndex": 3,
+   "explanation": "$5.00 − $3.25 = $1.75"
+  },
+  {
+   "id": "easy-011",
+   "category": "clever-math",
+   "difficulty": "easy",
+   "title": "The Half Off",
+   "prompt": "A shirt costs $40. It's on sale for half off.\n\nWhat's the sale price?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "$15",
+    "$20",
+    "$25",
+    "$30"
+   ],
+   "correctIndex": 1,
+   "explanation": "Half off means 50% off:\n\n$40 × 0.50 = $20"
+  },
+  {
+   "id": "easy-012",
+   "category": "sat-style",
+   "difficulty": "easy",
+   "title": "The Substitution",
+   "prompt": "If x = 4, what is 3x − 2?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "10",
+    "8",
+    "12",
+    "14"
+   ],
+   "correctIndex": 0,
+   "explanation": "3(4) − 2 = 12 − 2 = 10"
+  },
+  {
+   "id": "easy-013",
+   "category": "sat-style",
+   "difficulty": "easy",
+   "title": "The Average Score",
+   "prompt": "A student scores 80, 90, and 100 on three tests.\n\nWhat is their average score?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "85",
+    "88",
+    "90",
+    "95"
+   ],
+   "correctIndex": 2,
+   "explanation": "Add the scores and divide by how many there are:\n\n(80 + 90 + 100) ÷ 3 = 270 ÷ 3 = 90"
+  },
+  {
+   "id": "easy-014",
+   "category": "logic",
+   "difficulty": "easy",
+   "title": "The Locked Door",
+   "prompt": "A prize is hidden in one of three boxes: A, B, or C.\n\nYou're told:\n\n- The prize is not in Box A.\n- The prize is not in Box C.\n\nWhich box has the prize?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "Box A",
+    "Box B",
+    "Box C",
+    "Not enough information"
+   ],
+   "correctIndex": 1,
+   "explanation": "With only three boxes and the prize ruled out of two of them (A and C), the only one left is Box B."
+  },
+  {
+   "id": "easy-015",
+   "category": "logic",
+   "difficulty": "easy",
+   "title": "The Three Pets",
+   "prompt": "Max, Nora, and Priya each own exactly one pet — a cat, a dog, or a fish.\n\n- Max doesn't own the fish.\n- Nora doesn't own the cat.\n- Priya owns the dog.\n\nWhat pet does Max own?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "Cat",
+    "Dog",
+    "Fish",
+    "Can't tell"
+   ],
+   "correctIndex": 0,
+   "explanation": "Priya already has the dog, so the cat and fish are split between Max and Nora.\n\nMax doesn't own the fish — so Max must own the cat. (That leaves the fish for Nora, which also fits her clue: she doesn't own the cat.)"
+  },
+  {
+   "id": "easy-016",
+   "category": "developer-logic",
+   "difficulty": "easy",
+   "title": "The Countdown",
+   "prompt": "A program starts at 5. As long as the number is at least 1, it prints the number, then subtracts 1.\n\nWhat is the last number this program prints?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "5",
+    "0",
+    "It never stops",
+    "1"
+   ],
+   "correctIndex": 3,
+   "explanation": "The program prints: 5, 4, 3, 2, 1 — then checks again, sees the number is now 0 (less than 1), and stops.\n\nThe trap is assuming the count keeps going down to 0 and prints that too — but the check happens before printing, so 0 is never printed."
+  },
+  {
+   "id": "easy-017",
+   "category": "developer-logic",
+   "difficulty": "easy",
+   "title": "The Four Flips",
+   "prompt": "A light switch starts OFF. You flip it 4 times in a row.\n\nWhat state is it in at the end?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "OFF",
+    "ON",
+    "Impossible to tell",
+    "It depends on how fast you flip it"
+   ],
+   "correctIndex": 0,
+   "explanation": "Track it flip by flip: OFF → ON → OFF → ON → OFF.\n\nEvery pair of flips cancels out and returns to the starting state, so an even number of flips (4) always ends up back where it began."
+  },
+  {
+   "id": "easy-018",
+   "category": "brain-teaser",
+   "difficulty": "easy",
+   "title": "The Odd Number",
+   "prompt": "Which number doesn't belong?\n\n2, 4, 6, 9, 8",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "2",
+    "6",
+    "8",
+    "9"
+   ],
+   "correctIndex": 3,
+   "explanation": "2, 4, 6, and 8 are all even. 9 is the only odd number in the group."
+  },
+  {
+   "id": "easy-019",
+   "category": "clever-math",
+   "difficulty": "easy",
+   "title": "The Sales Tax",
+   "prompt": "An item costs $20 before tax. Sales tax is 5%.\n\nWhat's the total cost?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "$20.50",
+    "$21.00",
+    "$21.50",
+    "$25.00"
+   ],
+   "correctIndex": 1,
+   "explanation": "Paying 5% tax means paying 105% of the price: $20 × 1.05 = $21.00 (or $20 plus $1 in tax)."
+  },
+  {
+   "id": "easy-020",
+   "category": "sat-style",
+   "difficulty": "easy",
+   "title": "The Linear Equation",
+   "prompt": "Solve for x: 2x + 5 = 15",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "4",
+    "6",
+    "5",
+    "10"
+   ],
+   "correctIndex": 2,
+   "explanation": "2x = 15 − 5 = 10, so x = 10 ÷ 2 = 5"
+  },
+  {
+   "id": "easy-021",
+   "category": "logic",
+   "difficulty": "easy",
+   "title": "The Feathers and Steel",
+   "prompt": "Which is heavier: 1,000 grams of feathers or 1 kilogram of steel?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "The feathers",
+    "The steel",
+    "Not enough information",
+    "They weigh the same"
+   ],
+   "correctIndex": 3,
+   "explanation": "1 kilogram = 1,000 grams — so 1,000 grams of feathers and 1 kilogram of steel are exactly the same weight. Only their volume and density differ, not their weight."
+  },
+  {
+   "id": "easy-022",
+   "category": "developer-logic",
+   "difficulty": "easy",
+   "title": "The Reversed List",
+   "prompt": "A program takes the list [1, 2, 3] and reverses it.\n\nWhat is the first item printed from the reversed list?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "1",
+    "3",
+    "2",
+    "It depends on the programming language"
+   ],
+   "correctIndex": 1,
+   "explanation": "Reversing [1, 2, 3] gives [3, 2, 1] — so the first item is 3."
+  },
+  {
+   "id": "easy-023",
+   "category": "brain-teaser",
+   "difficulty": "easy",
+   "title": "The Vowel Count",
+   "prompt": "How many vowels (A, E, I, O, U) are in the word ELEPHANT?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "3",
+    "2",
+    "4",
+    "5"
+   ],
+   "correctIndex": 0,
+   "explanation": "Spelling it out: E-L-E-P-H-A-N-T. The vowels are E, E, A — three total."
+  },
+  {
+   "id": "easy-024",
+   "category": "clever-math",
+   "difficulty": "easy",
+   "title": "The Movie Tickets",
+   "prompt": "Two movie tickets cost $9 each. Popcorn costs $6 total.\n\nWhat's the total cost?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "$15",
+    "$18",
+    "$24",
+    "$30"
+   ],
+   "correctIndex": 2,
+   "explanation": "2 × $9 = $18 for tickets, plus $6 for popcorn:\n\n$18 + $6 = $24"
+  },
+  {
+   "id": "easy-025",
+   "category": "sat-style",
+   "difficulty": "easy",
+   "title": "The Coordinate Distance",
+   "prompt": "A point is located at (3, 4) on a coordinate grid.\n\nHow far is this point from the origin, (0, 0)?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "4",
+    "6",
+    "5",
+    "7"
+   ],
+   "correctIndex": 2,
+   "explanation": "Use the distance formula (really just the Pythagorean theorem):\n\n√(3² + 4²) = √(9 + 16) = √25 = 5"
+  },
+  {
+   "id": "easy-026",
+   "category": "logic",
+   "difficulty": "easy",
+   "title": "The Coin Sequences",
+   "prompt": "You flip a fair coin 3 times in a row.\n\nHow many different possible sequences of heads/tails are there?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "3",
+    "8",
+    "6",
+    "9"
+   ],
+   "correctIndex": 1,
+   "explanation": "Each flip has 2 possible outcomes, and there are 3 flips:\n\n2 × 2 × 2 = 8"
+  },
+  {
+   "id": "easy-027",
+   "category": "developer-logic",
+   "difficulty": "easy",
+   "title": "The Boolean Flip",
+   "prompt": "A variable starts as True. It gets flipped (negated) 3 times in a row.\n\nWhat is its value at the end?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "True",
+    "Impossible to tell",
+    "It depends on the starting value",
+    "False"
+   ],
+   "correctIndex": 3,
+   "explanation": "Track it: True → False → True → False.\n\nAn odd number of flips always ends up opposite to where it started; an even number always returns to the original value."
+  },
+  {
+   "id": "easy-028",
+   "category": "brain-teaser",
+   "difficulty": "easy",
+   "title": "The Synonym",
+   "prompt": "Which word means the same as \"happy\"?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "Joyful",
+    "Sad",
+    "Angry",
+    "Tired"
+   ],
+   "correctIndex": 0,
+   "explanation": "\"Joyful\" describes feeling happy or delighted — a direct synonym. The other three describe different emotional or physical states entirely."
+  },
+  {
+   "id": "easy-029",
+   "category": "clever-math",
+   "difficulty": "easy",
+   "title": "The Book Bundle",
+   "prompt": "Four books cost $12 each. You get $10 off the total.\n\nWhat's the final price?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "$28",
+    "$42",
+    "$38",
+    "$48"
+   ],
+   "correctIndex": 2,
+   "explanation": "4 × $12 = $48, then subtract the discount:\n\n$48 − $10 = $38"
+  },
+  {
+   "id": "easy-030",
+   "category": "sat-style",
+   "difficulty": "easy",
+   "title": "The Slope",
+   "prompt": "A line passes through the points (0, 2) and (4, 10).\n\nWhat is the slope of the line?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "1",
+    "2",
+    "4",
+    "8"
+   ],
+   "correctIndex": 1,
+   "explanation": "Slope = (change in y) ÷ (change in x):\n\n(10 − 2) ÷ (4 − 0) = 8 ÷ 4 = 2"
+  },
+  {
+   "id": "easy-031",
+   "category": "logic",
+   "difficulty": "easy",
+   "title": "The Odd Ball",
+   "prompt": "You have 3 identical-looking balls; exactly one is heavier than the other two, which weigh the same as each other.\n\nUsing a balance scale just once, how can you guarantee finding the heavier ball?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "Weigh any two of the balls against each other — if they balance, the third ball is heavier; if not, the heavier side has it",
+    "It's impossible in one weighing",
+    "Weigh all three at once",
+    "Weigh one ball against nothing"
+   ],
+   "correctIndex": 0,
+   "explanation": "Pick any two balls and put one on each side of the scale.\n\n- If they balance, neither of them is the heavy one — so it must be the third ball, the one left off the scale.\n- If they don't balance, the heavier side is holding the odd ball out.\n\nEither outcome tells you exactly which ball is heavier, in a single weighing."
+  },
+  {
+   "id": "easy-032",
+   "category": "developer-logic",
+   "difficulty": "easy",
+   "title": "The Inclusive Loop",
+   "prompt": "A program runs a loop: \"for i from 1 to 5, print i.\"\n\nHow many numbers does it print in total?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "4",
+    "6",
+    "It depends on the language",
+    "5"
+   ],
+   "correctIndex": 3,
+   "explanation": "The loop prints 1, 2, 3, 4, 5 — that's every whole number from 1 through 5, inclusive, which is 5 numbers total."
+  }
+ ],
+ "medium": [
+  {
+   "id": "medium-001",
+   "category": "logic",
+   "difficulty": "medium",
+   "title": "The Dinner Party",
+   "prompt": "Six friends — Alex, Ben, Cara, David, Emma, and Fran — are sitting evenly spaced around a circular table.\n\n- Alex is sitting directly opposite Ben.\n- Cara is sitting immediately to Alex's right.\n- David is sitting immediately to Ben's right.\n\nWho must be sitting opposite Cara?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "Alex",
+    "Emma",
+    "David",
+    "Fran"
+   ],
+   "correctIndex": 2,
+   "explanation": "Alex and Ben are directly across from each other, so Ben sits exactly three seats around the table from Alex.\n\nCara is one seat to Alex's right. David is one seat to Ben's right — the very same offset, measured from the person directly across.\n\nShifting two opposite people by the same one seat keeps them opposite each other. So Cara and David are directly across from each other.\n\nThe answer is David."
+  },
+  {
+   "id": "medium-002",
+   "category": "clever-math",
+   "difficulty": "medium",
+   "title": "The Weird Clock",
+   "prompt": "A clock shows 3:15.\n\nWithout looking at a clock, which answer is closest to the angle between the hour hand and minute hand?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "0°",
+    "15°",
+    "22.5°",
+    "7.5°"
+   ],
+   "correctIndex": 3,
+   "explanation": "The obvious answer might be 0° because both hands appear to point near the 3.\n\nBut the hour hand moves continuously.\n\nAt exactly 3:00, the hour hand points directly at 3.\n\nBy 3:15, it has moved one-quarter of the distance from 3 toward 4.\n\nEach hour represents:\n\n30°\n\nOne-quarter of 30° is:\n\n30 ÷ 4 = 7.5°\n\nTherefore the angle is:\n\n7.5°"
+  },
+  {
+   "id": "medium-003",
+   "category": "clever-math",
+   "difficulty": "medium",
+   "title": "The Pizza Problem",
+   "prompt": "A pizza is cut into 8 equal slices.\n\nTom eats 25% of the pizza.\n\nSarah eats 50% of what remains.\n\nHow many slices are left?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "2",
+    "3",
+    "4",
+    "5"
+   ],
+   "correctIndex": 1,
+   "explanation": "25% of 8 slices is:\n\n8 × 0.25 = 2 slices\n\nSo 6 slices remain.\n\nSarah eats 50% of those 6:\n\n6 ÷ 2 = 3\n\nSo:\n\n6 − 3 = 3 slices"
+  },
+  {
+   "id": "medium-004",
+   "category": "clever-math",
+   "difficulty": "medium",
+   "title": "The Sneaky Discount",
+   "prompt": "A store increases the price of a $100 jacket by 20%, then puts the jacket on sale for 20% off.\n\nWhat is the final price?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "$96",
+    "$100",
+    "$104",
+    "$120"
+   ],
+   "correctIndex": 0,
+   "explanation": "First increase the price by 20%:\n\n$100 × 1.20 = $120\n\nThen take 20% off the new price:\n\n$120 × 0.80 = $96\n\nThe final price is:\n\n$96"
+  },
+  {
+   "id": "medium-005",
+   "category": "brain-teaser",
+   "difficulty": "medium",
+   "title": "The Growing Pattern",
+   "prompt": "A sequence follows this rule:\n\n3, 7, 15, 31, 63, ?\n\nWhat comes next?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "127",
+    "95",
+    "111",
+    "129"
+   ],
+   "correctIndex": 0,
+   "explanation": "Each number is multiplied by 2 and then increased by 1:\n\n3 × 2 + 1 = 7\n\n7 × 2 + 1 = 15\n\n15 × 2 + 1 = 31\n\n31 × 2 + 1 = 63\n\nTherefore:\n\n63 × 2 + 1 = 127"
+  },
+  {
+   "id": "medium-006",
+   "category": "brain-teaser",
+   "difficulty": "medium",
+   "title": "The Calendar Riddle",
+   "prompt": "Today is a Wednesday.\n\nWhat day of the week will it be 17 days from today?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday"
+   ],
+   "correctIndex": 2,
+   "explanation": "A week repeats every 7 days, so only the remainder matters:\n\n17 ÷ 7 = 2 remainder 3\n\nThree days after Wednesday:\n\nWednesday → Thursday → Friday → Saturday"
+  },
+  {
+   "id": "medium-007",
+   "category": "clever-math",
+   "difficulty": "medium",
+   "title": "The Train Platforms",
+   "prompt": "A train travels at a constant 60 mph.\n\nHow far does it travel in 45 minutes?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "30 miles",
+    "45 miles",
+    "40 miles",
+    "60 miles"
+   ],
+   "correctIndex": 1,
+   "explanation": "45 minutes is 3/4 of an hour.\n\n60 mph × 3/4 = 45 miles"
+  },
+  {
+   "id": "medium-008",
+   "category": "clever-math",
+   "difficulty": "medium",
+   "title": "The Average Speed Trap",
+   "prompt": "A car drives from Town A to Town B at 60 mph, then immediately drives back from Town B to Town A at 30 mph.\n\nWhat is the car's average speed for the whole round trip?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "45 mph",
+    "50 mph",
+    "60 mph",
+    "40 mph"
+   ],
+   "correctIndex": 3,
+   "explanation": "The intuitive (wrong) answer is to average the two speeds: (60 + 30) ÷ 2 = 45 mph.\n\nBut average speed is total distance ÷ total time, not an average of speeds — and the car spends more time at the slower speed.\n\nPick a convenient distance, say 60 miles each way:\n\n- Trip there: 60 miles ÷ 60 mph = 1 hour\n- Trip back: 60 miles ÷ 30 mph = 2 hours\n\nTotal distance: 120 miles\nTotal time: 3 hours\n\n120 ÷ 3 = 40 mph"
+  },
+  {
+   "id": "medium-009",
+   "category": "logic",
+   "difficulty": "medium",
+   "title": "The Balance Scale",
+   "prompt": "You have a two-pan balance scale and 8 identical-looking coins. Exactly one coin is fake and slightly lighter than the rest.\n\nWhat is the minimum number of weighings needed to guarantee finding the fake coin?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "1",
+    "2",
+    "3",
+    "4"
+   ],
+   "correctIndex": 1,
+   "explanation": "Split the 8 coins into three groups: 3, 3, and 2.\n\nWeighing 1: Put 3 coins on each side.\n\n- If they balance, the fake is in the remaining 2 coins.\n- If one side is lighter, the fake is among those 3.\n\nWeighing 2:\n\n- If narrowed to 2 coins, weigh them directly against each other — the lighter one is fake.\n- If narrowed to 3 coins, weigh any 2 of them — if they balance, the third is fake; if not, the lighter one is fake.\n\nEvery branch resolves within 2 weighings."
+  },
+  {
+   "id": "medium-010",
+   "category": "developer-logic",
+   "difficulty": "medium",
+   "title": "The Ticket Pile",
+   "prompt": "A kitchen puts incoming order tickets on a spike, one on top of the other. When the kitchen has time, it grabs the top ticket first — never one from partway down the pile.\n\nOrders come in, in this order: A, B, C, D.\n\nThe kitchen then pulls two tickets off the spike. Which two orders come out, and in what order?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "A, then B",
+    "B, then C",
+    "C, then D",
+    "D, then C"
+   ],
+   "correctIndex": 3,
+   "explanation": "Every new ticket goes on top, so after A, B, C, D are placed, D is sitting on top of the pile.\n\nThe kitchen always takes the top ticket — so it pulls D first, then C.\n\nThis behavior — the last thing added is the first thing removed — is what programmers call a stack. The question never uses that word, but the logic is identical to how a stack works."
+  },
+  {
+   "id": "medium-011",
+   "category": "developer-logic",
+   "difficulty": "medium",
+   "title": "The Traffic Light",
+   "prompt": "A traffic light repeats this cycle, in order, forever:\n\nGreen → Yellow → Red → Green → Yellow → Red → …\n\nRight now, the light is Yellow. What color will it be after 17 more changes?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "Green",
+    "Yellow",
+    "Red",
+    "Impossible to tell"
+   ],
+   "correctIndex": 0,
+   "explanation": "The cycle repeats every 3 changes, so only the remainder of 17 ÷ 3 matters:\n\n17 ÷ 3 = 5 remainder 2\n\nSo we only need to count 2 steps forward from Yellow:\n\nYellow → Red (1 step) → Green (2 steps)\n\nAfter 17 changes, the light is back to Green."
+  },
+  {
+   "id": "medium-012",
+   "category": "developer-logic",
+   "difficulty": "medium",
+   "title": "The Guessing Game",
+   "prompt": "You need to find one specific person out of 1,000 people standing in a line, sorted alphabetically by last name. You can only ask someone, \"Is the person I'm looking for earlier or later in the line than you?\"\n\nWhat's the smartest strategy?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "Start at the front and ask each person in turn",
+    "Start at the back and ask each person in turn",
+    "Start in the middle and eliminate half the remaining line each time",
+    "Ask every tenth person"
+   ],
+   "correctIndex": 2,
+   "explanation": "Because the line is sorted, asking the person in the middle tells you which half your target is in — instantly discarding the other 500 people.\n\nRepeating this, each question cuts the remaining group in half again: 500 → 250 → 125 → …\n\nThis takes roughly log₂(1000) ≈ 10 questions — instead of up to 1,000 asking one at a time.\n\nProgrammers call this binary search, but the trick works purely from the fact that the line is sorted — no programming knowledge required to see why it's faster."
+  },
+  {
+   "id": "medium-013",
+   "category": "developer-logic",
+   "difficulty": "medium",
+   "title": "The Phone Book Lookup",
+   "prompt": "You have a phone book with 10 million names, and you want to know whether \"Tom Smith\" is in it as fast as possible.\n\nWhich approach finds the answer fastest?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "Check every name one at a time from the start",
+    "Keep the names sorted and repeatedly split the search in half",
+    "Pick names at random and hope to get lucky",
+    "Use an index that jumps straight to where \"Tom Smith\" would be, in one step"
+   ],
+   "correctIndex": 3,
+   "explanation": "Checking one at a time could take up to 10 million steps. Splitting in half repeatedly — binary search — is much faster, around 24 steps, but still takes several steps.\n\nAn index built specifically to jump straight to a name's location (what programmers call a hash-based lookup) can answer in roughly one step, regardless of how many names are in the book."
+  },
+  {
+   "id": "medium-014",
+   "category": "sat-style",
+   "difficulty": "medium",
+   "title": "The Sales Report",
+   "prompt": "A small shop sold 40 items in January and 52 items in February.\n\nBy what percent did sales increase?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "30%",
+    "12%",
+    "20%",
+    "23%"
+   ],
+   "correctIndex": 0,
+   "explanation": "The increase is 52 − 40 = 12 items.\n\nPercent increase is the change divided by the original amount:\n\n12 ÷ 40 = 0.30 = 30%"
+  },
+  {
+   "id": "medium-015",
+   "category": "sat-style",
+   "difficulty": "medium",
+   "title": "The Missing Angle",
+   "prompt": "A triangle has two angles measuring 54° and 61°.\n\nWhat is the measure of the third angle?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "55°",
+    "65°",
+    "115°",
+    "125°"
+   ],
+   "correctIndex": 1,
+   "explanation": "Every triangle's angles add up to 180°:\n\n180 − 54 − 61 = 65°"
+  },
+  {
+   "id": "medium-016",
+   "category": "sat-style",
+   "difficulty": "medium",
+   "title": "The Trail Mix Blend",
+   "prompt": "Peanuts cost $3 per pound and cashews cost $5 per pound.\n\nA shopper buys 10 pounds total of a peanut-cashew blend for $38.\n\nHow many pounds of cashews did they buy?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "2",
+    "3",
+    "4",
+    "6"
+   ],
+   "correctIndex": 2,
+   "explanation": "Let p = pounds of peanuts, c = pounds of cashews.\n\np + c = 10\n\n3p + 5c = 38\n\nFrom the first equation, p = 10 − c. Substitute:\n\n3(10 − c) + 5c = 38\n\n30 − 3c + 5c = 38\n\n2c = 8\n\nc = 4\n\nSo the shopper bought 4 pounds of cashews (and 6 pounds of peanuts)."
+  },
+  {
+   "id": "medium-017",
+   "category": "sat-style",
+   "difficulty": "medium",
+   "title": "The Function Chain",
+   "prompt": "Let f(x) = x² and g(x) = x + 3.\n\nWhat is f(g(2))?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "25",
+    "7",
+    "10",
+    "16"
+   ],
+   "correctIndex": 0,
+   "explanation": "Work from the inside out. First find g(2):\n\ng(2) = 2 + 3 = 5\n\nThen plug that result into f:\n\nf(5) = 5² = 25\n\nThe trap is computing f(2) and g(2) separately and adding or multiplying them — function composition only works inside-out, one step at a time."
+  },
+  {
+   "id": "medium-018",
+   "category": "brain-teaser",
+   "difficulty": "medium",
+   "title": "The Height Order",
+   "prompt": "- Amy is taller than Ben.\n- Ben is taller than Cara.\n- Dana is shorter than Cara.\n\nWho is the shortest?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "Amy",
+    "Ben",
+    "Dana",
+    "Cara"
+   ],
+   "correctIndex": 2,
+   "explanation": "Chain the clues together: Amy > Ben > Cara > Dana.\n\nDana is shorter than Cara, who is already the shortest of the first three named — so Dana is shortest overall."
+  },
+  {
+   "id": "medium-019",
+   "category": "clever-math",
+   "difficulty": "medium",
+   "title": "The Recipe Ratio",
+   "prompt": "A recipe calls for 2 cups of flour for every 3 cups of sugar.\n\nIf you use 9 cups of sugar, how many cups of flour do you need?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "4",
+    "5",
+    "7",
+    "6"
+   ],
+   "correctIndex": 3,
+   "explanation": "The ratio is 2 : 3 (flour : sugar). Scale it up so the sugar side becomes 9:\n\n3 × 3 = 9, so multiply the flour side by 3 too: 2 × 3 = 6\n\nYou need 6 cups of flour."
+  },
+  {
+   "id": "medium-020",
+   "category": "sat-style",
+   "difficulty": "medium",
+   "title": "The Sum and Difference",
+   "prompt": "The sum of two numbers is 15. One number is 3 more than the other.\n\nWhat are the two numbers?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "5 and 10",
+    "6 and 9",
+    "7 and 8",
+    "4 and 11"
+   ],
+   "correctIndex": 1,
+   "explanation": "Let the smaller number be x. Then the other is x + 3.\n\nx + (x + 3) = 15\n\n2x + 3 = 15\n\n2x = 12, so x = 6\n\nThe two numbers are 6 and 9."
+  },
+  {
+   "id": "medium-021",
+   "category": "logic",
+   "difficulty": "medium",
+   "title": "The Four Drinks",
+   "prompt": "Jax, Kim, Lee, and Mo each prefer a different drink: coffee, tea, juice, or water.\n\n- Jax doesn't like coffee or tea.\n- Kim likes juice.\n- Lee doesn't like water.\n- Mo likes coffee.\n\nWhat drink does Jax prefer?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "Water",
+    "Coffee",
+    "Tea",
+    "Juice"
+   ],
+   "correctIndex": 0,
+   "explanation": "Kim already has juice, and Mo already has coffee, leaving tea and water for Jax and Lee.\n\nJax doesn't like coffee or tea — so Jax must have water. (That leaves tea for Lee, which fits: Lee just doesn't like water.)"
+  },
+  {
+   "id": "medium-022",
+   "category": "developer-logic",
+   "difficulty": "medium",
+   "title": "The First Match",
+   "prompt": "A program checks numbers in order and stops at the first one greater than 50, from this list:\n\n12, 34, 45, 61, 22, 78\n\nWhich number does it return?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "78",
+    "61",
+    "45",
+    "22"
+   ],
+   "correctIndex": 1,
+   "explanation": "Checking in the list's own order: 12 (no), 34 (no), 45 (no), 61 (yes — stop here).\n\nThe trap is assuming it returns the largest number over 50 (78) — but the program stops at the first one it finds, and 78 comes later in the list, so it's never reached."
+  },
+  {
+   "id": "medium-023",
+   "category": "brain-teaser",
+   "difficulty": "medium",
+   "title": "The Siblings' Ages",
+   "prompt": "Sam is twice as old as his sister Mia. In 4 years, Sam will be 20.\n\nHow old is Mia right now?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "6",
+    "7",
+    "10",
+    "8"
+   ],
+   "correctIndex": 3,
+   "explanation": "If Sam will be 20 in 4 years, Sam is 16 now.\n\nSam is twice Mia's age, so Mia is 16 ÷ 2 = 8."
+  },
+  {
+   "id": "medium-024",
+   "category": "clever-math",
+   "difficulty": "medium",
+   "title": "The Simple Interest",
+   "prompt": "You deposit $1,000 in an account earning 5% simple interest per year.\n\nHow much interest will you have earned after 2 years?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "$50",
+    "$105",
+    "$100",
+    "$110"
+   ],
+   "correctIndex": 2,
+   "explanation": "Simple interest doesn't compound — it's the same amount each year:\n\n$1,000 × 0.05 × 2 years = $100"
+  },
+  {
+   "id": "medium-025",
+   "category": "sat-style",
+   "difficulty": "medium",
+   "title": "The Quadratic Roots",
+   "prompt": "What are the solutions to x² − 5x + 6 = 0?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "x = 1, 6",
+    "x = -2, -3",
+    "x = 2, 3",
+    "x = 2, 6"
+   ],
+   "correctIndex": 2,
+   "explanation": "Factor the quadratic: you need two numbers that multiply to 6 and add to -5 — that's -2 and -3.\n\nx² − 5x + 6 = (x − 2)(x − 3) = 0\n\nSo x = 2 or x = 3."
+  },
+  {
+   "id": "medium-026",
+   "category": "logic",
+   "difficulty": "medium",
+   "title": "The Four Cards",
+   "prompt": "Four cards — red, blue, green, and yellow — lie face down in a row, positions 1 through 4.\n\n- The red card is not in position 1 or position 4.\n- The blue card is immediately to the left of the green card.\n- The yellow card is in position 4.\n\nWhat position is the red card in?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "1",
+    "2",
+    "4",
+    "3"
+   ],
+   "correctIndex": 3,
+   "explanation": "Yellow is fixed at position 4. Red can't be in 1 or 4, so red is in 2 or 3.\n\nTry red in position 2: that leaves positions 1 and 3 for blue and green — but they aren't next to each other, so blue can't be \"immediately left of\" green there. Contradiction.\n\nSo red must be in position 3, leaving positions 1 and 2 for blue and green: blue in 1, green in 2 — which are adjacent, satisfying the clue."
+  },
+  {
+   "id": "medium-027",
+   "category": "developer-logic",
+   "difficulty": "medium",
+   "title": "The Cache Eviction",
+   "prompt": "A cache holds the 3 most recently looked-up items, most recent at the front: [banana, cherry, date].\n\nA lookup for \"apple\" happens next — it's not in the cache, so it gets fetched and placed at the front. Since the cache only holds 3 items, the oldest (last) item is removed.\n\nWhat does the cache contain after this lookup?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "[apple, banana, cherry, date]",
+    "[apple, banana, cherry]",
+    "[banana, cherry, date, apple]",
+    "[apple, date, cherry]"
+   ],
+   "correctIndex": 1,
+   "explanation": "Adding \"apple\" to the front gives [apple, banana, cherry, date] — but that's 4 items, one too many.\n\nThe oldest item (the last one, \"date\") gets evicted, leaving [apple, banana, cherry]."
+  },
+  {
+   "id": "medium-028",
+   "category": "brain-teaser",
+   "difficulty": "medium",
+   "title": "The Seating Order",
+   "prompt": "Three friends — Al, Bo, and Cy — sit in a row of three seats (1st, 2nd, 3rd).\n\n- Al is not in the 1st seat.\n- Bo is not in the 3rd seat.\n- Cy is in the middle seat.\n\nWhat is the seating order, from 1st to 3rd?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "Bo, Cy, Al",
+    "Al, Cy, Bo",
+    "Cy, Al, Bo",
+    "Bo, Al, Cy"
+   ],
+   "correctIndex": 0,
+   "explanation": "Cy is fixed in the middle (2nd seat).\n\nAl isn't in 1st, and 2nd is taken — so Al must be in 3rd.\n\nThat leaves 1st for Bo, which also fits: Bo isn't in 3rd, and 3rd is already taken by Al anyway.\n\nOrder: Bo, Cy, Al."
+  },
+  {
+   "id": "medium-029",
+   "category": "clever-math",
+   "difficulty": "medium",
+   "title": "The Restaurant Tip",
+   "prompt": "A restaurant bill is $64. You want to leave a 20% tip.\n\nWhat is the total amount you'll pay (bill + tip)?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "$70.40",
+    "$76.80",
+    "$73.60",
+    "$80.00"
+   ],
+   "correctIndex": 1,
+   "explanation": "A 20% tip on $64 is $64 × 0.20 = $12.80.\n\nTotal: $64 + $12.80 = $76.80 (or equivalently, $64 × 1.20 = $76.80)."
+  },
+  {
+   "id": "medium-030",
+   "category": "sat-style",
+   "difficulty": "medium",
+   "title": "The Exponent Rule",
+   "prompt": "Simplify: 2³ × 2⁴",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "2¹²",
+    "4⁷",
+    "16⁷",
+    "2⁷"
+   ],
+   "correctIndex": 3,
+   "explanation": "When multiplying powers with the same base, add the exponents:\n\n2³ × 2⁴ = 2^(3+4) = 2⁷ (which equals 128, but the question only asks for the simplified form)"
+  },
+  {
+   "id": "medium-031",
+   "category": "logic",
+   "difficulty": "medium",
+   "title": "The Cancelled Game",
+   "prompt": "You're told: \"If it rains, the game is cancelled.\"\n\nThe game was not cancelled.\n\nWhat can you conclude?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "It did not rain",
+    "It rained",
+    "Nothing can be determined",
+    "The game was rescheduled"
+   ],
+   "correctIndex": 0,
+   "explanation": "The rule \"if it rains, the game is cancelled\" only tells us what happens when it rains — it doesn't say the game can only be cancelled because of rain, but it does guarantee that rain always leads to cancellation.\n\nSo if the game wasn't cancelled, rain couldn't have happened — otherwise the rule would have been broken. This kind of reasoning (denying the result to conclude the condition didn't happen) is called modus tollens, and it's valid — unlike concluding \"it rained\" from a cancellation, which would wrongly assume rain is the only possible cause."
+  },
+  {
+   "id": "medium-032",
+   "category": "developer-logic",
+   "difficulty": "medium",
+   "title": "The Duplicate Finder",
+   "prompt": "A program scans this list of numbers looking for a duplicate:\n\n4, 2, 7, 2, 9\n\nWhich number appears twice?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "4",
+    "7",
+    "2",
+    "9"
+   ],
+   "correctIndex": 2,
+   "explanation": "Scanning left to right: 4 (new), 2 (new), 7 (new), 2 (seen already!), 9 (new).\n\nThe number 2 appears at both the 2nd and 4th positions."
+  }
+ ],
+ "hard": [
+  {
+   "id": "hard-001",
+   "category": "logic",
+   "difficulty": "hard",
+   "title": "The Three Boxes",
+   "prompt": "You have three boxes:\n\n- BOX 1: Apples\n- BOX 2: Oranges\n- BOX 3: Apples & Oranges\n\nHowever, every label is wrong.\n\nYou may reach into one box and take out exactly one piece of fruit without looking inside.\n\nWhich box should you choose to determine the contents of all three boxes?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "Box 1",
+    "Box 2",
+    "Box 3",
+    "It is impossible"
+   ],
+   "correctIndex": 2,
+   "explanation": "The key is that every label is wrong.\n\nTherefore, the box labeled \"Apples & Oranges\" cannot contain both types of fruit.\n\nIt must contain either:\n\n- Only apples, or\n- Only oranges.\n\nSo Box 3 gives us the most information.\n\nSuppose you pull out an apple.\n\nThen Box 3 must contain:\n\n🍎 Apples only\n\nNow consider Box 2, labeled \"Oranges.\"\n\nThat label is wrong, so Box 2 cannot contain only oranges.\n\nIt also cannot be the apples-only box because Box 3 is already apples-only.\n\nTherefore Box 2 must be:\n\n🍎 + 🍊 Apples & Oranges\n\nThat leaves Box 1:\n\n🍊 Oranges only\n\nOne fruit tells us everything."
+  },
+  {
+   "id": "hard-002",
+   "category": "clever-math",
+   "difficulty": "hard",
+   "title": "The Movie Theater",
+   "prompt": "A movie theater sells:\n\n- Adult tickets: $12\n- Child tickets: $8\n\nA group buys 7 tickets for $68.\n\nHow many adult tickets did they buy?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "3",
+    "2",
+    "4",
+    "5"
+   ],
+   "correctIndex": 0,
+   "explanation": "Let A = adult tickets and C = child tickets.\n\nThere are 7 tickets in total:\nA + C = 7, so C = 7 − A\n\nThe total cost is $68:\n12A + 8(7 − A) = 68\n12A + 56 − 8A = 68\n4A = 12\nA = 3\n\nCheck: 3 adult tickets cost 3 × $12 = $36, and 4 child tickets cost 4 × $8 = $32. $36 + $32 = $68. ✓"
+  },
+  {
+   "id": "hard-003",
+   "category": "clever-math",
+   "difficulty": "hard",
+   "title": "The Mixture Problem",
+   "prompt": "A container holds 10 liters of a drink that is 30% juice.\n\nHow many liters of pure juice must be added to make the mixture 50% juice?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "2",
+    "3",
+    "5",
+    "4"
+   ],
+   "correctIndex": 3,
+   "explanation": "Initially there are:\n\n10 × 30% = 3 liters of juice\n\nLet x = liters of pure juice added.\n\nAfter adding x liters:\n\n- Total liquid = 10 + x\n- Juice = 3 + x\n\nWe want the final mixture to be 50% juice:\n\n(3 + x) / (10 + x) = 0.50\n\nMultiply both sides:\n\n3 + x = 5 + 0.5x\n\nTherefore:\n\n0.5x = 2\n\nx = 4\n\nSo the answer is:\n\n4 liters"
+  },
+  {
+   "id": "hard-004",
+   "category": "logic",
+   "difficulty": "hard",
+   "title": "The Card Draw",
+   "prompt": "A standard 52-card deck is shuffled. You draw one card.\n\nWhat is the probability that the card is either a face card (Jack, Queen, King) or a Heart?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "22/52",
+    "25/52",
+    "28/52",
+    "31/52"
+   ],
+   "correctIndex": 0,
+   "explanation": "There are 12 face cards (3 per suit × 4 suits) and 13 Hearts.\n\nIf we just add them, we double-count the face cards that are also Hearts (Jack, Queen, King of Hearts = 3 cards).\n\nUse the \"either/or\" rule — add the two groups, then subtract the overlap:\n\n12 + 13 − 3 = 22\n\nSo the probability is:\n\n22/52"
+  },
+  {
+   "id": "hard-005",
+   "category": "logic",
+   "difficulty": "hard",
+   "title": "The Elevator Logic",
+   "prompt": "Four coworkers — Priya, Jordan, Sam, and Lee — work on four different floors: 2, 5, 8, and 10 (not necessarily in that order).\n\n- Priya works on a higher floor than Jordan.\n- Sam works on floor 5.\n- Lee does not work on the top floor.\n- Jordan works on floor 2.\n\nWhat floor does Priya work on?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "Floor 2",
+    "Floor 5",
+    "Floor 8",
+    "Floor 10"
+   ],
+   "correctIndex": 3,
+   "explanation": "From the clues:\n\n- Jordan = floor 2.\n- Sam = floor 5.\n- That leaves floors 8 and 10 for Priya and Lee.\n- Lee does not work on the top floor (10), so Lee = floor 8.\n- Therefore Priya = floor 10.\n\nPriya-higher-than-Jordan is automatically satisfied and mainly serves to confirm the arrangement, not to derive it."
+  },
+  {
+   "id": "hard-006",
+   "category": "developer-logic",
+   "difficulty": "hard",
+   "title": "The Light Switches",
+   "prompt": "There are 100 light switches in a row, all starting OFF. You make 100 passes:\n\n- Pass 1: flip every switch.\n- Pass 2: flip every 2nd switch.\n- Pass 3: flip every 3rd switch.\n- …\n- Pass 100: flip only switch #100.\n\nAfter all 100 passes, which switches are ON?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "Only the perfect-square-numbered switches (1, 4, 9, 16, 25…)",
+    "None of them",
+    "All of them",
+    "Only the prime-numbered switches"
+   ],
+   "correctIndex": 0,
+   "explanation": "A switch gets flipped once for every number that evenly divides its position. Switch #12, for example, gets flipped on passes 1, 2, 3, 4, 6, and 12 — six flips, which is an even number, so it ends up back OFF.\n\nSwitch #16 gets flipped on passes 1, 2, 4, 8, and 16 — five flips, an odd number, so it ends up ON.\n\nMost numbers pair their divisors up evenly (like 3 and 4 for 12), giving an even flip count. Perfect squares are the exception — their square root pairs with itself (4×4 for 16) rather than with a different number, leaving one divisor unpaired and the total flip count odd.\n\nSo only the perfect squares — 1, 4, 9, 16, 25, 36, 49, 64, 81, 100 — stay ON."
+  },
+  {
+   "id": "hard-007",
+   "category": "developer-logic",
+   "difficulty": "hard",
+   "title": "The Busy Host",
+   "prompt": "A restaurant has 1,000 tables. Every time a customer asks whether a table is free, the host walks down the list of tables from #1 onward until finding an open one.\n\nThe restaurant suddenly gets very busy — 10,000 customers ask in a row. What's the smartest fix?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "Hire more hosts to do the same walk-through faster",
+    "Have the host check tables in a random order instead",
+    "Have the host keep a running, always-up-to-date list of which tables are currently free",
+    "Ask customers to wait longer between requests"
+   ],
+   "correctIndex": 2,
+   "explanation": "The real problem isn't the number of customers — it's that the host repeats the same table-by-table walk from scratch for every single question, redoing work that a smarter setup would only need to do once.\n\nIf the host instead keeps a running list that updates the moment a table opens or fills, answering \"is anything free?\" becomes instant, no matter how many times it's asked.\n\nProgrammers call this idea caching — keeping a precomputed answer ready instead of recalculating it every time — but the insight (\"stop redoing the same work over and over\") holds with zero programming background."
+  },
+  {
+   "id": "hard-008",
+   "category": "sat-style",
+   "difficulty": "hard",
+   "title": "The Fence Problem",
+   "prompt": "A farmer has 40 meters of fencing and wants to build a rectangular pen using all of it, enclosing the largest possible area.\n\nWhat is the largest area they can enclose?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "75 m²",
+    "100 m²",
+    "84 m²",
+    "96 m²"
+   ],
+   "correctIndex": 1,
+   "explanation": "With 40 meters of fencing, the length and width must add up to 20 meters (since perimeter = 2 × (l + w) = 40).\n\nTry a few options: 9 × 11 = 99 m². 8 × 12 = 96 m². 10 × 10 = 100 m².\n\nFor a fixed perimeter, a rectangle's area is always largest when it's a square — the closer the two sides are to equal, the more area you get. So the farmer should make a 10-by-10 square pen for 100 m²."
+  },
+  {
+   "id": "hard-009",
+   "category": "brain-teaser",
+   "difficulty": "hard",
+   "title": "The Two Ropes",
+   "prompt": "You have two ropes. Each one takes exactly 60 minutes to burn completely, but neither burns at a steady rate along its length (some sections burn faster than others).\n\nUsing only these two ropes and a lighter, how can you measure exactly 45 minutes?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "Light one rope at both ends; when it finishes, light the second rope at one end",
+    "Light both ropes at one end each, at the same time",
+    "It can't be done without a clock",
+    "Light one rope at both ends and the other rope at one end, at the same time; when the first rope finishes, light the second end of the second rope"
+   ],
+   "correctIndex": 3,
+   "explanation": "Light Rope A at both ends and Rope B at one end, simultaneously.\n\nRope A always takes exactly half its total time to burn from both ends at once — 30 minutes — no matter how unevenly it burns, because two flames consuming it together always finish in half the single-end time.\n\nThe moment Rope A finishes (30 minutes in), light the second end of Rope B. Rope B already has 30 minutes of unevenly-distributed burn time left; lighting its other end now means those two flames finish it in half of that remaining time — 15 more minutes.\n\n30 + 15 = 45 minutes."
+  },
+  {
+   "id": "hard-010",
+   "category": "clever-math",
+   "difficulty": "hard",
+   "title": "The Two Pipes",
+   "prompt": "Pipe A can fill a pool in 6 hours by itself. Pipe B can fill the same pool in 3 hours by itself.\n\nIf both pipes run together, how long will it take to fill the pool?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "1.5 hours",
+    "4.5 hours",
+    "2 hours",
+    "9 hours"
+   ],
+   "correctIndex": 2,
+   "explanation": "The tempting-but-wrong answer is to average 6 and 3 to get 4.5 hours — but rates add, not times.\n\nPipe A fills 1/6 of the pool per hour; Pipe B fills 1/3 per hour. Together:\n\n1/6 + 1/3 = 1/6 + 2/6 = 3/6 = 1/2 of the pool per hour\n\nFilling the whole pool at that combined rate takes 2 hours."
+  },
+  {
+   "id": "hard-011",
+   "category": "sat-style",
+   "difficulty": "hard",
+   "title": "The Leaning Ladder",
+   "prompt": "A 15-foot ladder leans against a wall, with its base 9 feet from the wall.\n\nHow high up the wall does the ladder reach?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "12 feet",
+    "6 feet",
+    "10 feet",
+    "13 feet"
+   ],
+   "correctIndex": 0,
+   "explanation": "The ladder, the wall, and the ground form a right triangle, with the ladder as the hypotenuse. Use the Pythagorean theorem:\n\nheight² + 9² = 15²\n\nheight² = 225 − 81 = 144\n\nheight = √144 = 12 feet"
+  },
+  {
+   "id": "hard-012",
+   "category": "logic",
+   "difficulty": "hard",
+   "title": "The Impossible Statement",
+   "prompt": "Alex and Bo are two people. One of them always tells the truth; the other always lies. You don't know which is which.\n\nAlex says: \"I am the liar.\"\n\nWhat can you conclude?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "Alex is the liar",
+    "The statement leads to a contradiction either way — it couldn't actually have been said under the puzzle's own rules",
+    "Alex is the truth-teller",
+    "Bo is the liar"
+   ],
+   "correctIndex": 1,
+   "explanation": "Test both possibilities:\n\nIf Alex is the truth-teller, then \"I am the liar\" would have to be true — meaning Alex is the liar. Contradiction.\n\nIf Alex is the liar, then \"I am the liar\" would have to be false — meaning Alex is not the liar. Contradiction.\n\nNeither assignment survives — the statement is self-defeating, so a strict truth-teller/liar couldn't consistently say it in the first place."
+  },
+  {
+   "id": "hard-013",
+   "category": "developer-logic",
+   "difficulty": "hard",
+   "title": "The Recursive Countdown",
+   "prompt": "A function is defined as: count(n) — if n is 0 or less, stop; otherwise print n, then call count(n − 2).\n\nIf you call count(7), what is the last number printed before it stops?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "7",
+    "1",
+    "0",
+    "-1"
+   ],
+   "correctIndex": 1,
+   "explanation": "Trace it step by step:\n\ncount(7) → print 7 → count(5) → print 5 → count(3) → print 3 → count(1) → print 1 → count(-1) → -1 is ≤ 0, so it stops without printing.\n\nThe last number actually printed is 1 — the trap is assuming it counts down to exactly 0, but stepping by 2 from an odd start skips right past it."
+  },
+  {
+   "id": "hard-014",
+   "category": "brain-teaser",
+   "difficulty": "hard",
+   "title": "The Three Switches",
+   "prompt": "Outside a closed room, there are three switches. Exactly one of them controls a lightbulb inside the room. You may flip the switches however you like, but you may only enter the room and look at the bulb once.\n\nHow can you determine, with certainty, which switch controls the bulb?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "It's impossible with only one look",
+    "Flip each switch on and off quickly, then enter and see which one left a smell",
+    "Flip all three on, then enter — whichever bulb is on is the answer",
+    "Turn one switch on for a few minutes, then turn it off and turn a second switch on; the bulb's state and warmth (on / off-but-warm / off-and-cold) tell you which switch is which"
+   ],
+   "correctIndex": 3,
+   "explanation": "Turn Switch 1 on and leave it for a few minutes (long enough to warm up a bulb), then turn it off and immediately turn Switch 2 on. Now go look:\n\n- If the bulb is on → it's Switch 2.\n- If the bulb is off but warm → it was recently on, so it's Switch 1.\n- If the bulb is off and cold → it was never on at all, so it's Switch 3.\n\nOne look gives you three distinguishable outcomes instead of just two (on/off), because heat gives you a third piece of information."
+  },
+  {
+   "id": "hard-015",
+   "category": "clever-math",
+   "difficulty": "hard",
+   "title": "The Three Workers",
+   "prompt": "Worker A can finish a job alone in 6 days. Worker B alone in 12 days. Worker C alone in 4 days.\n\nIf all three work together, how long will the job take?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "1.5 days",
+    "2.5 days",
+    "2 days",
+    "4 days"
+   ],
+   "correctIndex": 2,
+   "explanation": "Add their rates (jobs per day), using a common denominator of 12:\n\n1/6 + 1/12 + 1/4 = 2/12 + 1/12 + 3/12 = 6/12 = 1/2 job per day\n\nAt half a job per day, the whole job takes 2 days."
+  },
+  {
+   "id": "hard-016",
+   "category": "sat-style",
+   "difficulty": "hard",
+   "title": "The Father and Son",
+   "prompt": "A father is currently 3 times as old as his son. In 12 years, the father will be twice as old as his son.\n\nHow old is the son right now?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "12",
+    "8",
+    "10",
+    "14"
+   ],
+   "correctIndex": 0,
+   "explanation": "Let the son's current age be x, so the father is 3x.\n\nIn 12 years: 3x + 12 = 2(x + 12)\n\n3x + 12 = 2x + 24\n\nx = 12\n\nCheck: the father is 36 now; in 12 years, father = 48, son = 24, and 48 is indeed twice 24. ✓"
+  },
+  {
+   "id": "hard-017",
+   "category": "logic",
+   "difficulty": "hard",
+   "title": "The Census Taker",
+   "prompt": "A census taker asks a woman for her three children's ages. She says: \"The product of their ages is 36, and the sum of their ages is my house number.\"\n\nThe census taker looks at the house number and says he still can't determine the ages. She adds: \"The oldest one has red hair.\"\n\nNow the census taker knows the ages. What are the three ages?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "2, 2, 9",
+    "1, 6, 6",
+    "3, 3, 4",
+    "2, 3, 6"
+   ],
+   "correctIndex": 0,
+   "explanation": "List every way three positive whole ages can multiply to 36, along with each set's sum:\n\n1,1,36 (38) · 1,2,18 (21) · 1,3,12 (16) · 1,4,9 (14) · 1,6,6 (13) · 2,2,9 (13) · 2,3,6 (11) · 3,3,4 (10)\n\nEvery sum is unique except 13, which two different triples share: {1, 6, 6} and {2, 2, 9}. That's exactly why knowing the house number (the sum) wasn't enough for the census taker — his house number must be 13, and it's genuinely ambiguous between those two options.\n\nThe final clue — \"the oldest one\" (singular) — rules out {1, 6, 6}, where two children are tied for oldest at age 6. That leaves {2, 2, 9}."
+  },
+  {
+   "id": "hard-018",
+   "category": "developer-logic",
+   "difficulty": "hard",
+   "title": "The Deadlock",
+   "prompt": "Alex is holding flour; Bo is holding eggs — both needed to bake a cake. Alex won't hand over the flour until he gets the eggs first. Bo won't hand over the eggs until he gets the flour first. Neither budges.\n\nWhat is this situation called, and how is it typically resolved?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "A race condition — solved by having them act in a random order",
+    "An infinite loop — solved by adding a counter that stops it",
+    "A memory leak — solved by cleaning up unused resources",
+    "A deadlock — solved by having one side yield and go first"
+   ],
+   "correctIndex": 3,
+   "explanation": "This is a classic deadlock: two sides are each waiting on the other, and neither will make the first move, so nothing ever happens.\n\nThe only way out is for one side to break the symmetry — someone has to hand something over first, on trust, before getting anything back. Neither more time nor more patience fixes it; only one side yielding does."
+  },
+  {
+   "id": "hard-019",
+   "category": "brain-teaser",
+   "difficulty": "hard",
+   "title": "The Monk on the Mountain",
+   "prompt": "A monk starts climbing a mountain path at 6 AM and reaches the top by evening. The next day, he starts back down the same path at 6 AM and reaches the bottom by evening (walking at whatever varying pace he likes each day — no need for the same speed).\n\nMust there be some exact time of day at which the monk is at the exact same point on the path on both days?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "No — his pace varies too much to guarantee that",
+    "Yes — there must be such a point, regardless of pace",
+    "Only if he walks at a constant speed both days",
+    "It depends on how long the path is"
+   ],
+   "correctIndex": 1,
+   "explanation": "Here's the trick: imagine two monks instead of one — one starting at the bottom at 6 AM walking up (repeating day 1's trip), and the other starting at the top at 6 AM walking down (repeating day 2's trip), both on the very same day.\n\nOne monk is heading up the path while the other is heading down it, on the same path, during the same hours. They must cross paths at some moment — there's no way to avoid it.\n\nThat crossing point and time is exactly the point where the real monk (on his two separate days) occupied the same spot at the same time of day."
+  },
+  {
+   "id": "hard-020",
+   "category": "clever-math",
+   "difficulty": "hard",
+   "title": "The Discount Order",
+   "prompt": "A $200 item gets a 10% discount, then an additional 15% discount off the new price.\n\nWould the final price be any different if the 15% discount were applied first, followed by the 10%?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "Yes — applying the bigger discount first always saves more",
+    "Yes — applying the smaller discount first always saves more",
+    "No — the final price is the same either way",
+    "It depends on whether the discounts are added or multiplied"
+   ],
+   "correctIndex": 2,
+   "explanation": "Either order gives:\n\n$200 × 0.90 × 0.85 = $153\n\n$200 × 0.85 × 0.90 = $153\n\nMultiplication doesn't care about order (it's commutative), so stacking percentage discounts always lands on the same final price no matter which one is applied first — unlike a percentage increase followed by a decrease (see \"The Sneaky Discount,\" §6), where order-independence does not hold in the same way, because that mixes an increase with a decrease rather than two decreases."
+  },
+  {
+   "id": "hard-021",
+   "category": "sat-style",
+   "difficulty": "hard",
+   "title": "The Combination Lock",
+   "prompt": "A lock uses a 3-digit code, each digit from 0–9, with no digit allowed to repeat.\n\nHow many different codes are possible?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "1,000",
+    "900",
+    "504",
+    "720"
+   ],
+   "correctIndex": 3,
+   "explanation": "The first digit has 10 choices. The second digit can't repeat the first, so it has 9 choices. The third can't repeat either of the first two, so it has 8 choices:\n\n10 × 9 × 8 = 720"
+  },
+  {
+   "id": "hard-022",
+   "category": "logic",
+   "difficulty": "hard",
+   "title": "The Poisoned Wine",
+   "prompt": "You have 1,000 bottles of wine, exactly one of which is poisoned. The poison is undetectable and symptom-free until it kills — exactly 24 hours after being tasted, no matter how diluted the dose. You have 10 prisoners willing to test it, and only 24 hours before a big party where you must know which single bottle is poisoned.\n\nHow can you identify the poisoned bottle using only these 10 prisoners and a single round of testing?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "It's impossible — you'd need one prisoner per bottle",
+    "Have each prisoner taste one bottle each; test 10 bottles per day until you find it",
+    "Number the bottles in binary (up to 10 digits); each prisoner is assigned one digit position and drinks from every bottle whose binary number has a 1 in that position — the pattern of who dies (in binary) reveals the exact bottle number",
+    "Mix a few drops from every bottle into one glass for one prisoner to test"
+   ],
+   "correctIndex": 2,
+   "explanation": "10 prisoners can each represent one \"bit\" of information — and with 10 bits, you can uniquely represent any number from 0 up to 2¹⁰ − 1 = 1,023, which comfortably covers all 1,000 bottles.\n\nNumber the bottles 1 through 1,000, and write each number in binary using 10 digits. Prisoner #1 tastes every bottle whose binary number has a 1 in the first digit position; prisoner #2 tastes every bottle with a 1 in the second position; and so on.\n\nAfter 24 hours, look at which prisoners died. Read \"died\" as a 1 and \"survived\" as a 0 for each position, in order — the resulting 10-digit binary number is exactly the poisoned bottle's number."
+  },
+  {
+   "id": "hard-023",
+   "category": "developer-logic",
+   "difficulty": "hard",
+   "title": "The Repeated Work",
+   "prompt": "A function computes Fibonacci numbers the simple recursive way: fib(n) = fib(n − 1) + fib(n − 2).\n\nWhen computing fib(5) this way, how many separate times does the function end up calling fib(3)?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "Once",
+    "Twice",
+    "Three times",
+    "It never calls fib(3) directly"
+   ],
+   "correctIndex": 1,
+   "explanation": "Trace the calls: fib(5) calls fib(4) and fib(3) — that's one call to fib(3) right there.\n\nBut fib(4) itself calls fib(3) and fib(2) — that's a second, completely separate call to fib(3), redoing all the same work the first call already did.\n\nThis kind of repeated recomputation is exactly what techniques like memoization (caching each result the first time it's computed) are designed to eliminate — a real-world cousin of \"The Cache Eviction\" and \"The Busy Host\" questions already in the bank."
+  }
+ ]
+}

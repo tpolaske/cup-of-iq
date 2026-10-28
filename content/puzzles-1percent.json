@@ -1,0 +1,164 @@
+{
+ "onePercent": [
+  {
+   "id": "1percent-001",
+   "category": "logic",
+   "difficulty": "1percent",
+   "title": "The Three Ball Boxes",
+   "prompt": "A man has three boxes.\n\nEach box contains either:\n\n- Only red balls\n- Only blue balls\n- A mixture of red and blue balls\n\nThe boxes are labeled:\n\n- RED\n- BLUE\n- MIXED\n\nThe man tells you:\n\nEvery single label is wrong.\n\nYou are allowed to pull one ball from one box.\n\nYou pull out a red ball.\n\nYou now know exactly what is inside all three boxes.\n\nWhich box did you pull the ball from?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "MIXED",
+    "RED",
+    "BLUE",
+    "You still can't know"
+   ],
+   "correctIndex": 0,
+   "explanation": "The box labeled MIXED cannot actually be mixed because every label is wrong.\n\nTherefore it must contain either:\n\nOnly red or only blue.\n\nYou pulled out a red ball.\n\nTherefore the MIXED-labeled box must contain:\n\n🔴 Red only\n\nNow look at the box labeled BLUE.\n\nIts label is wrong, so it cannot contain only blue.\n\nIt also cannot contain only red because we already identified the red-only box.\n\nTherefore it must contain:\n\n🔴🔵 Mixed\n\nThat leaves the box labeled RED.\n\nIt must contain:\n\n🔵 Blue only\n\nSo the final arrangement is:\n\nLabeled MIXED → 🔴 Red only\nLabeled BLUE → 🔴🔵 Mixed\nLabeled RED → 🔵 Blue only\n\nThe answer is MIXED."
+  },
+  {
+   "id": "1percent-002",
+   "category": "brain-teaser",
+   "difficulty": "1percent",
+   "title": "The 28-Day Months",
+   "prompt": "How many months of the year have 28 days?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "1",
+    "4",
+    "12",
+    "11"
+   ],
+   "correctIndex": 2,
+   "explanation": "The intuitive answer is 1 (thinking only of February).\n\nBut every month has at least 28 days — February has exactly 28 (or 29), and every other month has 28 days plus a few more.\n\nSo all 12 months have 28 days; February is just the only one that stops there."
+  },
+  {
+   "id": "1percent-003",
+   "category": "brain-teaser",
+   "difficulty": "1percent",
+   "title": "The Farmer's Sheep",
+   "prompt": "A farmer has 17 sheep. All but 9 die.\n\nHow many sheep does the farmer have left?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "8",
+    "9",
+    "17",
+    "0"
+   ],
+   "correctIndex": 1,
+   "explanation": "\"All but 9 die\" means 9 survive — that's what the phrase describes directly.\n\nThe instinct to compute 17 − 9 = 8 quietly answers a different question (\"how many died\") instead of the one asked (\"how many are left\").\n\nSheep count doesn't matter here — 17 is a decoy."
+  },
+  {
+   "id": "1percent-004",
+   "category": "developer-logic",
+   "difficulty": "1percent",
+   "title": "The Never-Ending Sequence",
+   "prompt": "Start with the number 6 and repeat this rule:\n\n- If the number is even, divide it by 2.\n- If the number is odd, multiply it by 3 and add 1.\n\nWhat eventually happens?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "It eventually reaches 0",
+    "It gets stuck at 6 forever",
+    "It grows larger forever",
+    "It eventually reaches 1, then cycles 1 → 4 → 2 → 1 forever"
+   ],
+   "correctIndex": 3,
+   "explanation": "Following the rule from 6: 6 → 3 → 10 → 5 → 16 → 8 → 4 → 2 → 1, and from there it loops 1 → 4 → 2 → 1 forever.\n\nHere's the twist that makes this a genuine 1% Club question: this always seems to happen, for every starting number anyone has ever tried — but no one has ever mathematically proven it happens for every possible number. It's a real, unsolved question in mathematics, known as the Collatz conjecture.\n\nSo the question has a clean, checkable answer for this specific starting number, while quietly introducing the solver to a problem that has stumped mathematicians for decades."
+  },
+  {
+   "id": "1percent-005",
+   "category": "clever-math",
+   "difficulty": "1percent",
+   "title": "The Nine Count",
+   "prompt": "How many times does the digit 9 appear when you write out every number from 1 to 100?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "10",
+    "20",
+    "11",
+    "19"
+   ],
+   "correctIndex": 1,
+   "explanation": "Count the two ways a 9 can show up separately.\n\nAs the units digit: 9, 19, 29, 39, 49, 59, 69, 79, 89, 99 — that's 10 appearances.\n\nAs the tens digit: 90 through 99 — that's another 10 appearances.\n\n10 + 10 = 20"
+  },
+  {
+   "id": "1percent-006",
+   "category": "logic",
+   "difficulty": "1percent",
+   "title": "The Crowded Room",
+   "prompt": "How many people need to be in a room before there's a better than 50% chance that two of them share the same birthday (ignore leap years)?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "183",
+    "366",
+    "57",
+    "23"
+   ],
+   "correctIndex": 3,
+   "explanation": "The intuitive guess is close to half of 365 — but the real driver isn't the number of people, it's the number of pairs of people, and that grows much faster.\n\nWith 23 people, there are 23 × 22 ÷ 2 = 253 possible pairs to compare. It only takes one matching pair among all 253 to succeed, and that's already enough to push the odds past 50%."
+  },
+  {
+   "id": "1percent-007",
+   "category": "brain-teaser",
+   "difficulty": "1percent",
+   "title": "Two Fathers, Two Sons",
+   "prompt": "Two fathers and two sons go fishing together. They catch exactly three fish, and each person goes home with one whole fish — none split, none thrown back.\n\nHow is this possible?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "One fish was unusually large and got counted twice",
+    "One person didn't take a fish",
+    "There were only three people: a grandfather, his son, and his grandson",
+    "It's a trick question — it's actually impossible"
+   ],
+   "correctIndex": 2,
+   "explanation": "\"Two fathers and two sons\" sounds like four separate people — but a grandfather, father, and son form a group where the middle person is both a father (to the son) and a son (to the grandfather).\n\nSo \"two fathers\" = grandfather + father, and \"two sons\" = father + son — only three actual people, which matches the three fish exactly."
+  },
+  {
+   "id": "1percent-008",
+   "category": "clever-math",
+   "difficulty": "1percent",
+   "title": "The Rope Around the Earth",
+   "prompt": "A rope is wrapped snugly around the Earth's equator (about 40,000 km long). If you add just 1 extra meter to the rope and lift it evenly off the ground all the way around, roughly how high off the ground would the rope float?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "About 16 centimeters",
+    "A fraction of a millimeter",
+    "About 6 meters",
+    "It couldn't lift off the ground at all"
+   ],
+   "correctIndex": 0,
+   "explanation": "Circumference relates to radius by C = 2πr. Adding a small amount to the circumference increases the radius by that amount divided by 2π — no matter how big the circle already is:\n\n1 meter ÷ (2 × π) ≈ 0.159 meters ≈ 16 cm\n\nThe Earth's enormous size cancels out of the math completely; only the extra 1 meter matters."
+  },
+  {
+   "id": "1percent-009",
+   "category": "brain-teaser",
+   "difficulty": "1percent",
+   "title": "The House With Four Southern Walls",
+   "prompt": "A man builds a house where all four walls face south. A bear walks past his window.\n\nWhat color is the bear?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "Brown",
+    "White",
+    "Black",
+    "Not enough information"
+   ],
+   "correctIndex": 1,
+   "explanation": "The only place on Earth where every direction you face is south is the North Pole. A bear near the North Pole is a polar bear — white."
+  },
+  {
+   "id": "1percent-010",
+   "category": "logic",
+   "difficulty": "1percent",
+   "title": "The Tenth Flip",
+   "prompt": "You flip a fair coin 9 times in a row and get heads every single time.\n\nWhat is the probability the 10th flip will also be heads?",
+   "answerFormat": "multipleChoice",
+   "choices": [
+    "Very low — it's \"due\" for tails",
+    "About 1 in 1,000",
+    "Exactly 0%",
+    "Exactly 50%"
+   ],
+   "correctIndex": 3,
+   "explanation": "Each coin flip is independent — the coin has no memory of what happened before it. No matter how long a streak has run, the next flip is still a fresh 50/50 event.\n\n(Getting 9 heads in a row was a big coincidence in hindsight — about a 1-in-512 chance — but that's a fact about the 9 flips that already happened, not a force acting on the 10th one.)"
+  }
+ ]
+}
