@@ -51,3 +51,25 @@ export function findSchool(name: string, schools: SchoolContent): School | undef
   }
   return undefined;
 }
+
+// TMR-4 — the short, warm banner line for a persisted outcome + school. Shared
+// by the results screen and the share text so the two never drift.
+// Tier 1/2, accepted and waitlisted wording is from design.md §10 (signed off).
+// PROVISIONAL: tier3 / tier4 / fail copy is not specified anywhere yet; each is
+// a gentle joke by design (TMR-4) and is a one-line edit here.
+export function bannerLine(outcome: Outcome, school: string): string {
+  switch (outcome) {
+    case 'tier1':
+    case 'tier2':
+    case 'accepted':
+      return `${school} is calling. 🎓`;
+    case 'tier3':
+      return `${school} wants a second look. 👀`;
+    case 'tier4':
+      return `${school} has you on the radar. 📋`;
+    case 'fail':
+      return `${school} says there's always next time. 😄`;
+    case 'waitlisted':
+      return `${school} has put you on the waitlist. 😅`;
+  }
+}
