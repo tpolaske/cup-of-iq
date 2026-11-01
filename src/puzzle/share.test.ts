@@ -90,20 +90,26 @@ describe('buildShareText — Sunday (sign-off #23)', () => {
 });
 
 describe('bannerLine (TMR-4)', () => {
-  it('uses the agreed wording for tier1/tier2/accepted/waitlisted', () => {
-    expect(bannerLine('tier1', 'Yale')).toBe('Yale is calling. 🎓');
-    expect(bannerLine('tier2', 'Brown')).toBe('Brown is calling. 🎓');
-    expect(bannerLine('accepted', 'Harvard')).toBe('Harvard is calling. 🎓');
-    expect(bannerLine('waitlisted', 'Princeton')).toBe("Princeton says there's always next time. 😄");
+  it('every weekday tier and Sunday accepted say "<school> is calling."', () => {
+    const calling: Outcome[] = ['tier1', 'tier2', 'tier3', 'tier4', 'fail', 'accepted'];
+    for (const o of calling) expect(bannerLine(o, 'Test U')).toBe('Test U is calling. 🎓');
   });
 
-  it('every outcome yields a non-empty, school-named, single-line banner with no negative words', () => {
-    const all: Outcome[] = ['tier1', 'tier2', 'tier3', 'tier4', 'fail', 'accepted', 'waitlisted'];
-    for (const o of all) {
-      const line = bannerLine(o, 'Test U');
-      expect(line).toContain('Test U');
-      expect(line).not.toContain('\n');
-      expect(line).not.toMatch(/fail|lose|lost|wrong|bad|reject/i);
-    }
+  it('Sunday waitlisted is the only different line', () => {
+    expect(bannerLine('waitlisted', 'Princeton')).toBe("Princeton says there's always next time. 😄");
+  });
+});
+
+describe('buildShareText — lesser weekday schools', () => {
+  it('a 0/3 round shares as "<fail school> is calling"', () => {
+    expect(buildShareText(weekday([false, false, false], 'fail', 'Central Connecticut State'), 0)).toBe(
+      'Cup of IQ · Puzzle  Day 96\n0/3 correct\nCentral Connecticut State is calling. 🎓\nhttps://cupofiq.com/puzzle',
+    );
+  });
+
+  it('a 1/3 round shares with its tier-4 school', () => {
+    expect(buildShareText(weekday([false, true, false], 'tier4', 'Providence'), 0)).toContain(
+      '1/3 correct\nProvidence is calling. 🎓',
+    );
   });
 });
