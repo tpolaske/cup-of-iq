@@ -54,9 +54,10 @@ export function findSchool(name: string, schools: SchoolContent): School | undef
 
 // TMR-4 — the short, warm banner line for a persisted outcome + school. Shared
 // by the results screen and the share text so the two never drift.
-// Tier 1/2, accepted and waitlisted wording is from design.md §10 (signed off).
-// PROVISIONAL: tier3 / tier4 / fail copy is not specified anywhere yet; each is
-// a gentle joke by design (TMR-4) and is a one-line edit here.
+// Tier 1/2 and accepted wording is from design.md §10 (signed off); Sunday
+// waitlisted uses the "always next time" line (Tom, 2026-10-29).
+// PROVISIONAL: tier3 / tier4 copy is not specified anywhere yet; each is a
+// gentle joke by design (TMR-4) and is a one-line edit here.
 export function bannerLine(outcome: Outcome, school: string): string {
   switch (outcome) {
     case 'tier1':
@@ -68,8 +69,7 @@ export function bannerLine(outcome: Outcome, school: string): string {
     case 'tier4':
       return `${school} has you on the radar. 📋`;
     case 'fail':
+    case 'waitlisted': // Sunday wrong answer — same gentle line (Tom, 2026-10-29)
       return `${school} says there's always next time. 😄`;
-    case 'waitlisted':
-      return `${school} has put you on the waitlist. 😅`;
   }
 }

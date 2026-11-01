@@ -78,7 +78,7 @@ describe('buildShareText — Sunday (sign-off #23)', () => {
 
   it('waitlisted matches the spec example and never has a streak line', () => {
     const expected =
-      'Cup of IQ · Puzzle  Day 98 · 💯 Sunday special\nThe 1% question got me — waitlisted\nPrinceton has put you on the waitlist. 😅\nhttps://cupofiq.com/puzzle';
+      'Cup of IQ · Puzzle  Day 98 · 💯 Sunday special\nThe 1% question got me — waitlisted\nPrinceton says there\'s always next time. 😄\nhttps://cupofiq.com/puzzle';
     expect(buildShareText(sunday(false, 'Princeton'), 0)).toBe(expected);
     // even if a caller passes a stale high streak, a waitlist never shows one
     expect(buildShareText(sunday(false, 'Princeton'), 9)).toBe(expected);
@@ -90,11 +90,11 @@ describe('buildShareText — Sunday (sign-off #23)', () => {
 });
 
 describe('bannerLine (TMR-4)', () => {
-  it('uses the signed-off wording for tier1/tier2/accepted/waitlisted', () => {
+  it('uses the agreed wording for tier1/tier2/accepted/waitlisted', () => {
     expect(bannerLine('tier1', 'Yale')).toBe('Yale is calling. 🎓');
     expect(bannerLine('tier2', 'Brown')).toBe('Brown is calling. 🎓');
     expect(bannerLine('accepted', 'Harvard')).toBe('Harvard is calling. 🎓');
-    expect(bannerLine('waitlisted', 'Princeton')).toBe('Princeton has put you on the waitlist. 😅');
+    expect(bannerLine('waitlisted', 'Princeton')).toBe("Princeton says there's always next time. 😄");
   });
 
   it('every outcome yields a non-empty, school-named, single-line banner with no negative words', () => {
