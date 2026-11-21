@@ -1,0 +1,22 @@
+/* Cup of IQ — puzzle mode screens. Palette matches the dino game and the signed-off mockups. */
+:root { --pz-cream: #FEFBF8; --pz-ink: #4A382B; --pz-mute: #7A6552; --pz-card: #FFFDF7; --pz-line: #E8DCC8; --pz-sage: #9CBF7B; --pz-good: #3F6B2C; --pz-bad: #A5531F; }
+body { margin: 0; background: var(--pz-cream); color: var(--pz-ink); font-family: ui-rounded, 'SF Pro Rounded', Quicksand, 'Segoe UI', system-ui, sans-serif; }
+.pz-screen { max-width: 420px; margin: 0 auto; min-height: 100vh; box-sizing: border-box; padding: 24px 20px 28px; display: flex; flex-direction: column; gap: 14px; }
+.pz-hd { display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; color: var(--pz-mute); }
+.pz-bars { display: flex; gap: 10px; justify-content: center; }
+.pz-bar { flex: 1; max-width: 64px; height: 8px; border-radius: 4px; background: #D9C9AF; }
+.pz-bar.is-done { background: var(--pz-sage); }
+.pz-bar.is-current { outline: 2px solid var(--pz-ink); outline-offset: 2px; }
+.pz-card { background: var(--pz-card); border: 2px solid var(--pz-line); border-radius: 18px; padding: 18px; }
+.pz-prompt { margin: 0; font-size: 18px; line-height: 1.45; }
+.pz-choices { display: flex; flex-direction: column; gap: 10px; }
+.pz-choice { display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 10px 14px; text-align: left; font: inherit; font-size: 16px; color: inherit; background: var(--pz-card); border: 2px solid var(--pz-line); border-radius: 14px; cursor: pointer; }
+.pz-letter { flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: #F1E9D8; color: var(--pz-mute); font-size: 13px; font-weight: 800; }
+.pz-choice.is-selected { border-color: var(--pz-sage); background: #F5F9F1; }
+.pz-choice.is-selected .pz-letter { background: #5F7F49; color: #fff; }
+.pz-actions { display: flex; gap: 10px; margin-top: auto; }
+.pz-btn { font: inherit; font-weight: 700; font-size: 16px; min-height: 48px; padding: 0 20px; border-radius: 14px; border: 2px solid #D9C9AF; background: var(--pz-card); color: var(--pz-ink); cursor: pointer; }
+.pz-primary { flex: 1; background: var(--pz-ink); border-color: var(--pz-ink); color: var(--pz-cream); }
+.pz-btn:disabled { opacity: .45; cursor: default; }
+.pz-choice:focus-visible, .pz-btn:focus-visible { outline: 3px solid #5F7F49; outline-offset: 2px; }
+.pz-hint { margin: 0; text-align: center; font-size: 12px; color: var(--pz-mute); }
