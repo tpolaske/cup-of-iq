@@ -13,10 +13,11 @@ import {
   type PuzzleState,
   type StorageLike,
 } from './progress';
+import { findSchool } from './banner';
 import { createSession, type PuzzleSession } from './puzzle';
 import type { RoundTimer } from './timer';
 import { buildShareText } from './share';
-import type { Puzzle, PuzzleContent, SchoolContent } from './types';
+import type { Puzzle, PuzzleContent, School, SchoolContent } from './types';
 
 // Screen contracts. Screens render what they are given and call back; they never
 // touch storage or the state machine's transitions themselves.
@@ -28,12 +29,14 @@ export interface PlayView {
 
 export interface RevealView {
   round: LastPlayed;
+  school: School; // pennant colors for round.school (neutral fallback if unknown)
   puzzles: (Puzzle | null)[]; // aligned with round.questions
   onDone(): void; // the screen auto-advances when its animation ends (TMR-5)
 }
 
 export interface ResultsView {
   round: LastPlayed;
+  school: School;
   puzzles: (Puzzle | null)[];
   streak: number;
   bestStreak: number;
@@ -81,6 +84,12 @@ export function findPuzzle(content: PuzzleContent, id: string): Puzzle | null {
   return null;
 }
 
+// A school removed from schools.json must never break a stored day: fall back to
+// a neutral pennant carrying the stored name.
+function schoolFor(schools: SchoolContent, round: LastPlayed): School {
+  return findSchool(round.school, schools) ?? { name: round.school, base: '#4A382B', accent: '#FFFFFF' };
+}
+
 function resolve(content: PuzzleContent, round: LastPlayed): (Puzzle | null)[] {
   return round.questions.map((q) => findPuzzle(content, q.puzzleId));
 }
@@ -91,6 +100,7 @@ export function boot(deps: BootDeps): BootResult {
 
   const resultsView = (round: LastPlayed): ResultsView => ({
     round,
+    school: schoolFor(deps.schools, round),
     puzzles: resolve(content, round),
     streak: state.accuracyStreak,
     bestStreak: state.bestStreak,
@@ -124,6 +134,7 @@ export function boot(deps: BootDeps): BootResult {
     session.beginReveal();
     screens.showReveal({
       round,
+      school: schoolFor(deps.schools, round),
       puzzles: resolve(content, round),
       onDone() {
         if (revealDone) return;
